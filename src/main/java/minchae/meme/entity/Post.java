@@ -5,8 +5,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import minchae.meme.request.PostCreate;
+import minchae.meme.request.PostEdit;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.NotFound;
 
 @Entity
 @Getter
@@ -41,6 +42,16 @@ public class Post {
 
     @Column
     private Long writerId;
+
+    public void plusRecommendation() {
+        this.recommendation++;
+    }
+
+    public void update(PostEdit postEdit) {
+        this.title = postEdit.getTitle();
+        this.content = postEdit.getContent();
+        this.views++;
+    }
 
 
 }

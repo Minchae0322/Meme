@@ -1,40 +1,16 @@
 package minchae.meme.service;
 
-import lombok.RequiredArgsConstructor;
-import minchae.meme.entity.Post;
-import minchae.meme.entity.PostCreate;
-import minchae.meme.entity.PostResponse;
-import minchae.meme.entity.Post_Meme;
-import minchae.meme.repository.PostRepository;
-import org.springframework.stereotype.Service;
+import minchae.meme.request.PostCreate;
+import minchae.meme.request.PostEdit;
+import minchae.meme.response.PostResponse;
 
-@Service
-@RequiredArgsConstructor
-public class PostService {
-    private final PostRepository postRepository;
+public interface PostService {
+    void write(PostCreate postCreate);
+    PostResponse get(Long postId);
 
-    public void writePost_Meme(PostCreate postCreate) {
-        Post post = Post.builder()
-                .title(postCreate.getTitle())
-                .content(postCreate.getContent())
-                .writerId(postCreate.getWriterId())
-                .build();
-        postRepository.save(post);
-    }
+    void delete(Long postId);
 
-    public PostResponse getPost_Meme(Long postId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다"));
-        return PostResponse.builder()
-                .title(post.getTitle())
-                .content(post.getContent())
-                .recommendation(post.getRecommendation())
-                .bad(post.getBad())
-                .views(post.getViews())
-                .writerId(post.getWriterId())
-                .build();
-    }
-
+    void update(Long postId, PostEdit postEdit);
 
 
 }

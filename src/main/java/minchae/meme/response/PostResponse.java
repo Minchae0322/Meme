@@ -1,4 +1,4 @@
-package minchae.meme.entity;
+package minchae.meme.response;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

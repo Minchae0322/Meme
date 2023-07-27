@@ -1,4 +1,4 @@
-package minchae.meme.entity;
+package minchae.meme.request;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -9,8 +9,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PostCreate {
-
-    private Long postId;
 
     private String title;
 
@@ -25,8 +23,7 @@ public class PostCreate {
     private Long writerId;
 
     @Builder
-    public PostCreate(Long postId, String title, String content, int recommendation, int bad, int views, Long writerId) {
-        this.postId = postId;
+    public PostCreate(String title, String content, int recommendation, int bad, int views, Long writerId) {
         this.title = title;
         this.content = content;
         this.recommendation = recommendation;
