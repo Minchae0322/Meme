@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import minchae.meme.entity.Post;
 import org.hibernate.annotations.ColumnDefault;
 
 @NoArgsConstructor
@@ -37,4 +38,5 @@ public class PostResponse {
         this.views = views;
         this.writerId = writerId;
     }
+
 }

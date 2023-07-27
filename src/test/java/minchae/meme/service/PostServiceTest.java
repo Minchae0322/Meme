@@ -11,6 +11,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -100,6 +104,32 @@ class PostServiceTest {
         assertEquals(postRepository.count(), 1);
         assertEquals(updatedPost.getTitle(), "첫게시물입니다");
         assertEquals(updatedPost.getContent(), "내용을 변경합니다");
+
+    }
+
+    @Test
+    @DisplayName("게시물 리스트")
+    void getPostListWherePage() {
+        //given
+        List<Post> posts = IntStream.range(0, 10)
+                        .mapToObj(i -> Post.builder()
+                                .title("제목" + " " + i)
+                                .content("내용" + " " + i)
+                                .writerId((long) i)
+                                .build())
+                                .collect(Collectors.toList());
+        postRepository.saveAll(posts);
+        assertEquals(postRepository.count(), 10);
+
+        //when
+        Post post1 = postRepository.findAll().get(0);
+        Post post2 = postRepository.findAll().get(5);
+
+
+        //result
+        assertEquals(10, postRepository.count());
+        assertEquals("제목 0", post1.getTitle());
+        assertEquals("제목 5", post2.getTitle());
 
     }
 

@@ -10,6 +10,10 @@ import minchae.meme.repository.PostRepository;
 import minchae.meme.service.PostService;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class Post_MemeServiceImpl implements PostService {
@@ -31,6 +35,7 @@ public class Post_MemeServiceImpl implements PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다"));
         return PostResponse.builder()
+                .postId(post.getPostId())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .recommendation(post.getRecommendation())
@@ -53,6 +58,22 @@ public class Post_MemeServiceImpl implements PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지않는 게시물 입니다"));
         post.update(postEdit);
+    }
+    @Override
+    @Transactional
+    public List<PostResponse> getListWherePage(int page) {
+        return postRepository.getPostList(page)
+                .stream()
+                .map(post -> PostResponse.builder()
+                        .postId(post.getPostId())
+                        .title(post.getTitle())
+                        .content(post.getContent())
+                        .recommendation(post.getRecommendation())
+                        .bad(post.getBad())
+                        .views(post.getViews())
+                        .writerId(post.getWriterId())
+                        .build())
+                .collect(Collectors.toList());
     }
 
 
