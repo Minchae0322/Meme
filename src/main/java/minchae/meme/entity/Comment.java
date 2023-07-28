@@ -1,12 +1,16 @@
 package minchae.meme.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class Comment {
 
     @Id
@@ -20,10 +24,18 @@ public class Comment {
     @Column
     private String comment;
     private Long writerId;
-    @Column
+    @ColumnDefault("0")
     private int recommendation;
-    @Column
+    @ColumnDefault("0")
     private int bad;
 
-
+    @Builder
+    public Comment(Long commentId, Post post, String comment, Long writerId, int recommendation, int bad) {
+        this.commentId = commentId;
+        this.post = post;
+        this.comment = comment;
+        this.writerId = writerId;
+        this.recommendation = recommendation;
+        this.bad = bad;
+    }
 }

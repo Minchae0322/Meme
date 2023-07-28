@@ -1,5 +1,6 @@
 package minchae.meme.service;
 
+import minchae.meme.entity.Comment;
 import minchae.meme.entity.Post;
 import minchae.meme.request.PostCreate;
 import minchae.meme.repository.PostRepository;
@@ -132,6 +133,8 @@ class PostServiceTest {
         assertEquals("제목 5", post2.getTitle());
 
     }
+
+
 
 
 }
