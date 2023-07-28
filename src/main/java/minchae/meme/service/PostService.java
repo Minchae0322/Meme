@@ -12,7 +12,7 @@ public interface PostService {
 
     void delete(Long postId);
 
-    void update(Long postId, PostEdit postEdit);
+    PostResponse update(Long postId, PostEdit postEdit);
 
     List<PostResponse> getListWherePage(int page);
 

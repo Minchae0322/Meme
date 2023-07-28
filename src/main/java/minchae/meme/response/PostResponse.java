@@ -1,13 +1,10 @@
 package minchae.meme.response;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import minchae.meme.entity.Post;
-import org.hibernate.annotations.ColumnDefault;
 
 @NoArgsConstructor
 @Getter
@@ -37,6 +34,17 @@ public class PostResponse {
         this.bad = bad;
         this.views = views;
         this.writerId = writerId;
+    }
+
+    public PostResponse postToPostResponse(Post post) {
+        this.postId = post.getPostId();
+        this.title = post.getTitle();
+        this.content = post.getContent();
+        this.recommendation = post.getRecommendation();
+        this.bad = post.getBad();
+        this.views = post.getViews();
+        this.writerId = post.getWriterId();
+        return this;
     }
 
 }

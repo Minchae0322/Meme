@@ -3,6 +3,7 @@ package minchae.meme.controller;
 
 import lombok.RequiredArgsConstructor;
 import minchae.meme.request.PostCreate;
+import minchae.meme.request.PostEdit;
 import minchae.meme.response.PostResponse;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.service.impl.Post_MemeServiceImpl;
@@ -17,7 +18,7 @@ public class PostController {
 
     @GetMapping("/posts/{postId}")
     public PostResponse getPost(@PathVariable("postId") Long postId) {
-       return postService.get(postId);
+        return postService.get(postId);
     }
 
 
@@ -35,5 +36,10 @@ public class PostController {
     public Long deletePost(@PathVariable("postId") Long postId) {
         postService.delete(postId);
         return postId;
+    }
+
+    @PatchMapping("/posts/{postId}")
+    public PostResponse updatePost(@PathVariable("postId") Long postId, @RequestBody PostEdit postEdit) {
+         return postService.update(postId, postEdit);
     }
 }

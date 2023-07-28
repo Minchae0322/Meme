@@ -109,6 +109,7 @@ class PostControllerTest {
                 .build();
         postService.write(postCreate);
 
+
         PostEdit postEdit = PostEdit.builder()
                 .title("글 내용을 변경하겠습니다")
                 .content("글 내용을 변경합니다")
@@ -122,6 +123,9 @@ class PostControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("글 내용을 변경하겠습니다"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content").value("글 내용을 변경합니다"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.postId").value(postResponse.getPostId()))
                 .andDo(print());
 
         Assertions.assertEquals(postRepository.count(), 1);

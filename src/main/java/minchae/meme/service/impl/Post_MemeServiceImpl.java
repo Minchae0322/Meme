@@ -54,10 +54,11 @@ public class Post_MemeServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public void update(Long postId, PostEdit postEdit) {
+    public PostResponse update(Long postId, PostEdit postEdit) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지않는 게시물 입니다"));
         post.update(postEdit);
+        return PostResponse.builder().build().postToPostResponse(post);
     }
     @Override
     @Transactional
