@@ -1,16 +1,26 @@
 package minchae.meme.service.impl;
 
+import lombok.RequiredArgsConstructor;
+import minchae.meme.repository.CommentRepository;
 import minchae.meme.request.CommentCreate;
 import minchae.meme.response.CommentResponse;
 import minchae.meme.service.CommentService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+@Service
+@RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
+
+    private final CommentRepository commentRepository;
 
     @Override
     public List<CommentResponse> getCommentList(Long postId) {
-        return null;
+        return commentRepository.getCommentListWherePostId(postId)
+                .stream().map(comment -> CommentResponse.builder().build().commentToCommentResponse(comment))
+                .collect(Collectors.toList());
     }
 
     @Override

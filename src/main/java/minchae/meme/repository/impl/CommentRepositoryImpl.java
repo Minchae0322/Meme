@@ -3,6 +3,7 @@ package minchae.meme.repository.impl;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import minchae.meme.entity.Comment;
+import minchae.meme.entity.Post;
 import minchae.meme.entity.QComment;
 import minchae.meme.entity.QPost;
 import minchae.meme.repository.CommentRepository;
@@ -18,11 +19,9 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
     @Override
     public List<Comment> getCommentListWherePostId(Long postId) {
-        return jpaQueryFactory.select(QComment.comment1)
-                .from(QComment.comment1)
-                .join(QPost.post)
-                .on(QPost.post.eq(QComment.comment1.post))
-                //todo where은 안되는이유
+        return jpaQueryFactory.selectFrom(QComment.comment1)
+                .where(QComment.comment1.post.postId.eq(postId))
                 .fetch();
     }
+
 }
