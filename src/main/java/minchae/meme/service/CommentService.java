@@ -1,6 +1,8 @@
 package minchae.meme.service;
 
+import minchae.meme.entity.Post;
 import minchae.meme.request.CommentCreate;
+import minchae.meme.request.CommentEdit;
 import minchae.meme.response.CommentResponse;
 
 import java.util.List;
@@ -12,8 +14,8 @@ public interface CommentService {
 
     void delete(Long commentId);
 
-    CommentResponse write(CommentCreate commentCreate);
+    void write(Post post, CommentCreate commentCreate);
 
-    CommentResponse update(Long commentId, CommentCreate commentCreate);
+    CommentResponse update(Long commentId, CommentEdit commentEdit);
 
 }

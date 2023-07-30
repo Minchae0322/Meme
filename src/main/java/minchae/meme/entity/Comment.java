@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import minchae.meme.request.CommentEdit;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
@@ -18,6 +19,7 @@ public class Comment {
     private Long commentId;
 
     @ManyToOne
+    //@JoinColumn(name = "postId")
     private Post post;
 
     @Lob
@@ -37,5 +39,9 @@ public class Comment {
         this.writerId = writerId;
         this.recommendation = recommendation;
         this.bad = bad;
+    }
+
+    public void update(CommentEdit commentEdit) {
+        this.comment = commentEdit.getComment();
     }
 }

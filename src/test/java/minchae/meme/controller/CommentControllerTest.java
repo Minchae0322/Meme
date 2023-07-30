@@ -74,4 +74,31 @@ class CommentControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(30))
                 .andDo(print());
     }
+
+    @Test
+    @DisplayName("댓글 작성하기")
+    public void writeComment() throws Exception {
+        //todo
+    }
+
+    @Test
+    @DisplayName("댓글 하나 가져오기 where commentId")
+    public void getComment() throws Exception {
+       //todo
+
+    }
+
+    @Test
+    @DisplayName("댓글 내용 수정하기")
+    public void updateComment() throws Exception {
+        //todo
+
+    }
+
+    @Test
+    @DisplayName("댓글 삭제하기 where commentId")
+    public void deleteComment() throws Exception {
+        //todo
+
+    }
 }

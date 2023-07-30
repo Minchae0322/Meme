@@ -9,21 +9,17 @@ import minchae.meme.entity.Post;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CommentCreate {
+public class CommentEdit {
     private Post post;
+    private Long commentId;
     private String comment;
     private Long writerId;
 
-    private int recommendation = 0;
-
-    private int bad = 0;
-
     @Builder
-    public CommentCreate(Post post, String comment, Long writerId, int recommendation, int bad) {
+    public CommentEdit(Post post, Long commentId, String comment, Long writerId) {
         this.post = post;
+        this.commentId = commentId;
         this.comment = comment;
         this.writerId = writerId;
-        this.recommendation = recommendation;
-        this.bad = bad;
     }
 }

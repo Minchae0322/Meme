@@ -1,8 +1,12 @@
 package minchae.meme.service.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import minchae.meme.entity.Comment;
+import minchae.meme.entity.Post;
 import minchae.meme.repository.CommentRepository;
 import minchae.meme.request.CommentCreate;
+import minchae.meme.request.CommentEdit;
 import minchae.meme.response.CommentResponse;
 import minchae.meme.service.CommentService;
 import org.springframework.stereotype.Service;
@@ -25,21 +29,34 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentResponse getComment(Long commentId) {
-        return null;
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지않는 댓글입니다"));
+        return CommentResponse.builder().build().commentToCommentResponse(comment);
     }
 
     @Override
     public void delete(Long commentId) {
-
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지않는 댓글입니다"));
+        commentRepository.delete(comment);
     }
 
     @Override
-    public CommentResponse write(CommentCreate commentCreate) {
-        return null;
+    public void write(Post post, CommentCreate commentCreate) {
+        Comment comment = Comment.builder()
+                .post(post)
+                .comment(commentCreate.getComment())
+                .writerId(commentCreate.getWriterId())
+                .build();
+        commentRepository.save(comment);
     }
 
     @Override
-    public CommentResponse update(Long commentId, CommentCreate commentCreate) {
-        return null;
+    @Transactional
+    public CommentResponse update(Long commentId, CommentEdit commentEdit) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지않는 댓글입니다"));
+        comment.update(commentEdit);
+        return CommentResponse.builder().build().commentToCommentResponse(comment);
     }
 }

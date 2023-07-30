@@ -6,5 +6,7 @@ import minchae.meme.entity.Post;
 import java.util.List;
 
 public interface CommentRepositoryCustom{
-    public List<Comment> getCommentListWherePostId(Long postId);
+    List<Comment> getCommentListWherePostId(Long postId);
+
+
 }
