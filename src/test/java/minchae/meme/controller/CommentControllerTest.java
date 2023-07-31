@@ -49,13 +49,17 @@ class CommentControllerTest {
 
     @BeforeEach
     public void before() {
+        //commentRepository.deleteAll();
         postRepository.deleteAll();
     }
+
+
 
     @Test
     @DisplayName("댓글 불러오기 where postId")
     public void getCommentListWherePostId() throws Exception {
-        Post post  = Post.builder()
+
+        Post post = Post.builder()
                 .title("글 작성중입니다")
                 .content("글 내용은 비밀입니다")
                 .writerId(1L)
@@ -75,7 +79,7 @@ class CommentControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(30))
                 .andDo(print());
 
-        assertEquals(1, commentRepository.findAll().size());
+        assertEquals(30, commentRepository.findAll().size());
     }
 
     @Test

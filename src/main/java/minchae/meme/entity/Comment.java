@@ -1,5 +1,6 @@
 package minchae.meme.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,7 +19,8 @@ public class Comment {
     @GeneratedValue
     private Long commentId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    //@JsonIgnore
     //@JoinColumn(name = "postId")
     private Post post;
 

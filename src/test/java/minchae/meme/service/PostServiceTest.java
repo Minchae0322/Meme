@@ -1,5 +1,6 @@
 package minchae.meme.service;
 
+import jakarta.transaction.Transactional;
 import minchae.meme.entity.Comment;
 import minchae.meme.entity.Post;
 import minchae.meme.repository.CommentRepository;
@@ -187,9 +188,12 @@ class PostServiceTest {
 
         commentRepository.saveAll(comments);
         commentRepository.saveAll(comments2);
+        //postRepository.delete(post);
 
 
-        // todo assertEquals(30, postRepository.findAll().get(0).getComments().size());
+
+
+        //todo assertEquals(1, commentRepository.findAll().size());
         // 이것은 실패함 post에서도 comments.addAll(comments)를 해줘야 될것으로 예상
     }
 

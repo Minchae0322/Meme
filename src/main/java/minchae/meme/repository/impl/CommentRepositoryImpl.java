@@ -26,7 +26,6 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
     }
 
     @Override
-    @Transactional
     public void deleteCommentListWherePostId(Long postId) {
         jpaQueryFactory.delete(QComment.comment1)
                 .where(QComment.comment1.post.postId.eq(postId))

@@ -2,6 +2,7 @@ package minchae.meme.entity;
 
 
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -19,6 +20,7 @@ import java.util.List;
 @DiscriminatorColumn(name = "POST-TYPE")
 @NoArgsConstructor
 @SuperBuilder
+@Transactional
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,9 +48,9 @@ public class Post {
     @Column
     private Long writerId;
 
-    /*
-    @OneToMany(mappedBy = "post")
-    private final List<Comment> comments = new ArrayList<>();*/
+
+   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private final List<Comment> comments = new ArrayList<>();
 
 
 
