@@ -1,5 +1,6 @@
 package minchae.meme.service;
 
+import jakarta.transaction.Transactional;
 import minchae.meme.entity.Comment;
 import minchae.meme.entity.Post;
 import minchae.meme.repository.CommentRepository;
@@ -38,7 +39,7 @@ class CommentServiceTest {
 
     @BeforeEach
     public void before() {
-       // commentRepository.deleteAll();
+        commentRepository.deleteAll();
         postRepository.deleteAll();
     }
 
@@ -114,6 +115,62 @@ class CommentServiceTest {
     }
 
     @Test
+    @DisplayName("댓글 작성 삽입이상 확인")
+    void writeComment2() {
+
+        Post post = Post.builder()
+                .title("댓글이 있는 글입니다")
+                .content("메롱")
+                .build();
+        postRepository.save(post);
+
+        CommentCreate comment = CommentCreate.builder()
+                .comment("댓글입니다")
+                .writerId(24L)
+                .build();
+
+        commentService.write(post, comment);
+
+        Post commentPost = postRepository.findById(post.getPostId())
+                .orElseThrow();
+
+        assertEquals(1, commentPost.getComments().size());
+        assertEquals("댓글입니다", commentPost.getComments().get(0).getComment());
+    }
+
+    @Test
+    @DisplayName("댓글 작성 후 갱신이상 확인")
+    void writeComment3() {
+        //given
+        Post post = Post.builder()
+                .title("댓글이 있는 글입니다")
+                .content("메롱")
+                .build();
+        postRepository.save(post);
+
+        Comment comment = Comment.builder()
+                .post(post)
+                .comment("댓글입니다")
+                .writerId(24L)
+                .build();
+
+        commentRepository.save(comment);
+
+        //when - 댓글이 바뀌였을때 post 에 있는 List<comment> comments 안에 있는 댓글도 바뀌어야 한다.
+        CommentEdit commentEdit = CommentEdit.builder()
+                .comment("바뀐 댓글입니다")
+                .build();
+
+        commentService.update(comment.getCommentId(), commentEdit);
+
+        Post commentPost = postRepository.findById(post.getPostId())
+                .orElseThrow();
+
+        assertEquals(1, commentPost.getComments().size());
+        assertEquals("바뀐 댓글입니다", commentPost.getComments().get(0).getComment());
+    }
+
+    @Test
     @DisplayName("댓글 1개 조회")
     void getComment() {
 
@@ -136,6 +193,14 @@ class CommentServiceTest {
         assertEquals("댓글이 있는 글입니다", writedComment.getPost().getTitle());
     }
 
+
+    @Test
+    @DisplayName("만약 포스트를 입력받지 못한경우 댓글 삽입을 할 수 없다")
+    void failWriteCommentIfNotPutPost() {
+
+        //todo
+
+    }
     @Test
     @DisplayName("댓글 수정")
     void updateComment() {
@@ -185,13 +250,14 @@ class CommentServiceTest {
         commentRepository.save(comment);
         commentService.delete(comment.getCommentId());
 
-        assertEquals(0, commentRepository.findAll().size());
+        assertEquals(0, post.getComments().size());
 
     }
 
 
     @Test
     @DisplayName("댓글리스트 삭제 where PostId")
+    @Transactional
     void deleteCommentList() {
         Post post = Post.builder()
                 .title("댓글이 있는 글입니다")

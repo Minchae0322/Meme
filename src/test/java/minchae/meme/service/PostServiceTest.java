@@ -8,6 +8,7 @@ import minchae.meme.request.PostCreate;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.request.PostEdit;
 import minchae.meme.response.CommentResponse;
+import minchae.meme.response.PostResponse;
 import minchae.meme.service.impl.Post_MemeServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -44,24 +45,36 @@ class PostServiceTest {
     @Test
     @DisplayName("게시물 작성")
     void writePost() {
-        PostCreate postMeme = PostCreate.builder()
+
+        //when
+        Post post = Post.builder()
                 .title("첫게시물입니다")
                 .content("ㅇㅇㅇㅇㅇㅇ")
                 .build();
-        postService.write(postMeme);
+        postRepository.save(post);
         assertEquals(postRepository.count(), 1);
+
+        Post savedPost = postRepository.findById(post.getPostId())
+                .orElseThrow();
+        assertEquals("첫게시물입니다", savedPost.getTitle());
+        assertEquals("ㅇㅇㅇㅇㅇㅇ", savedPost.getContent());
+        assertEquals(0, savedPost.getComments().size());
     }
 
     @Test
     @DisplayName("게시물1개 조회")
     void getPost() {
-        PostCreate postMeme = PostCreate.builder()
+        //given
+        Post post = Post.builder()
                 .title("첫게시물입니다")
                 .content("ㅇㅇㅇㅇㅇㅇ")
                 .build();
-        postService.write(postMeme);
+        postRepository.save(post);
         assertEquals(postRepository.count(), 1);
-        Post postResponse = postRepository.findAll().get(0);
+
+        //when
+        PostResponse postResponse = postService.get(post.getPostId());
+
         assertEquals(postResponse.getTitle(), "첫게시물입니다");
         assertEquals(postResponse.getContent(), "ㅇㅇㅇㅇㅇㅇ");
         assertEquals(postResponse.getViews(), 0);
@@ -70,32 +83,52 @@ class PostServiceTest {
     @DisplayName("게시물 삭제")
     void deletePost() {
         //given
-        PostCreate postMeme = PostCreate.builder()
+        Post post = Post.builder()
                 .title("첫게시물입니다")
                 .content("ㅇㅇㅇㅇㅇㅇ")
                 .build();
-        postService.write(postMeme);
+        postRepository.save(post);
         assertEquals(postRepository.count(), 1);
 
 
+        //when
+        Post savedPost = postRepository.findById(post.getPostId())
+                .orElseThrow();
+
+        postService.delete(savedPost.getPostId());
+
+        //result
+        assertEquals(postRepository.count(), 0);
+
+    }
+
+    @Test
+    @DisplayName("게시물을 삭제했을때 게시물에 달린 댓글들 모두 삭제")
+    void deletePostAndCheckWhetherCommentsAlsoDelete() {
+        //given
+        Post post = Post.builder()
+                .title("첫게시물입니다")
+                .content("ㅇㅇㅇㅇㅇㅇ")
+                .build();
+        postRepository.save(post);
+        assertEquals(postRepository.count(), 1);
 
         //when
-        Post post = postRepository.findAll().get(0);
-
-
+        Post savedPost = postRepository.findById(post.getPostId())
+                .orElseThrow();
 
         List<Comment> comments = IntStream.range(0, 30)
                 .mapToObj(i -> Comment.builder()
-                        .post(post)
+                        .post(savedPost)
                         .comment("댓글" + " " + i)
                         .build()).collect(Collectors.toList());
         commentRepository.saveAll(comments);
 
-        postService.delete(post.getPostId());
+        postService.delete(savedPost.getPostId());
 
         //result
         assertEquals(postRepository.count(), 0);
-        List<Comment> commentList = commentRepository.getCommentListWherePostId(post.getPostId());
+        List<Comment> commentList = commentRepository.getCommentListWherePostId(savedPost.getPostId());
         assertEquals(0, commentList.size());
 
     }
@@ -105,24 +138,24 @@ class PostServiceTest {
     @DisplayName("게시물 수정")
     void updatePost() {
         //given
-        PostCreate postMeme = PostCreate.builder()
+        Post postMeme = Post.builder()
                 .title("첫게시물입니다")
                 .content("변경될 내용입니다")
                 .build();
-        postService.write(postMeme);
+        postRepository.save(postMeme);
         assertEquals(postRepository.count(), 1);
 
         //when
-        Post post = postRepository.findAll().get(0);
+
         PostEdit postEdit = PostEdit.builder()
                 .title("첫게시물입니다")
                 .content("내용을 변경합니다")
                 .build();
-        postService.update(post.getPostId(), postEdit);
+        postService.update(postMeme.getPostId(), postEdit);
 
-
-        Post updatedPost = postRepository.findById(post.getPostId())
+        Post updatedPost = postRepository.findById(postMeme.getPostId())
                 .orElseThrow(() -> new IllegalArgumentException("수정오류"));
+
         //result
         assertEquals(postRepository.count(), 1);
         assertEquals(updatedPost.getTitle(), "첫게시물입니다");
@@ -131,7 +164,7 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("게시물 리스트")
+    @DisplayName("게시물 리스트 받아오기")
     void getPostListWherePage() {
         //given
         List<Post> posts = IntStream.range(0, 10)
@@ -145,14 +178,16 @@ class PostServiceTest {
         assertEquals(postRepository.count(), 10);
 
         //when
-        Post post1 = postRepository.findAll().get(0);
-        Post post2 = postRepository.findAll().get(5);
+        //todo 페이지 하나에 몇개의 게시물이 들어가는지
+        List<PostResponse> postResponseList = postService.getListWherePage(1);
+        PostResponse post1 = postResponseList.get(0);
+        PostResponse post2 = postResponseList.get(4);
 
 
         //result
         assertEquals(10, postRepository.count());
         assertEquals("제목 0", post1.getTitle());
-        assertEquals("제목 5", post2.getTitle());
+        assertEquals("제목 4", post2.getTitle());
 
     }
 
@@ -188,13 +223,11 @@ class PostServiceTest {
 
         commentRepository.saveAll(comments);
         commentRepository.saveAll(comments2);
-        //postRepository.delete(post);
 
+        Post commentsPost = postRepository.findById(post.getPostId())
+                .orElseThrow();
 
-
-
-        //todo assertEquals(1, commentRepository.findAll().size());
-        // 이것은 실패함 post에서도 comments.addAll(comments)를 해줘야 될것으로 예상
+        assertEquals(30, commentsPost.getComments().size());
     }
 
 

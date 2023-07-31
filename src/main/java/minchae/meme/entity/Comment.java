@@ -19,8 +19,8 @@ public class Comment {
     @GeneratedValue
     private Long commentId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    //@JsonIgnore
+    @ManyToOne
+    @JsonIgnore
     //@JoinColumn(name = "postId")
     private Post post;
 

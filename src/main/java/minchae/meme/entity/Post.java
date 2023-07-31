@@ -49,7 +49,7 @@ public class Post {
     private Long writerId;
 
 
-   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private final List<Comment> comments = new ArrayList<>();
 
 
