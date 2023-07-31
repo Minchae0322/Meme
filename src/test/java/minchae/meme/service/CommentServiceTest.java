@@ -178,4 +178,45 @@ class CommentServiceTest {
         assertEquals(0, commentRepository.findAll().size());
 
     }
+
+
+    @Test
+    @DisplayName("댓글리스트 삭제 where PostId")
+    void deleteCommentList() {
+        Post post = Post.builder()
+                .title("댓글이 있는 글입니다")
+                .content("메롱")
+                .build();
+
+        Post post2 =  Post.builder()
+                .title("댓글이 있는 글입니다2")
+                .content("메롱2")
+                .build();
+
+        postRepository.save(post);
+        postRepository.save(post2);
+
+        List<Comment> comments = IntStream.range(0, 30)
+                .mapToObj(i -> Comment.builder()
+                        .post(post)
+                        .comment("댓글" + " " + i)
+                        .build()).collect(Collectors.toList());
+
+        List<Comment> comments2 = IntStream.range(0, 30)
+                .mapToObj(i -> Comment.builder()
+                        .post(post2)
+                        .comment("댓글" + " " + i)
+                        .build()).collect(Collectors.toList());
+
+        commentRepository.saveAll(comments);
+        commentRepository.saveAll(comments2);
+
+        commentService.deleteCommentList(post.getPostId());
+
+        List<Comment> commentList = commentRepository.getCommentListWherePostId(post.getPostId());
+
+        assertEquals(0, commentList.size());
+
+
+    }
 }

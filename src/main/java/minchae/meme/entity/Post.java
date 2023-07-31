@@ -9,6 +9,9 @@ import minchae.meme.request.PostCreate;
 import minchae.meme.request.PostEdit;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -42,6 +45,12 @@ public class Post {
 
     @Column
     private Long writerId;
+
+    /*
+    @OneToMany(mappedBy = "post")
+    private final List<Comment> comments = new ArrayList<>();*/
+
+
 
     public void plusRecommendation() {
         this.recommendation++;

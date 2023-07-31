@@ -8,5 +8,6 @@ import java.util.List;
 public interface CommentRepositoryCustom{
     List<Comment> getCommentListWherePostId(Long postId);
 
+    void deleteCommentListWherePostId(Long postId);
 
 }

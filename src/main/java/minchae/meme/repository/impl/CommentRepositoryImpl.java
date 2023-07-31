@@ -1,6 +1,7 @@
 package minchae.meme.repository.impl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import minchae.meme.entity.Comment;
 import minchae.meme.entity.Post;
@@ -22,6 +23,14 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
         return jpaQueryFactory.selectFrom(QComment.comment1)
                 .where(QComment.comment1.post.postId.eq(postId))
                 .fetch();
+    }
+
+    @Override
+    @Transactional
+    public void deleteCommentListWherePostId(Long postId) {
+        jpaQueryFactory.delete(QComment.comment1)
+                .where(QComment.comment1.post.postId.eq(postId))
+                .execute();
     }
 
 }

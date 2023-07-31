@@ -18,4 +18,6 @@ public interface CommentService {
 
     CommentResponse update(Long commentId, CommentEdit commentEdit);
 
+    void deleteCommentList(Long postId);
+
 }

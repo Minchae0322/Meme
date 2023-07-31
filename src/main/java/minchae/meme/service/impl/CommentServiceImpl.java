@@ -59,4 +59,9 @@ public class CommentServiceImpl implements CommentService {
         comment.update(commentEdit);
         return CommentResponse.builder().build().commentToCommentResponse(comment);
     }
+
+    @Override
+    public void deleteCommentList(Long postId) {
+        commentRepository.deleteCommentListWherePostId(postId);
+    }
 }

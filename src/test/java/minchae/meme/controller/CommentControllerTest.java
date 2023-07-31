@@ -5,6 +5,7 @@ import minchae.meme.entity.Comment;
 import minchae.meme.entity.Post;
 import minchae.meme.repository.CommentRepository;
 import minchae.meme.repository.PostRepository;
+import minchae.meme.request.CommentCreate;
 import minchae.meme.request.PostCreate;
 import minchae.meme.service.CommentService;
 import minchae.meme.service.impl.CommentServiceImpl;
@@ -73,12 +74,35 @@ class CommentControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(30))
                 .andDo(print());
+
+        assertEquals(1, commentRepository.findAll().size());
     }
 
     @Test
     @DisplayName("댓글 작성하기")
     public void writeComment() throws Exception {
-        //todo
+        PostCreate postCreate = PostCreate.builder()
+                .title("댓글이 있는 글입니다")
+                .content("댓글을 입력하세요")
+                .writerId(20L)
+                .build();
+        ObjectMapper objectMapper = new ObjectMapper();
+        mockMvc.perform(MockMvcRequestBuilders.post("/posts")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(postCreate)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(print());
+
+        CommentCreate commentCreate = CommentCreate.builder()
+                .comment("댓글 1")
+                .writerId(30L)
+                .build();
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/posts/{postId}/comment", postRepository.findAll().get(0).getPostId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(commentCreate)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(print());
     }
 
     @Test

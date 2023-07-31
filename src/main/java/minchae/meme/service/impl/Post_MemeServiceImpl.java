@@ -3,6 +3,7 @@ package minchae.meme.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import minchae.meme.entity.Post;
+import minchae.meme.repository.CommentRepository;
 import minchae.meme.request.PostCreate;
 import minchae.meme.request.PostEdit;
 import minchae.meme.response.PostResponse;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class Post_MemeServiceImpl implements PostService {
     private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
 
     @Override
     @Transactional
@@ -51,6 +53,7 @@ public class Post_MemeServiceImpl implements PostService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지않거나 이미 삭제된 게시물입니다"));
         //todo 글에 관련된 댓글도 모두 삭제되어야함.
         //todo 이렇게 된다면 post 에 List<Comment> comments 를 추가시켜야 할 수 밖엥 없는가?
+        commentRepository.deleteCommentListWherePostId(postId);
         postRepository.delete(post);
     }
 
