@@ -36,15 +36,7 @@ public class Post_MemeServiceImpl implements PostService {
     public PostResponse get(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다"));
-        return PostResponse.builder()
-                .postId(post.getPostId())
-                .title(post.getTitle())
-                .content(post.getContent())
-                .recommendation(post.getRecommendation())
-                .bad(post.getBad())
-                .views(post.getViews())
-                .writerId(post.getWriterId())
-                .build();
+        return PostResponse.builder().build().postToPostResponse(post);
     }
 
     @Override

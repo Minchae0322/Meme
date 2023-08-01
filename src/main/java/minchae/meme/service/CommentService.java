@@ -12,7 +12,7 @@ public interface CommentService {
 
     CommentResponse getComment(Long commentId);
 
-    void delete(Long commentId);
+    void delete(Long postId, Long commentId);
 
     void write(Post post, CommentCreate commentCreate);
 

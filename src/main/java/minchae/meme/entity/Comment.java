@@ -19,7 +19,7 @@ public class Comment {
     @GeneratedValue
     private Long commentId;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REFRESH)
     @JsonIgnore
     //@JoinColumn(name = "postId")
     private Post post;

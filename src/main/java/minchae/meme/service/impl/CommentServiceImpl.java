@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import minchae.meme.entity.Comment;
 import minchae.meme.entity.Post;
 import minchae.meme.repository.CommentRepository;
+import minchae.meme.repository.PostRepository;
 import minchae.meme.request.CommentCreate;
 import minchae.meme.request.CommentEdit;
 import minchae.meme.response.CommentResponse;
@@ -20,6 +21,7 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
 
+    private final PostRepository postRepository;
     @Override
     public List<CommentResponse> getCommentList(Long postId) {
         return commentRepository.getCommentListWherePostId(postId)
@@ -35,9 +37,13 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void delete(Long commentId) {
+    @Transactional
+    public void delete(Long postId, Long commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지않는 댓글입니다"));
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다"));
+        post.getComments().remove(comment);
         commentRepository.delete(comment);
     }
 
