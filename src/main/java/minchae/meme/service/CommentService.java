@@ -20,4 +20,8 @@ public interface CommentService {
 
     void deleteCommentList(Long postId);
 
+    int upRecommendation(Long commentId);
+
+    int upBad(Long commentId);
+
 }

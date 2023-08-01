@@ -40,12 +40,10 @@ public class Post_MemeServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public void delete(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지않거나 이미 삭제된 게시물입니다"));
-        //todo 글에 관련된 댓글도 모두 삭제되어야함.
-        //todo 이렇게 된다면 post 에 List<Comment> comments 를 추가시켜야 할 수 밖엥 없는가?
-        //commentRepository.deleteCommentListWherePostId(postId);
         postRepository.delete(post);
     }
 

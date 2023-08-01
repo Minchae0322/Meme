@@ -84,6 +84,7 @@ class CommentServiceTest {
         postRepository.save(post);
 
         Comment comment = Comment.builder()
+                .post(post)
                 .comment("댓글입니다")
                 .writerId(24L)
                 .build();
@@ -94,6 +95,7 @@ class CommentServiceTest {
                 .orElseThrow();
 
         assertEquals(1, commentPost.getComments().size());
+        assertEquals(1, commentRepository.count());
         assertEquals("댓글입니다", commentPost.getComments().get(0).getComment());
     }
 
@@ -218,6 +220,52 @@ class CommentServiceTest {
 
         Assertions.assertEquals(30, commentList.size());
         Assertions.assertEquals("댓글 4", commentList.get(4).getComment());
+    }
+
+    @Test
+    @DisplayName("포스트에 맞는 댓글 리스트 삽입이상 확인")
+    void getCommentListWherePostId1() {
+
+        Post post = Post.builder()
+                .title("댓글이 있는 글입니다")
+                .content("메롱")
+                .build();
+
+        Post post2 =  Post.builder()
+                .title("댓글이 있는 글입니다2")
+                .content("메롱2")
+                .build();
+
+        postRepository.save(post);
+        postRepository.save(post2);
+
+        List<Comment> comments = IntStream.range(0, 30)
+                .mapToObj(i -> Comment.builder()
+                        .post(post)
+                        .comment("댓글" + " " + i)
+                        .build()).collect(Collectors.toList());
+
+        List<Comment> comments2 = IntStream.range(0, 30)
+                .mapToObj(i -> Comment.builder()
+                        .post(post2)
+                        .comment("댓글" + " " + i)
+                        .build()).collect(Collectors.toList());
+
+        commentRepository.saveAll(comments);
+        commentRepository.saveAll(comments2);
+
+        Comment addComment = Comment.builder()
+                .post(post)
+                .comment("새로 추가된 댓글입니다.")
+                .build();
+
+        commentRepository.save(addComment);
+
+        Post addCommentPost = postRepository.findById(post.getPostId())
+                .orElseThrow();
+
+        assertEquals(31, addCommentPost.getComments().size());
+
     }
 
 
@@ -410,11 +458,13 @@ class CommentServiceTest {
 
         commentRepository.saveAll(comments);
 
+        //when repository 에서 가져와야 한다 , 왜냐하면 위에 post 객체는 repository 에 있는 객체가 아니기때문에 아무리 지워도 repository 안에서는 그대로다.
+        Post deletePost = postRepository.findById(post.getPostId())
+                .orElseThrow();
 
-        post.getComments().remove(1);
+        deletePost.getComments().remove(6);
 
-
-        assertEquals(29, commentRepository.count());
+        assertEquals(29, deletePost.getComments().size());
 
     }
 
@@ -457,6 +507,123 @@ class CommentServiceTest {
 
         assertEquals(0, commentList.size());
 
+    }
+
+
+    @Test
+    @DisplayName("post 객체 삭제시 post 와 연관된 comments 전부 삭제")
+    void deleteCommentListWhenPostDeleted() {
+        Post post = Post.builder()
+                .title("댓글이 있는 글입니다")
+                .content("메롱")
+                .build();
+
+        Post post2 =  Post.builder()
+                .title("댓글이 있는 글입니다2")
+                .content("메롱2")
+                .build();
+
+        postRepository.save(post);
+        postRepository.save(post2);
+
+        List<Comment> comments = IntStream.range(0, 30)
+                .mapToObj(i -> Comment.builder()
+                        .post(post)
+                        .comment("댓글" + " " + i)
+                        .build()).collect(Collectors.toList());
+
+        List<Comment> comments2 = IntStream.range(0, 30)
+                .mapToObj(i -> Comment.builder()
+                        .post(post2)
+                        .comment("댓글" + " " + i)
+                        .build()).collect(Collectors.toList());
+
+        commentRepository.saveAll(comments);
+        commentRepository.saveAll(comments2);
+
+        assertEquals(60, commentRepository.count());
+
+        postService.delete(post.getPostId());
+
+        assertEquals(30, commentRepository.findAll().size());
+
+    }
+
+    @Test
+    @DisplayName("추천을 1회 올리기")
+    void upCommentRecommendation() {
+        Post post = Post.builder()
+                .title("댓글이 있는 글입니다")
+                .content("메롱")
+                .build();
+
+        Post post2 =  Post.builder()
+                .title("댓글이 있는 글입니다2")
+                .content("메롱2")
+                .build();
+
+        postRepository.save(post);
+        postRepository.save(post2);
+
+        List<Comment> comments = IntStream.range(0, 30)
+                .mapToObj(i -> Comment.builder()
+                        .post(post)
+                        .comment("댓글" + " " + i)
+                        .build()).collect(Collectors.toList());
+
+        commentRepository.saveAll(comments);
+
+        commentService.upRecommendation(comments.get(3).getCommentId());
+
+
+        Post upPost = postRepository.findById(post.getPostId())
+                .orElseThrow();
+
+        Comment upComment = commentRepository.findById(comments.get(3).getCommentId())
+                .orElseThrow();
+
+        assertEquals(1, upComment.getRecommendation());
+        assertEquals(1, upPost.getComments().get(3).getRecommendation());
+
+    }
+
+
+    @Test
+    @DisplayName("비추천을 1회 올리기")
+    void upCommentBad() {
+        Post post = Post.builder()
+                .title("댓글이 있는 글입니다")
+                .content("메롱")
+                .build();
+
+        Post post2 =  Post.builder()
+                .title("댓글이 있는 글입니다2")
+                .content("메롱2")
+                .build();
+
+        postRepository.save(post);
+        postRepository.save(post2);
+
+        List<Comment> comments = IntStream.range(0, 30)
+                .mapToObj(i -> Comment.builder()
+                        .post(post)
+                        .comment("댓글" + " " + i)
+                        .build()).collect(Collectors.toList());
+
+        commentRepository.saveAll(comments);
+
+        commentService.upBad(comments.get(3).getCommentId());
+
+
+        Post badPost = postRepository.findById(post.getPostId())
+                .orElseThrow();
+
+
+        Comment badComment = commentRepository.findById(comments.get(3).getCommentId())
+                .orElseThrow();
+
+        assertEquals(1, badComment.getBad());
+        assertEquals(1, badPost.getComments().get(3).getBad());
 
     }
 }

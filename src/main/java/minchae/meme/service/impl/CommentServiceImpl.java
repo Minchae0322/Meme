@@ -70,4 +70,22 @@ public class CommentServiceImpl implements CommentService {
     public void deleteCommentList(Long postId) {
         commentRepository.deleteCommentListWherePostId(postId);
     }
+
+    @Override
+    @Transactional
+    public int upRecommendation(Long commentId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow();
+        comment.setRecommendation(comment.getRecommendation() + 1);
+        return comment.getRecommendation() + 1;
+    }
+
+    @Override
+    @Transactional
+    public int upBad(Long commentId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow();
+        comment.setBad(comment.getBad() + 1);
+        return comment.getBad() + 1;
+    }
 }
