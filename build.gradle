@@ -22,7 +22,6 @@ repositories {
 }
 
 dependencies {
-    implementation'org.springframework.boot:org.springframework.boot.gradle.plugin:3.1.2'
     implementation "com.querydsl:querydsl-core:5.0.0"
     implementation "com.querydsl:querydsl-collections"
     implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")

@@ -1,6 +1,7 @@
 package minchae.meme.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotBlank;
@@ -49,6 +50,7 @@ public class Post {
     private Long writerId;
 
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private final List<Comment> comments = new ArrayList<>();
 

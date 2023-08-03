@@ -88,4 +88,17 @@ public class CommentServiceImpl implements CommentService {
         comment.setBad(comment.getBad() + 1);
         return comment.getBad() + 1;
     }
+
+    @Override
+    public void writeCommentList(List<CommentCreate> commentCreateList) {
+        List<Comment> commentList = commentCreateList.stream().map(commentCreate -> Comment.builder()
+                        .post(commentCreate.getPost())
+                        .comment(commentCreate.getComment())
+                        .bad(commentCreate.getBad())
+                        .recommendation(commentCreate.getRecommendation())
+                        .writerId(commentCreate.getWriterId())
+                        .build())
+                .collect(Collectors.toList());
+        commentRepository.saveAll(commentList);
+    }
 }

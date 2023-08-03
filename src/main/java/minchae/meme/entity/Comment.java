@@ -1,7 +1,9 @@
 package minchae.meme.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,11 +22,13 @@ public class Comment {
     private Long commentId;
 
     @ManyToOne
+    @JsonBackReference
     //@JoinColumn(name = "postId")
     private Post post;
 
     @Lob
     @Column
+    @NotBlank
     private String comment;
     private Long writerId;
     @ColumnDefault("0")

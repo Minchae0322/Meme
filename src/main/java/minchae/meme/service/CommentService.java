@@ -24,4 +24,5 @@ public interface CommentService {
 
     int upBad(Long commentId);
 
+    void writeCommentList(List<CommentCreate> commentCreateList);
 }

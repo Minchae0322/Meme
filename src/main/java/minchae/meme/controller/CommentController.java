@@ -1,17 +1,15 @@
 package minchae.meme.controller;
 
 import lombok.RequiredArgsConstructor;
-import minchae.meme.entity.Comment;
 import minchae.meme.entity.Post;
 import minchae.meme.repository.CommentRepository;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.request.CommentCreate;
+import minchae.meme.request.CommentEdit;
+import minchae.meme.request.CommentVo;
 import minchae.meme.response.CommentResponse;
 import minchae.meme.service.CommentService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,11 +28,32 @@ public class CommentController {
         return commentService.getCommentList(postId);
     }
 
-    @PostMapping("/posts/{postId}/comment")
-    public void writeComment(@PathVariable Long postId, CommentCreate commentCreate) {
+    @GetMapping("/posts/comment/{commentId}")
+    public CommentResponse getComment(@PathVariable Long commentId) {
+        return commentService.getComment(commentId);
+    }
+
+    @PostMapping("/posts/{postId}/comments")
+    public void writeComment(@PathVariable Long postId, @RequestBody CommentCreate commentCreate) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("이미 삭제된 글입니다"));
         commentService.write(post, commentCreate);
+    }
+
+    @PatchMapping("/posts/{postId}/comments/{commentId}")
+    public CommentResponse writeComment(@PathVariable Long postId, @PathVariable Long commentId, @RequestBody CommentEdit commentEdit) {
+        return commentService.update(commentId, commentEdit);
+    }
+
+    @DeleteMapping("/posts/{postId}/comments/{commentId}")
+    public void getCommentList(@PathVariable Long postId, @PathVariable Long commentId) {
+        commentService.delete(postId, commentId);
+    }
+
+
+    @PostMapping("/posts/{postId}/commentList")
+    public void writeCommentList(@PathVariable Long postId, @RequestBody CommentVo commentVo) {
+        commentService.writeCommentList(commentVo.getCommentCreateList());
     }
 
 }

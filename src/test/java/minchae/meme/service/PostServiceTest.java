@@ -4,6 +4,8 @@ import jakarta.transaction.Transactional;
 import minchae.meme.entity.Comment;
 import minchae.meme.entity.Post;
 import minchae.meme.repository.CommentRepository;
+import minchae.meme.request.FreePostPage;
+import minchae.meme.request.Page;
 import minchae.meme.request.PostCreate;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.request.PostEdit;
@@ -179,12 +181,13 @@ class PostServiceTest {
 
         //when
         //todo 페이지 하나에 몇개의 게시물이 들어가는지
-        List<PostResponse> postResponseList = postService.getListWherePage(1);
+        List<PostResponse> postResponseList = postService.getListWherePage(new FreePostPage(1, 5));
         PostResponse post1 = postResponseList.get(0);
         PostResponse post2 = postResponseList.get(4);
 
 
         //result
+        assertEquals(5, postResponseList.size());
         assertEquals(10, postRepository.count());
         assertEquals("제목 0", post1.getTitle());
         assertEquals("제목 4", post2.getTitle());
@@ -192,43 +195,7 @@ class PostServiceTest {
     }
 
 
-    @Test
-    @DisplayName("comment 에만 연관관계 설정을 해줬을때 post 에서도 적용이 되나")
-    void getCommentListWherePage() {
-        //given
-        Post post = Post.builder()
-                .title("댓글이 있는 글입니다")
-                .content("메롱")
-                .build();
 
-        Post post2 =  Post.builder()
-                .title("댓글이 있는 글입니다2")
-                .content("메롱2")
-                .build();
-
-        postRepository.save(post);
-        postRepository.save(post2);
-
-        List<Comment> comments = IntStream.range(0, 30)
-                .mapToObj(i -> Comment.builder()
-                        .post(post)
-                        .comment("댓글" + " " + i)
-                        .build()).collect(Collectors.toList());
-
-        List<Comment> comments2 = IntStream.range(0, 30)
-                .mapToObj(i -> Comment.builder()
-                        .post(post2)
-                        .comment("댓글" + " " + i)
-                        .build()).collect(Collectors.toList());
-
-        commentRepository.saveAll(comments);
-        commentRepository.saveAll(comments2);
-
-        Post commentsPost = postRepository.findById(post.getPostId())
-                .orElseThrow();
-
-        assertEquals(30, commentsPost.getComments().size());
-    }
 
 
 

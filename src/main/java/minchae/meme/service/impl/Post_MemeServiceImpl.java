@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import minchae.meme.entity.Post;
 import minchae.meme.repository.CommentRepository;
+import minchae.meme.request.Page;
 import minchae.meme.request.PostCreate;
 import minchae.meme.request.PostEdit;
 import minchae.meme.response.PostResponse;
@@ -57,7 +58,7 @@ public class Post_MemeServiceImpl implements PostService {
     }
     @Override
     @Transactional
-    public List<PostResponse> getListWherePage(int page) {
+    public List<PostResponse> getListWherePage(Page page) {
         return postRepository.getPostList(page)
                 .stream()
                 .map(post -> PostResponse.builder()

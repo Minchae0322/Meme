@@ -1,15 +1,22 @@
 package minchae.meme.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import minchae.meme.entity.Comment;
 import minchae.meme.entity.Post;
+import minchae.meme.repository.CommentRepository;
+import minchae.meme.request.CommentCreate;
+import minchae.meme.request.FreePostPage;
 import minchae.meme.request.PostCreate;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.request.PostEdit;
+import minchae.meme.response.PostResponse;
+import minchae.meme.service.CommentService;
 import minchae.meme.service.impl.Post_MemeServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +25,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @SpringBootTest
@@ -29,12 +41,18 @@ class PostControllerTest {
 
     @Autowired
     private Post_MemeServiceImpl postService;
+    @Autowired
+    private CommentRepository commentRepository;
+    @Autowired
+    private CommentService commentService;
+
 
     @Autowired
     private PostRepository postRepository;
 
     @BeforeEach
     public void before() {
+        commentRepository.deleteAll();
         postRepository.deleteAll();
     }
 
@@ -59,7 +77,7 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("글1개 조회")
+    @DisplayName("게시물1개 조회")
     public void getPost() throws Exception {
         PostCreate postCreate = PostCreate.builder()
                 .title("글 작성중입니다")
@@ -98,6 +116,42 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName("게시물을 삭제했을때 게시물에 달린 댓글들 모두 삭제")
+    void deletePostAndCheckWhetherCommentsAlsoDelete() throws Exception {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        //given
+        Post post = Post.builder()
+                .title("첫게시물입니다")
+                .content("ㅇㅇㅇㅇㅇㅇ")
+                .build();
+        postRepository.save(post);
+
+        List<Comment> comments = IntStream.range(0, 30)
+                .mapToObj(i -> Comment.builder()
+                        .post(post)
+                        .comment("댓글" + " " + i)
+                        .build()).collect(Collectors.toList());
+        commentRepository.saveAll(comments);
+
+        assertEquals(30, commentRepository.count());
+        assertEquals(post.getPostId(), commentRepository.findAll().get(0).getPost().getPostId());
+
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.delete("/posts/{postId}", post.getPostId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(print());
+
+
+        //result
+        assertEquals(postRepository.count(), 0);
+        List<Comment> commentList = commentRepository.getCommentListWherePostId(post.getPostId());
+        assertEquals(0, commentList.size());
+
+    }
+
+    @Test
     @DisplayName("글 수정")
     //todo controller에 메소드 만들기
     public void updatePost() throws Exception {
@@ -130,4 +184,34 @@ class PostControllerTest {
 
         Assertions.assertEquals(postRepository.count(), 1);
     }
+
+    @Test
+    @DisplayName("게시물 리스트 받아오기")
+    void getPostListWherePage() throws Exception{
+        //given
+        List<Post> posts = IntStream.range(0, 10)
+                .mapToObj(i -> Post.builder()
+                        .title("제목" + " " + i)
+                        .content("내용" + " " + i)
+                        .writerId((long) i)
+                        .build())
+                .collect(Collectors.toList());
+        postRepository.saveAll(posts);
+        assertEquals(postRepository.count(), 10);
+
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.get("/posts/list?page=1&size=5"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(5))
+                .andDo(print());
+
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/posts/list?page=1&size=10"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(10))
+                .andDo(print());
+
+    }
+
+
 }

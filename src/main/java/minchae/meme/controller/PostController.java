@@ -2,12 +2,16 @@ package minchae.meme.controller;
 
 
 import lombok.RequiredArgsConstructor;
+import minchae.meme.request.Page;
 import minchae.meme.request.PostCreate;
 import minchae.meme.request.PostEdit;
 import minchae.meme.response.PostResponse;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.service.impl.Post_MemeServiceImpl;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,5 +45,11 @@ public class PostController {
     @PatchMapping("/posts/{postId}")
     public PostResponse updatePost(@PathVariable("postId") Long postId, @RequestBody PostEdit postEdit) {
          return postService.update(postId, postEdit);
+    }
+
+
+    @GetMapping("/posts/list")
+    public List<PostResponse> getPostListWherePage(@PageableDefault Page page) {
+        return postService.getListWherePage(page);
     }
 }

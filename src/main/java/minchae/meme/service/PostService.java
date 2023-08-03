@@ -1,5 +1,6 @@
 package minchae.meme.service;
 
+import minchae.meme.request.Page;
 import minchae.meme.request.PostCreate;
 import minchae.meme.request.PostEdit;
 import minchae.meme.response.PostResponse;
@@ -14,7 +15,7 @@ public interface PostService {
 
     PostResponse update(Long postId, PostEdit postEdit);
 
-    List<PostResponse> getListWherePage(int page);
+    List<PostResponse> getListWherePage(Page page);
 
 
 }

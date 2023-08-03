@@ -626,4 +626,6 @@ class CommentServiceTest {
         assertEquals(1, badPost.getComments().get(3).getBad());
 
     }
+
+
 }
