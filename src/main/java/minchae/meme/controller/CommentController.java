@@ -56,4 +56,8 @@ public class CommentController {
         commentService.writeCommentList(commentVo.getCommentCreateList());
     }
 
+    @DeleteMapping("/posts/{postId}/commentList")
+    public void deleteCommentList(@PathVariable Long postId) {
+        commentService.deleteCommentList(postId);
+    }
 }

@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,6 +31,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -312,11 +314,6 @@ class CommentControllerTest {
     }
 
     @Test
-    @DisplayName("포스트에 맞는 댓글 리스트 갱신이상 확인")
-    void getCommentListWherePostId2() {
-
-    }
-    @Test
     @DisplayName("댓글 내용 수정하기")
     public void updateComment() throws Exception {
         //given
@@ -378,25 +375,88 @@ class CommentControllerTest {
     }
 
     @Test
-
     @DisplayName("댓글리스트 삭제 where PostId")
     @Transactional
-    void deleteCommentList() {
+    void deleteCommentList() throws Exception{
+        //given
         Post post = Post.builder()
                 .title("댓글이 있는 글입니다")
                 .content("메롱")
                 .build();
-        //todo
+
+        Post post2 =  Post.builder()
+                .title("댓글이 있는 글입니다2")
+                .content("메롱2")
+                .build();
+
+        postRepository.save(post);
+        postRepository.save(post2);
+
+        List<Comment> comments = IntStream.range(0, 30)
+                .mapToObj(i -> Comment.builder()
+                        .post(post)
+                        .comment("댓글" + " " + i)
+                        .build()).collect(Collectors.toList());
+
+        List<Comment> comments2 = IntStream.range(0, 30)
+                .mapToObj(i -> Comment.builder()
+                        .post(post2)
+                        .comment("댓글" + " " + i)
+                        .build()).collect(Collectors.toList());
+
+        commentRepository.saveAll(comments);
+        commentRepository.saveAll(comments2);
+
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.delete("/posts/{postId}/commentList", post.getPostId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(print());
+
+        //result
+        mockMvc.perform(MockMvcRequestBuilders.get("/posts/{postId}", post.getPostId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.comments.length()").value(0))
+                .andDo(print());
+
     }
 
     @Test
     @DisplayName("post 객체 삭제시 post 와 연관된 comments 전부 삭제")
-    void deleteCommentListWhenPostDeleted() {
+    void deleteCommentListWhenPostDeleted() throws Exception{
         Post post = Post.builder()
                 .title("댓글이 있는 글입니다")
                 .content("메롱")
                 .build();
-        //todo
+
+        Post post2 =  Post.builder()
+                .title("댓글이 있는 글입니다2")
+                .content("메롱2")
+                .build();
+
+        postRepository.save(post);
+        postRepository.save(post2);
+
+        List<Comment> comments = IntStream.range(0, 30)
+                .mapToObj(i -> Comment.builder()
+                        .post(post)
+                        .comment("댓글" + " " + i)
+                        .build()).collect(Collectors.toList());
+
+        List<Comment> comments2 = IntStream.range(0, 30)
+                .mapToObj(i -> Comment.builder()
+                        .post(post2)
+                        .comment("댓글" + " " + i)
+                        .build()).collect(Collectors.toList());
+
+        commentRepository.saveAll(comments);
+        commentRepository.saveAll(comments2);
+
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.delete("/posts/{postId}", post.getPostId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(print());
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> commentService.getComment(comments.get(0).getCommentId()));
+        assertEquals("존재하지않는 댓글입니다", e.getMessage());
 
     }
 
