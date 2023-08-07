@@ -40,6 +40,17 @@ public class CommentController {
         commentService.write(post, commentCreate);
     }
 
+    @PostMapping("/posts/{commentId}/up")
+    public CommentResponse upRecommendation(@PathVariable Long commentId) {
+        return commentService.upRecommendation(commentId);
+    }
+
+    @PostMapping("/posts/{commentId}/bad")
+    public CommentResponse upBad(@PathVariable Long commentId) {
+        return commentService.upBad(commentId);
+    }
+
+
     @PatchMapping("/posts/{postId}/comments/{commentId}")
     public CommentResponse writeComment(@PathVariable Long postId, @PathVariable Long commentId, @RequestBody CommentEdit commentEdit) {
         return commentService.update(commentId, commentEdit);

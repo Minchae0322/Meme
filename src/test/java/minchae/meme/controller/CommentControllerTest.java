@@ -172,6 +172,7 @@ class CommentControllerTest {
 
         Comment comment = Comment.builder()
                 .post(post)
+                .recommendation(1)
                 .comment("댓글입니다")
                 .writerId(24L)
                 .build();
@@ -455,32 +456,126 @@ class CommentControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/posts/{postId}", post.getPostId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print());
+
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> commentService.getComment(comments.get(0).getCommentId()));
         assertEquals("존재하지않는 댓글입니다", e.getMessage());
 
     }
 
     @Test
-    @DisplayName("추천을 1회 올리기")
-    void upCommentRecommendation() {
+    @DisplayName("추천을 1회 올리기 갱신이상 확인")
+    void checkUpdateCommentRecommendation() throws Exception {
+
+        //given
         Post post = Post.builder()
                 .title("댓글이 있는 글입니다")
                 .content("메롱")
                 .build();
-        //todo
 
+        postRepository.save(post);
+
+        List<Comment> comments = IntStream.range(0, 30)
+                .mapToObj(i -> Comment.builder()
+                        .post(post)
+                        .comment("댓글" + " " + i)
+                        .build()).collect(Collectors.toList());
+
+        commentRepository.saveAll(comments);
+
+        //when 댓글의 추천을 눌렀을때
+        mockMvc.perform(MockMvcRequestBuilders.post("/posts/{commentId}/up", comments.get(1).getCommentId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.recommendation").value(1))
+                .andDo(print());
+
+        //result 댓글 1의 추천수가 1
+        mockMvc.perform(MockMvcRequestBuilders.get("/posts/{postId}", post.getPostId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.comments[1].recommendation").value(1))
+                .andDo(print());
+
+    }
+
+    @Test
+    @DisplayName("추천을 1회 올리기")
+    void upCommentRecommendation() throws Exception{
+        Post post = Post.builder()
+                .title("댓글이 있는 글입니다")
+                .content("메롱")
+                .build();
+
+        postRepository.save(post);
+
+        List<Comment> comments = IntStream.range(0, 30)
+                .mapToObj(i -> Comment.builder()
+                        .post(post)
+                        .comment("댓글" + " " + i)
+                        .build()).collect(Collectors.toList());
+
+        commentRepository.saveAll(comments);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/posts/{commentId}/up", comments.get(1).getCommentId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.recommendation").value(1))
+                .andDo(print());
     }
 
 
     @Test
     @DisplayName("비추천을 1회 올리기")
-    void upCommentBad() {
+    void upCommentBad() throws Exception{
         Post post = Post.builder()
                 .title("댓글이 있는 글입니다")
                 .content("메롱")
                 .build();
-        //todo
 
+        postRepository.save(post);
+
+        List<Comment> comments = IntStream.range(0, 30)
+                .mapToObj(i -> Comment.builder()
+                        .post(post)
+                        .comment("댓글" + " " + i)
+                        .build()).collect(Collectors.toList());
+
+        commentRepository.saveAll(comments);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/posts/{commentId}/bad", comments.get(1).getCommentId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.bad").value(1))
+                .andDo(print());
+
+    }
+
+    @Test
+    @DisplayName("비추천을 1회 올리기 갱신이상 확인")
+    void checkUpdateCommentBad() throws Exception{
+        //given
+        Post post = Post.builder()
+                .title("댓글이 있는 글입니다")
+                .content("메롱")
+                .build();
+
+        postRepository.save(post);
+
+        List<Comment> comments = IntStream.range(0, 30)
+                .mapToObj(i -> Comment.builder()
+                        .post(post)
+                        .comment("댓글" + " " + i)
+                        .build()).collect(Collectors.toList());
+
+        commentRepository.saveAll(comments);
+
+        //when - 댓글 1의 비추천을 1회 눌렀을때
+        mockMvc.perform(MockMvcRequestBuilders.post("/posts/{commentId}/bad", comments.get(1).getCommentId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.bad").value(1))
+                .andDo(print());
+
+        //result - 댓글 1의 비추천이 1
+        mockMvc.perform(MockMvcRequestBuilders.get("/posts/{postId}", post.getPostId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.comments[1].bad").value(1))
+                .andDo(print());
     }
 
 }

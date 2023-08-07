@@ -20,9 +20,9 @@ public interface CommentService {
 
     void deleteCommentList(Long postId);
 
-    int upRecommendation(Long commentId);
+    CommentResponse upRecommendation(Long commentId);
 
-    int upBad(Long commentId);
+    CommentResponse upBad(Long commentId);
 
     void writeCommentList(List<CommentCreate> commentCreateList);
 }

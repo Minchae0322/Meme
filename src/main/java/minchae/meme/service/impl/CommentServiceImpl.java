@@ -1,5 +1,7 @@
 package minchae.meme.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import minchae.meme.entity.Comment;
@@ -73,20 +75,20 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public int upRecommendation(Long commentId) {
+    public CommentResponse upRecommendation(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow();
         comment.setRecommendation(comment.getRecommendation() + 1);
-        return comment.getRecommendation() + 1;
+        return CommentResponse.builder().build().commentToCommentResponse(comment);
     }
 
     @Override
     @Transactional
-    public int upBad(Long commentId) {
+    public CommentResponse upBad(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow();
         comment.setBad(comment.getBad() + 1);
-        return comment.getBad() + 1;
+        return CommentResponse.builder().build().commentToCommentResponse(comment);
     }
 
     @Override
