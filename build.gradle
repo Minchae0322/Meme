@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.1.2'
     id 'io.spring.dependency-management' version '1.1.2'
+    id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
 
 group = 'minchae'
@@ -15,6 +16,14 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
+    asciidoctorExt
+}
+
+
+ext {
+    asciidocVersion = "3.0.0"
+    snippetsDir = file('build/generated-snippets')
+
 }
 
 repositories {
@@ -22,6 +31,8 @@ repositories {
 }
 
 dependencies {
+    asciidoctorExt "org.springframework.restdocs:spring-restdocs-asciidoctor:${asciidocVersion}"
+    testImplementation "org.springframework.restdocs:spring-restdocs-mockmvc:${asciidocVersion}"
     implementation "com.querydsl:querydsl-core:5.0.0"
     implementation "com.querydsl:querydsl-collections"
     implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
@@ -41,4 +52,25 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+test {
+    outputs.dir snippetsDir
+}
+
+asciidoctor {
+    inputs.dir snippetsDir
+    configurations 'asciidoctorExt'
+    dependsOn test
+}
+
+
+
+bootJar {
+    dependsOn asciidoctor
+
+    copy {
+        from asciidoctor.outputDir
+        into "src/main/resources/static/docs"
+    }
 }

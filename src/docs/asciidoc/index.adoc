@@ -1,0 +1,37 @@
+= APi
+:toc:
+
+== 글 작성
+
+=== 요청
+include::{snippets}/post-post/http-request.adoc[]
+
+=== 요청 param
+include::{snippets}/post-post/request-fields.adoc[]
+
+=== 응답
+include::{snippets}/post-post/http-response.adoc[]
+
+=== Curl
+
+include::{snippets}/post-post/curl-request.adoc[]
+
+== 글 단건 조회
+
+=== 요청
+include::{snippets}/post-get/http-request.adoc[]
+
+=== 요청 param
+include::{snippets}/post-get/path-parameters.adoc[]
+
+
+=== 응답
+include::{snippets}/post-get/http-response.adoc[]
+
+=== 응답 params
+include::{snippets}/post-get/response-fields.adoc[]
+
+
+=== Curl
+
+include::{snippets}/post-get/curl-request.adoc[]

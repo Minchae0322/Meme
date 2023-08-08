@@ -62,7 +62,6 @@ class PostControllerTest {
         PostCreate postCreate = PostCreate.builder()
                 .title("글 작성중입니다")
                 .content("글 내용은 비밀입니다")
-                .writerId(1L)
                 .build();
         ObjectMapper objectMapper = new ObjectMapper();
         String postCreateJson = objectMapper.writeValueAsString(postCreate);
@@ -82,7 +81,6 @@ class PostControllerTest {
         PostCreate postCreate = PostCreate.builder()
                 .title("글 작성중입니다")
                 .content("글 내용은 비밀입니다")
-                .writerId(1L)
                 .build();
         postService.write(postCreate);
 
