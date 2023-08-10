@@ -1,15 +1,11 @@
 package minchae.meme.service;
 
-import jakarta.transaction.Transactional;
 import minchae.meme.entity.Comment;
 import minchae.meme.entity.Post;
 import minchae.meme.repository.CommentRepository;
-import minchae.meme.request.FreePostPage;
-import minchae.meme.request.Page;
-import minchae.meme.request.PostCreate;
+import minchae.meme.request.FreeBoardPage;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.request.PostEdit;
-import minchae.meme.response.CommentResponse;
 import minchae.meme.response.PostResponse;
 import minchae.meme.service.impl.Post_MemeServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -181,7 +177,7 @@ class PostServiceTest {
 
         //when
         //todo 페이지 하나에 몇개의 게시물이 들어가는지
-        List<PostResponse> postResponseList = postService.getListWherePage(new FreePostPage(1, 5));
+        List<PostResponse> postResponseList = postService.getListWherePage(new FreeBoardPage(1, 5));
         PostResponse post1 = postResponseList.get(0);
         PostResponse post2 = postResponseList.get(4);
 

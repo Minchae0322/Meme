@@ -3,6 +3,7 @@ package minchae.meme.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import minchae.meme.entity.Post;
+import minchae.meme.exception.PostNotFound;
 import minchae.meme.repository.CommentRepository;
 import minchae.meme.request.Page;
 import minchae.meme.request.PostCreate;
@@ -36,7 +37,7 @@ public class Post_MemeServiceImpl implements PostService {
     @Override
     public PostResponse get(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다"));
+                .orElseThrow(PostNotFound::new);
         return PostResponse.builder().build().postToPostResponse(post);
     }
 
@@ -44,7 +45,7 @@ public class Post_MemeServiceImpl implements PostService {
     @Transactional
     public void delete(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지않거나 이미 삭제된 게시물입니다"));
+                .orElseThrow(PostNotFound::new);
         postRepository.delete(post);
     }
 
@@ -52,7 +53,7 @@ public class Post_MemeServiceImpl implements PostService {
     @Transactional
     public PostResponse update(Long postId, PostEdit postEdit) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지않는 게시물 입니다"));
+                .orElseThrow(PostNotFound::new);
         post.update(postEdit);
         return PostResponse.builder().build().postToPostResponse(post);
     }

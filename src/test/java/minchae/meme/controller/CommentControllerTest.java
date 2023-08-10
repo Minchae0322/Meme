@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import minchae.meme.entity.Comment;
 import minchae.meme.entity.Post;
+import minchae.meme.exception.CommentNotFound;
+import minchae.meme.exception.PostNotFound;
 import minchae.meme.repository.CommentRepository;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.request.CommentCreate;
@@ -457,8 +459,7 @@ class CommentControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print());
 
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> commentService.getComment(comments.get(0).getCommentId()));
-        assertEquals("존재하지않는 댓글입니다", e.getMessage());
+        assertThrows(CommentNotFound.class, () -> commentService.getComment(comments.get(0).getCommentId()));
 
     }
 
@@ -576,6 +577,15 @@ class CommentControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.comments[1].bad").value(1))
                 .andDo(print());
+    }
+
+    @Test
+    @DisplayName("댓글 받아오기 - commentNotFound 404 에러 출력")
+    void commentNotFound() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.get("/posts/comment/{commentId}", 393L))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andDo(print());
+
     }
 
 }

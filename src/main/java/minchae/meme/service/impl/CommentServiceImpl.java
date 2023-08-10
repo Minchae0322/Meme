@@ -6,12 +6,15 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import minchae.meme.entity.Comment;
 import minchae.meme.entity.Post;
+import minchae.meme.exception.CommentNotFound;
+import minchae.meme.exception.PostNotFound;
 import minchae.meme.repository.CommentRepository;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.request.CommentCreate;
 import minchae.meme.request.CommentEdit;
 import minchae.meme.response.CommentResponse;
 import minchae.meme.service.CommentService;
+import org.hibernate.tool.schema.spi.CommandAcceptanceException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,7 +37,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentResponse getComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지않는 댓글입니다"));
+                .orElseThrow(CommentNotFound::new);
         return CommentResponse.builder().build().commentToCommentResponse(comment);
     }
 
@@ -42,9 +45,9 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public void delete(Long postId, Long commentId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지않는 댓글입니다"));
+                .orElseThrow(CommentNotFound::new);
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다"));
+                .orElseThrow(PostNotFound::new);
         post.getComments().remove(comment);
         commentRepository.delete(comment);
     }
@@ -63,7 +66,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public CommentResponse update(Long commentId, CommentEdit commentEdit) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지않는 댓글입니다"));
+                .orElseThrow(CommentNotFound::new);
         comment.update(commentEdit);
         return CommentResponse.builder().build().commentToCommentResponse(comment);
     }
@@ -77,7 +80,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public CommentResponse upRecommendation(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow();
+                .orElseThrow(CommentNotFound::new);
         comment.setRecommendation(comment.getRecommendation() + 1);
         return CommentResponse.builder().build().commentToCommentResponse(comment);
     }
@@ -86,7 +89,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public CommentResponse upBad(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow();
+                .orElseThrow(CommentNotFound::new);
         comment.setBad(comment.getBad() + 1);
         return CommentResponse.builder().build().commentToCommentResponse(comment);
     }

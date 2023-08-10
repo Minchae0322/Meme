@@ -4,19 +4,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import minchae.meme.entity.Comment;
 import minchae.meme.entity.Post;
 import minchae.meme.repository.CommentRepository;
-import minchae.meme.request.CommentCreate;
-import minchae.meme.request.FreePostPage;
 import minchae.meme.request.PostCreate;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.request.PostEdit;
-import minchae.meme.response.PostResponse;
 import minchae.meme.service.CommentService;
 import minchae.meme.service.impl.Post_MemeServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -207,6 +203,16 @@ class PostControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/posts/list?page=1&size=10"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(10))
+                .andDo(print());
+
+    }
+
+
+    @Test
+    @DisplayName("게시물 받아오기 - postNotFound 404 에러 출력")
+    void postNotFound() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.get("/posts/{postId}", 393L))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andDo(print());
 
     }
