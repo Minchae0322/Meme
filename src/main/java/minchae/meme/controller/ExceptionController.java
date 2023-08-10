@@ -32,5 +32,10 @@ public class ExceptionController {
                 .code("404")
                 .message(e.getMessage())
                 .build();
+
+        //만약 @ResponseStatus 를 쓸 수 없는 상황이면
+        //ResponseEntity<ErrorResponse> response = ResponseEntity.status(e.getStatusCode();)
+        //                                                       .body(......);
+        //을 사용하면 http status 를 알아서 골라서 내려준다.
     }
 }
