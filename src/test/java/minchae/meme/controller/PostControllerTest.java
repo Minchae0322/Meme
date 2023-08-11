@@ -3,6 +3,7 @@ package minchae.meme.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import minchae.meme.entity.Comment;
 import minchae.meme.entity.Post;
+import minchae.meme.exception.PostNotFound;
 import minchae.meme.repository.CommentRepository;
 import minchae.meme.request.PostCreate;
 import minchae.meme.repository.PostRepository;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @SpringBootTest
@@ -214,6 +216,11 @@ class PostControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/posts/{postId}", 393L))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andDo(print());
+
+        assertThrows(PostNotFound.class,() -> {
+            postService.get(1L);
+        });
+
 
     }
 

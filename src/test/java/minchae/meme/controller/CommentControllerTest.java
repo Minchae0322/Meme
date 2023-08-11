@@ -585,6 +585,9 @@ class CommentControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/posts/comment/{commentId}", 393L))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andDo(print());
+        assertThrows(CommentNotFound.class,() -> {
+            commentService.getComment(1L);
+        });
 
     }
 
