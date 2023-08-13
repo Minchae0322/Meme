@@ -3,6 +3,7 @@ package minchae.meme.controller;
 
 import lombok.RequiredArgsConstructor;
 import minchae.meme.entity.Comment;
+import minchae.meme.entity.UserSession;
 import minchae.meme.request.Page;
 import minchae.meme.request.PostCreate;
 import minchae.meme.request.PostEdit;
@@ -26,6 +27,11 @@ public class PostController {
         return postService.get(postId);
     }
 
+
+    /*@GetMapping("/authTest")
+    public String authTest(UserSession userSession) {
+        return userSession.getName();
+    }*/
 
     @PostMapping("/posts")
     public PostResponse writePost(@RequestBody PostCreate params) {

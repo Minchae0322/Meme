@@ -2,7 +2,9 @@ package minchae.meme.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import minchae.meme.exception.CommentNotFound;
+import minchae.meme.exception.IsExistedUser;
 import minchae.meme.exception.PostNotFound;
+import minchae.meme.exception.Unauthorized;
 import minchae.meme.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -37,5 +39,25 @@ public class ExceptionController {
         //ResponseEntity<ErrorResponse> response = ResponseEntity.status(e.getStatusCode();)
         //                                                       .body(......);
         //을 사용하면 http status 를 알아서 골라서 내려준다.
+    }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(Unauthorized.class)
+    public ErrorResponse unauthorized(Unauthorized e) {
+        return ErrorResponse.builder()
+                .code("401")
+                .message(e.getMessage())
+                .build();
+    }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IsExistedUser.class)
+    public ErrorResponse isExitedUser(IsExistedUser e) {
+        return ErrorResponse.builder()
+                .code("404")
+                .message(e.getMessage())
+                .build();
     }
 }
