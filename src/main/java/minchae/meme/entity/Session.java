@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.UniqueElements;
 
 @Entity
 @Getter
@@ -16,6 +17,7 @@ public class Session {
     private Long id;
 
     @NotBlank
+    @UniqueElements
     private String accessToken;
 
     @ManyToOne

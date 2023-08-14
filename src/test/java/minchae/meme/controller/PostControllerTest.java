@@ -224,5 +224,11 @@ class PostControllerTest {
 
     }
 
+    @Test
+    @DisplayName("게시물은 로그인된 사용자만 작성할 수 있다")
+    void authWritePost() throws Exception{
+       //todo
+    }
+
 
 }

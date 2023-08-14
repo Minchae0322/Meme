@@ -14,7 +14,10 @@ public class SessionServiceImpl implements SessionService {
     private final SessionRepository sessionRepository;
     @Override
     public Session getSessionByAccessToken(String accessToken) {
-        return sessionRepository.findByAccessToken(accessToken)
-                .orElseThrow(Unauthorized::new);
+        try {
+            return sessionRepository.findByAccessToken(accessToken).get(0);
+        } catch (Exception e) {
+            throw new Unauthorized();
+        }
     }
 }
