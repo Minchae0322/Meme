@@ -1,4 +1,13 @@
 package minchae.meme.service.impl;
 
-public class UserServiceImpl {
+import minchae.meme.request.SignupForm;
+import minchae.meme.service.UserService;
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserServiceImpl implements UserService {
+    @Override
+    public void signup(SignupForm signupForm) {
+
+    }
 }

@@ -2,8 +2,6 @@ package minchae.meme.controller;
 
 
 import lombok.RequiredArgsConstructor;
-import minchae.meme.entity.Comment;
-import minchae.meme.entity.UserSession;
 import minchae.meme.request.Page;
 import minchae.meme.request.PostCreate;
 import minchae.meme.request.PostEdit;

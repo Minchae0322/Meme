@@ -1,19 +1,22 @@
 package minchae.meme.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @RequiredArgsConstructor
+@Getter
+@Setter
 public class User {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,8 +32,10 @@ public class User {
     @NotBlank
     private String email;
 
-
     private LocalDate createdDate;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Session> sessions = new ArrayList<>();
 
 
     @Builder
