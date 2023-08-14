@@ -20,4 +20,9 @@ public class SessionServiceImpl implements SessionService {
             throw new Unauthorized();
         }
     }
+
+    @Override
+    public void writeSession(Session session) {
+        sessionRepository.save(session);
+    }
 }

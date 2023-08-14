@@ -1,9 +1,9 @@
 package minchae.meme.resolver;
 
 import lombok.RequiredArgsConstructor;
+import minchae.meme.auth.Encode;
 import minchae.meme.entity.Session;
 import minchae.meme.exception.Unauthorized;
-import minchae.meme.repository.SessionRepository;
 import minchae.meme.service.SessionService;
 import minchae.meme.session.UserSession;
 import org.springframework.core.MethodParameter;
@@ -18,7 +18,6 @@ import java.util.Objects;
 public class AuthResolver implements HandlerMethodArgumentResolver {
 
 
-    private final SessionRepository sessionRepository;
 
     private final SessionService sessionService;
     @Override
@@ -31,6 +30,7 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
         if (webRequest.getParameter("accessToken") != null || Objects.equals(webRequest.getParameter("accessToken"), "")) {
             throw new Unauthorized();
         }
+
 
         Session session = sessionService.getSessionByAccessToken(webRequest.getParameter("accessToken"));
         //todo 데이터베이스에 있는 사용자인지 확인작업
