@@ -7,9 +7,12 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.boot.autoconfigure.web.WebProperties;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -17,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Getter
 @Setter
-public class User {
+public class User implements UserDetails {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -34,8 +37,7 @@ public class User {
 
     private LocalDate createdDate;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
-    private List<Session> sessions = new ArrayList<>();
+
 
 
     @Builder
@@ -45,5 +47,35 @@ public class User {
         this.password = password;
         this.email = email;
         this.createdDate = LocalDate.now();
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return null;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
     }
 }
