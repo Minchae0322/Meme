@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import minchae.meme.auth.CustomAuthorityDeserializer;
 import minchae.meme.entity.enumClass.Authorization;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -29,13 +30,13 @@ public class User implements UserDetails {
     private Long id;
 
     @NotBlank
-    private java.lang.String name;
+    private String name;
 
     @NotBlank
-    private java.lang.String password;
+    private String password;
 
     @NotBlank
-    private java.lang.String email;
+    private String email;
 
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -63,7 +64,7 @@ public class User implements UserDetails {
     }
 
     @Override
-    @JsonDeserialize
+    @JsonDeserialize(using = CustomAuthorityDeserializer.class)
     @JsonSerialize
     public Collection<? extends GrantedAuthority> getAuthorities() {
         ArrayList<GrantedAuthority> auth = new ArrayList<>();

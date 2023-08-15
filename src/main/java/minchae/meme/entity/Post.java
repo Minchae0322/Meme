@@ -49,7 +49,7 @@ public class Post {
     @Column
     private boolean isHot;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne()
     private User user;
 
 
