@@ -6,15 +6,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.boot.autoconfigure.web.WebProperties;
+import minchae.meme.entity.enumClass.Authorization;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.*;
+
 
 @Entity
 @RequiredArgsConstructor
@@ -35,47 +34,56 @@ public class User implements UserDetails {
     @NotBlank
     private String email;
 
-    private LocalDate createdDate;
 
+    @Column
+    private LocalDateTime createdDate;
 
+    @Enumerated(EnumType.STRING)
+    private Authorization authorizations;
+
+    private Boolean enable;
 
 
     @Builder
-    public User(Long id, String name, String password, String email) {
+    public User(Long id, String name, String password, String email, Authorization authorizations, Boolean enable) {
         this.id = id;
         this.name = name;
         this.password = password;
         this.email = email;
-        this.createdDate = LocalDate.now();
+        this.createdDate = LocalDateTime.now();
+        this.authorizations = authorizations;
+        this.enable = enable;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        ArrayList<GrantedAuthority> auth = new ArrayList<>();
+        auth.add(new SimpleGrantedAuthority(authorizations.name()));
+        return auth;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return name;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return enable;
     }
 }
