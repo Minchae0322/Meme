@@ -19,7 +19,7 @@ public class WebSecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.ignoring().requestMatchers("/error", "/favicon.ico");
+        return web -> web.ignoring().requestMatchers("/error", "/favicon.ico","/**");
     }
 
     @Bean

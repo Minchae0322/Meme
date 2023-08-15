@@ -69,7 +69,6 @@ public class PostControllerDocTest {
         PostCreate postCreate = PostCreate.builder()
                 .title("글 작성 제목")
                 .content("글 내용")
-                .writerId(1L)
                 .build();
 
         ObjectMapper objectMapper = new ObjectMapper();

@@ -3,6 +3,7 @@ package minchae.meme.request;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import minchae.meme.entity.User;
 
 @Getter
 @Setter
@@ -18,15 +19,15 @@ public class PostEdit {
 
     private int views;
 
-    private Long writerId;
+    private User user;
 
     @Builder
-    public PostEdit(String title, String content, int recommendation, int bad, int views, Long writerId) {
+    public PostEdit(String title, String content, int recommendation, int bad, int views, User user) {
         this.title = title;
         this.content = content;
         this.recommendation = recommendation;
         this.bad = bad;
         this.views = views;
-        this.writerId = writerId;
+        this.user = user;
     }
 }

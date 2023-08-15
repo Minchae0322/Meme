@@ -47,7 +47,10 @@ public class Post {
     private int views;
 
     @Column
-    private Long writerId;
+    private boolean isHot;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private User user;
 
 
     @JsonManagedReference

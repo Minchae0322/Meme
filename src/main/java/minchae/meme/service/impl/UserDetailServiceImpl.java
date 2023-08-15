@@ -23,7 +23,7 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(java.lang.String username) throws UsernameNotFoundException {
         //todo 비밀번호를 jwt 토큰으로 가져오기
         return userRepository.findByName(username)
                 .orElseThrow(Unauthorized::new);

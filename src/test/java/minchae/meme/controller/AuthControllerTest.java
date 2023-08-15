@@ -3,6 +3,8 @@ package minchae.meme.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import minchae.meme.entity.Comment;
 import minchae.meme.entity.Post;
+import minchae.meme.entity.User;
+import minchae.meme.entity.enumClass.Authorization;
 import minchae.meme.repository.UserRepository;
 import minchae.meme.request.SignupForm;
 import minchae.meme.service.UserService;
@@ -61,6 +63,25 @@ class AuthControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
         assertEquals(1, userRepository.count());
+    }
+
+
+    @Test
+    @DisplayName("회원가입")
+    public void signup2() throws Exception {
+        User user = User.builder()
+                .name("wjdalsco")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password("passwordEncoder.encode(signupForm.getPassword()")
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/signup2")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(user)))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
     }
 
 }

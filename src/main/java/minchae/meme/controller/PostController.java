@@ -37,7 +37,7 @@ public class PostController {
         return PostResponse.builder()
                 .title(params.getTitle())
                 .content(params.getContent())
-                .writerId(params.getWriterId())
+                .user(params.getUser())
                 .build();
     }
 

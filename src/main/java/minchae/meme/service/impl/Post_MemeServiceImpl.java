@@ -29,7 +29,7 @@ public class Post_MemeServiceImpl implements PostService {
         Post post = Post.builder()
                 .title(postCreate.getTitle())
                 .content(postCreate.getContent())
-                .writerId(postCreate.getWriterId())
+                .user(postCreate.getUser())
                 .build();
         postRepository.save(post);
     }
@@ -69,7 +69,7 @@ public class Post_MemeServiceImpl implements PostService {
                         .recommendation(post.getRecommendation())
                         .bad(post.getBad())
                         .views(post.getViews())
-                        .writerId(post.getWriterId())
+                        .user(post.getUser())
                         .build())
                 .collect(Collectors.toList());
     }

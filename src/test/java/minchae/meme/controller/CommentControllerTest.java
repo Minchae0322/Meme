@@ -75,7 +75,7 @@ class CommentControllerTest {
         Post post = Post.builder()
                 .title("글 작성중입니다")
                 .content("글 내용은 비밀입니다")
-                .writerId(1L)
+
                 .build();
 
         postRepository.save(post);
@@ -101,7 +101,6 @@ class CommentControllerTest {
         Post postCreate = Post.builder()
                 .title("댓글이 있는 글입니다")
                 .content("댓글을 입력하세요")
-                .writerId(20L)
                 .build();
         postRepository.save(postCreate);
 
@@ -286,6 +285,8 @@ class CommentControllerTest {
                         .build()).collect(Collectors.toList());
 
         CommentVo commentVo = new CommentVo(comments);
+
+        System.out.println(">>>>>>>>>>>>" + objectMapper.writeValueAsString(comments));
 
 
         mockMvc.perform(MockMvcRequestBuilders.post("/posts/{postId}/commentList", post.getPostId())

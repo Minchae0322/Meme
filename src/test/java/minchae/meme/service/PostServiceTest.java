@@ -1,10 +1,14 @@
 package minchae.meme.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import minchae.meme.entity.Comment;
 import minchae.meme.entity.Post;
+import minchae.meme.entity.User;
+import minchae.meme.entity.enumClass.Authorization;
 import minchae.meme.repository.CommentRepository;
 import minchae.meme.request.FreeBoardPage;
 import minchae.meme.repository.PostRepository;
+import minchae.meme.request.PostCreate;
 import minchae.meme.request.PostEdit;
 import minchae.meme.response.PostResponse;
 import minchae.meme.service.impl.Post_MemeServiceImpl;
@@ -13,12 +17,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @SpringBootTest
 class PostServiceTest {
@@ -169,7 +178,7 @@ class PostServiceTest {
                         .mapToObj(i -> Post.builder()
                                 .title("제목" + " " + i)
                                 .content("내용" + " " + i)
-                                .writerId((long) i)
+
                                 .build())
                                 .collect(Collectors.toList());
         postRepository.saveAll(posts);
@@ -187,6 +196,36 @@ class PostServiceTest {
         assertEquals(10, postRepository.count());
         assertEquals("제목 0", post1.getTitle());
         assertEquals("제목 4", post2.getTitle());
+
+    }
+
+    @Test
+    @DisplayName("게시물 작성 작성자 포함")
+    void writePostWithUser() throws Exception{
+        User user = User.builder()
+                .name("wjdalsco")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password("passwordEncoder.encode(signupForm.getPassword()")
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+
+
+        Post postCreate = Post.builder()
+                .title("글 작성중입니다")
+                .content("글 내용은 비밀입니다")
+                .user(user)
+                .build();
+
+        postRepository.save(postCreate);
+
+        assertEquals(1, postRepository.count());
+        assertEquals("wjdalsco", postRepository.findAll().get(0).getUser().getUsername());
+
+
+
+
+
 
     }
 

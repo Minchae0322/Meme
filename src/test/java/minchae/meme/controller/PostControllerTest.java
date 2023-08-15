@@ -3,8 +3,11 @@ package minchae.meme.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import minchae.meme.entity.Comment;
 import minchae.meme.entity.Post;
+import minchae.meme.entity.User;
+import minchae.meme.entity.enumClass.Authorization;
 import minchae.meme.exception.PostNotFound;
 import minchae.meme.repository.CommentRepository;
+import minchae.meme.repository.UserRepository;
 import minchae.meme.request.PostCreate;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.request.PostEdit;
@@ -18,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -32,10 +36,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+
 class PostControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private Post_MemeServiceImpl postService;
@@ -43,6 +50,9 @@ class PostControllerTest {
     private CommentRepository commentRepository;
     @Autowired
     private CommentService commentService;
+
+    @Autowired
+    private UserRepository userRepository;
 
 
     @Autowired
@@ -62,7 +72,7 @@ class PostControllerTest {
                 .content("글 내용은 비밀입니다")
                 .build();
         ObjectMapper objectMapper = new ObjectMapper();
-        String postCreateJson = objectMapper.writeValueAsString(postCreate);
+        java.lang.String postCreateJson = objectMapper.writeValueAsString(postCreate);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/posts")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -97,7 +107,7 @@ class PostControllerTest {
         PostCreate postCreate = PostCreate.builder()
                 .title("글 작성중입니다")
                 .content("글 내용은 비밀입니다")
-                .writerId(1L)
+
                 .build();
         postService.write(postCreate);
 
@@ -155,7 +165,7 @@ class PostControllerTest {
         PostCreate postCreate = PostCreate.builder()
                 .title("글 작성중입니다")
                 .content("글 내용은 비밀입니다")
-                .writerId(1L)
+
                 .build();
         postService.write(postCreate);
 
@@ -165,7 +175,7 @@ class PostControllerTest {
                 .content("글 내용을 변경합니다")
                 .build();
         ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(postEdit);
+        java.lang.String json = objectMapper.writeValueAsString(postEdit);
 
         //when
         Post postResponse = postRepository.findAll().get(0);
@@ -189,7 +199,6 @@ class PostControllerTest {
                 .mapToObj(i -> Post.builder()
                         .title("제목" + " " + i)
                         .content("내용" + " " + i)
-                        .writerId((long) i)
                         .build())
                 .collect(Collectors.toList());
         postRepository.saveAll(posts);
@@ -230,5 +239,43 @@ class PostControllerTest {
        //todo
     }
 
+
+    @Test
+    @DisplayName("게시물 작성 작성자 포함")
+    void writePostWithUser() throws Exception{
+        User user = User.builder()
+                .name("wjdalsco")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password("passwordEncoder.encode(signupForm.getPassword()")
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user);
+
+        PostCreate postCreate = PostCreate.builder()
+                .title("글 작성중입니다")
+                .content("글 내용은 비밀입니다")
+                .user(user)
+                .build();
+
+
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        System.out.println(">>>>>>>>>>>" + " " + objectMapper.writeValueAsString(postCreate));
+
+
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/posts")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(postCreate)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("글 작성중입니다"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content").value("글 내용은 비밀입니다"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.user.name").value("wjdalsco"))
+                .andDo(print());
+
+
+
+    }
 
 }

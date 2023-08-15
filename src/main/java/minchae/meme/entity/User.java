@@ -1,11 +1,12 @@
 package minchae.meme.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import minchae.meme.entity.enumClass.Authorization;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,25 +20,31 @@ import java.util.*;
 @RequiredArgsConstructor
 @Getter
 @Setter
+
 public class User implements UserDetails {
+
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
 
     @NotBlank
-    private String name;
+    private java.lang.String name;
 
     @NotBlank
-    private String password;
+    private java.lang.String password;
 
     @NotBlank
-    private String email;
+    private java.lang.String email;
 
 
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @Column
     private LocalDateTime createdDate;
 
+    @JsonSerialize
+    @JsonDeserialize
     @Enumerated(EnumType.STRING)
     private Authorization authorizations;
 
@@ -56,6 +63,8 @@ public class User implements UserDetails {
     }
 
     @Override
+    @JsonDeserialize
+    @JsonSerialize
     public Collection<? extends GrantedAuthority> getAuthorities() {
         ArrayList<GrantedAuthority> auth = new ArrayList<>();
         auth.add(new SimpleGrantedAuthority(authorizations.name()));
@@ -63,7 +72,7 @@ public class User implements UserDetails {
     }
 
     @Override
-    public String getUsername() {
+    public java.lang.String getUsername() {
         return name;
     }
 
