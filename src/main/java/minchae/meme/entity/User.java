@@ -56,9 +56,9 @@ public class User implements UserDetails {
 
 
     @Builder
-    public User(Long id, String name, String password, String email, Authorization authorizations, Boolean enable) {
+    public User(Long id, String username, String password, String email, Authorization authorizations, Boolean enable) {
         this.id = id;
-        this.username = name;
+        this.username = username;
         this.password = password;
         this.email = email;
         this.createdDate = LocalDateTime.now();
@@ -67,8 +67,7 @@ public class User implements UserDetails {
     }
 
     @Override
-    //@JsonDeserialize(using = CustomAuthorityDeserializer.class)
-    @JsonDeserialize
+    @JsonDeserialize(using = CustomAuthorityDeserializer.class)
     @JsonSerialize
     public Collection<? extends GrantedAuthority> getAuthorities() {
         ArrayList<GrantedAuthority> auth = new ArrayList<>();
@@ -77,7 +76,7 @@ public class User implements UserDetails {
     }
 
     @Override
-    public java.lang.String getUsername() {
+    public String getUsername() {
         return username;
     }
 

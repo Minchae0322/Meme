@@ -13,4 +13,4 @@ Content-Type: application/json
 POST http://localhost:8080/auth/login
 Content-Type: application/x-www-form-urlencoded
 
-username=dddd&password=dddd
+username=ddd&password=wjdals12

@@ -33,10 +33,10 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/**").permitAll())
+                        .requestMatchers("/**").permitAll()
+                        .requestMatchers("/").hasAuthority("USER"))
                 .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
-                        .failureUrl("/")
-                        .loginPage("/auth/login")
+                        .failureUrl("/auth/login")
                         .loginProcessingUrl("/auth/login")
                         .defaultSuccessUrl("/")
                         .usernameParameter("username")

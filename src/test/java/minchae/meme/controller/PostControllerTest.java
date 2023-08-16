@@ -244,7 +244,7 @@ class PostControllerTest {
     @DisplayName("게시물 작성 작성자 포함")
     void writePostWithUser() throws Exception{
         User user = User.builder()
-                .name("wjdalsco")
+                .username("wjdalsco")
                 .email("jcmcmdmw@nakejqkqlw.com")
                 .password("passwordEncoder.encode(signupForm.getPassword()")
                 .enable(true)
@@ -271,7 +271,7 @@ class PostControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("글 작성중입니다"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").value("글 내용은 비밀입니다"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.user.name").value("wjdalsco"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.user.username").value("wjdalsco"))
                 .andDo(print());
 
 

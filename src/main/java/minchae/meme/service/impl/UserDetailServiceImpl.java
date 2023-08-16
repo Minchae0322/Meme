@@ -35,7 +35,7 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
             throw new IsExistedUser();
         }
         User user = User.builder()
-                .name(signupForm.getUsername())
+                .username(signupForm.getUsername())
                 .email(signupForm.getEmail())
                 .password(passwordEncoder.encode(signupForm.getPassword()))
                 .enable(true)

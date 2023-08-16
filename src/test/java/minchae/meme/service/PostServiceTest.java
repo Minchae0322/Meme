@@ -203,7 +203,7 @@ class PostServiceTest {
     @DisplayName("게시물 작성 작성자 포함")
     void writePostWithUser() throws Exception{
         User user = User.builder()
-                .name("wjdalsco")
+                .username("wjdalsco")
                 .email("jcmcmdmw@nakejqkqlw.com")
                 .password("passwordEncoder.encode(signupForm.getPassword()")
                 .enable(true)
