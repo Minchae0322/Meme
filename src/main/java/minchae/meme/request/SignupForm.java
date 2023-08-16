@@ -24,8 +24,8 @@ public class SignupForm {
     private String phoneNum;
 
     @Builder
-    public SignupForm(String name, String password, String email, String phoneNum) {
-        this.username = name;
+    public SignupForm(String username, String password, String email, String phoneNum) {
+        this.username = username;
         this.password = password;
         this.email = email;
         this.phoneNum = phoneNum;

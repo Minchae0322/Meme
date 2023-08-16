@@ -51,7 +51,7 @@ class AuthControllerTest {
     @DisplayName("회원가입")
     public void signup() throws Exception {
         SignupForm signupForm = SignupForm.builder()
-                .name("정민채")
+                .username("정민채")
                 .email("jmcabc@naver.com1")
                 .password("wjdals12")
                 .phoneNum("01035573336")
@@ -67,20 +67,24 @@ class AuthControllerTest {
 
 
     @Test
-    @DisplayName("회원가입")
-    public void signup2() throws Exception {
-        User user = User.builder()
-                .name("wjdalsco")
-                .email("jcmcmdmw@nakejqkqlw.com")
-                .password("passwordEncoder.encode(signupForm.getPassword()")
-                .enable(true)
-                .authorizations(Authorization.USER)
+    @DisplayName("로그인")
+    public void login() throws Exception {
+        SignupForm signupForm = SignupForm.builder()
+                .username("ddd")
+                .email("jmcabc@naver.com1")
+                .password("wjdals12")
+                .phoneNum("01035573336")
                 .build();
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/auth/signup2")
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/signup")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(user)))
+                        .content(objectMapper.writeValueAsString(signupForm)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/login?username=ddd&password=wjdals12")
+        )
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection());
 
     }
 

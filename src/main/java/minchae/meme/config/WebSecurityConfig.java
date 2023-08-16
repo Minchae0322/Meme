@@ -40,7 +40,7 @@ public class WebSecurityConfig {
                         .loginProcessingUrl("/auth/login")
                         .defaultSuccessUrl("/")
                         .usernameParameter("username")
-                        .usernameParameter("password"))
+                        .passwordParameter("password"))
                 .csrf(AbstractHttpConfigurer::disable)
                 .build();
     }
