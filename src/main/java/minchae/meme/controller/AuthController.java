@@ -24,6 +24,17 @@ public class AuthController {
         return "username";
     }
 
+
+    @PostMapping("/admin/changeAuth")
+    public String changeAuth() {
+        return "username";
+    }
+
+    @GetMapping("/admin")
+    public String admin() {
+        return "username";
+    }
+
     @GetMapping("/")
     public String home() {
         return "로그인 성공";

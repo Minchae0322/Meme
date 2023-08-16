@@ -1,5 +1,10 @@
 package minchae.meme.entity.enumClass;
 
 public enum Authorization {
-    ADMIN, MANAGER, USER
+    ADMIN, MANAGER, USER;
+
+    String auth;
+
+    Authorization() {
+    }
 }

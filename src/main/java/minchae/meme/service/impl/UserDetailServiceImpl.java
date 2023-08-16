@@ -1,9 +1,11 @@
 package minchae.meme.service.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import minchae.meme.entity.User;
 import minchae.meme.entity.enumClass.Authorization;
 import minchae.meme.exception.IsExistedUser;
+import minchae.meme.exception.IsNotExistUser;
 import minchae.meme.exception.Unauthorized;
 import minchae.meme.repository.UserRepository;
 import minchae.meme.request.SignupForm;
@@ -43,5 +45,13 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
                 .build();
 
         userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void changeAuth(Long userId, String auth) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(IsNotExistUser::new);
+        user.changeAuth(Authorization.valueOf(auth));
     }
 }

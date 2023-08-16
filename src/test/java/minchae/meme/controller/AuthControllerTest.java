@@ -71,7 +71,7 @@ class AuthControllerTest {
 
 
     @Test
-    @DisplayName("로그인")
+    @DisplayName("user 로 로그인")
     public void login() throws Exception {
         SignupForm signupForm = SignupForm.builder()
                 .username("ddd")
@@ -94,17 +94,14 @@ class AuthControllerTest {
     @Test
     @DisplayName("로그인에 실패할 시 loginPage 로 redirect 된다.")
     public void loginUser() throws Exception {
-        SignupForm signupForm = SignupForm.builder()
-                .username("ddd")
-                .email("jmcabc@naver.com1")
-                .password("wjdals12")
-                .phoneNum("01035573336")
+        User user = User.builder()
+                .username("wjdalsco")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password("passwordEncoder.encode(signupForm.getPassword()")
+                .enable(true)
+                .authorizations(Authorization.ADMIN)
                 .build();
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/auth/signup")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(signupForm)))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+        userRepository.save(user);
 
 
         //when login 이 성공했을때는 /로 redirect 된다. /의 권한은 USER 이다.
@@ -113,5 +110,25 @@ class AuthControllerTest {
                 //.andExpect(MockMvcResultMatchers.redirectedUrl());
 
     }
+
+    @Test
+    @DisplayName("admin 으로 로그인")
+    public void auth() throws Exception {
+        User user = User.builder()
+                .username("jmcabc@naver.com")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password(passwordEncoder.encode("wjdals12"))
+                .enable(true)
+                .authorizations(Authorization.ADMIN)
+                .build();
+        userRepository.save(user);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/login?username=jmcabc@naver.com&password=wjdals12"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/"));
+
+
+
+    }
+
 
 }

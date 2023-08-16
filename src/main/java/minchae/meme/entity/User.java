@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import minchae.meme.auth.CustomAuthorityDeserializer;
@@ -73,6 +74,11 @@ public class User implements UserDetails {
         ArrayList<GrantedAuthority> auth = new ArrayList<>();
         auth.add(new SimpleGrantedAuthority(authorizations.name()));
         return auth;
+    }
+
+    @Transactional
+    public void changeAuth(Authorization authorization) {
+        authorizations = authorization;
     }
 
     @Override
