@@ -1,10 +1,14 @@
 package minchae.meme.config;
 
+import lombok.RequiredArgsConstructor;
+import minchae.meme.entity.enumClass.Authorization;
+import minchae.meme.repository.UserRepository;
+import minchae.meme.service.impl.UserDetailServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -16,10 +20,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity(debug = true)
 public class WebSecurityConfig {
 
-
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.ignoring().requestMatchers("/error", "/favicon.ico","/**");
+        return null;
     }
 
     @Bean
@@ -29,15 +32,15 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/auth/login").permitAll()
-                        .requestMatchers("/error").permitAll()
-                        .requestMatchers("/auth/signup").permitAll()
-                        .anyRequest().authenticated())
-                .formLogin(form -> form
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/**").permitAll())
+                .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
+                        .failureUrl("/")
                         .loginPage("/auth/login")
-                        .defaultSuccessUrl("/posts")
-                        .failureUrl("/auth/signup"))
+                        .loginProcessingUrl("/auth/login")
+                        .defaultSuccessUrl("/")
+                        .usernameParameter("username")
+                        .usernameParameter("password"))
                 .csrf(AbstractHttpConfigurer::disable)
                 .build();
     }

@@ -74,7 +74,7 @@ class PostControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         java.lang.String postCreateJson = objectMapper.writeValueAsString(postCreate);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/posts")
+        mockMvc.perform(MockMvcRequestBuilders.post("/user/writePost")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(postCreateJson))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -94,7 +94,7 @@ class PostControllerTest {
 
         Post postResponse = postRepository.findAll().get(0);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/posts/{postId}", postResponse.getPostId()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/user/writePost/{postId}", postResponse.getPostId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("글 작성중입니다"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").value("글 내용은 비밀입니다"))
@@ -114,7 +114,7 @@ class PostControllerTest {
 
         //when
         Post postResponse = postRepository.findAll().get(0);
-        mockMvc.perform(MockMvcRequestBuilders.delete("/posts/{postId}", postResponse.getPostId()))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/user/writePost/{postId}", postResponse.getPostId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print());
 
@@ -145,7 +145,7 @@ class PostControllerTest {
         assertEquals(post.getPostId(), commentRepository.findAll().get(0).getPost().getPostId());
 
         //when
-        mockMvc.perform(MockMvcRequestBuilders.delete("/posts/{postId}", post.getPostId()))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/user/writePost/{postId}", post.getPostId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print());
 
@@ -179,7 +179,7 @@ class PostControllerTest {
 
         //when
         Post postResponse = postRepository.findAll().get(0);
-        mockMvc.perform(MockMvcRequestBuilders.patch("/posts/{postId}", postResponse.getPostId())
+        mockMvc.perform(MockMvcRequestBuilders.patch("/user/writePost/{postId}", postResponse.getPostId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -205,13 +205,13 @@ class PostControllerTest {
         assertEquals(postRepository.count(), 10);
 
         //when
-        mockMvc.perform(MockMvcRequestBuilders.get("/posts/list?page=1&size=5"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/user/writePost/list?page=1&size=5"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(5))
                 .andDo(print());
 
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/posts/list?page=1&size=10"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/user/writePost/list?page=1&size=10"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(10))
                 .andDo(print());
@@ -222,7 +222,7 @@ class PostControllerTest {
     @Test
     @DisplayName("게시물 받아오기 - postNotFound 404 에러 출력")
     void postNotFound() throws Exception{
-        mockMvc.perform(MockMvcRequestBuilders.get("/posts/{postId}", 393L))
+        mockMvc.perform(MockMvcRequestBuilders.get("/user/writePost/{postId}", 393L))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andDo(print());
 
@@ -265,7 +265,7 @@ class PostControllerTest {
 
 
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/posts")
+        mockMvc.perform(MockMvcRequestBuilders.post("/user/writePost")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postCreate)))
                 .andExpect(MockMvcResultMatchers.status().isOk())

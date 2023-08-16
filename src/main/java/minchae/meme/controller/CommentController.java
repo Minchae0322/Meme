@@ -23,51 +23,51 @@ public class CommentController {
     private final PostRepository postRepository;
 
 
-    @GetMapping("/posts/{postId}/comments")
+    @GetMapping("/user/writePost/{postId}/comments")
     public List<CommentResponse> getCommentList(@PathVariable Long postId) {
         return commentService.getCommentList(postId);
     }
 
-    @GetMapping("/posts/comment/{commentId}")
+    @GetMapping("/user/writePost/comment/{commentId}")
     public CommentResponse getComment(@PathVariable Long commentId) {
         return commentService.getComment(commentId);
     }
 
-    @PostMapping("/posts/{postId}/comments")
+    @PostMapping("/user/writePost/{postId}/comments")
     public void writeComment(@PathVariable Long postId, @RequestBody CommentCreate commentCreate) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("이미 삭제된 글입니다"));
         commentService.write(post, commentCreate);
     }
 
-    @PostMapping("/posts/{commentId}/up")
+    @PostMapping("/user/writePost/{commentId}/up")
     public CommentResponse upRecommendation(@PathVariable Long commentId) {
         return commentService.upRecommendation(commentId);
     }
 
-    @PostMapping("/posts/{commentId}/bad")
+    @PostMapping("/user/writePost/{commentId}/bad")
     public CommentResponse upBad(@PathVariable Long commentId) {
         return commentService.upBad(commentId);
     }
 
 
-    @PatchMapping("/posts/{postId}/comments/{commentId}")
+    @PatchMapping("/user/writePost/{postId}/comments/{commentId}")
     public CommentResponse writeComment(@PathVariable Long postId, @PathVariable Long commentId, @RequestBody CommentEdit commentEdit) {
         return commentService.update(commentId, commentEdit);
     }
 
-    @DeleteMapping("/posts/{postId}/comments/{commentId}")
+    @DeleteMapping("/user/writePost/{postId}/comments/{commentId}")
     public void getCommentList(@PathVariable Long postId, @PathVariable Long commentId) {
         commentService.delete(postId, commentId);
     }
 
 
-    @PostMapping("/posts/{postId}/commentList")
+    @PostMapping("/user/writePost/{postId}/commentList")
     public void writeCommentList(@PathVariable Long postId, @RequestBody CommentVo commentVo) {
         commentService.writeCommentList(commentVo.getCommentCreateList());
     }
 
-    @DeleteMapping("/posts/{postId}/commentList")
+    @DeleteMapping("/user/writePost/{postId}/commentList")
     public void deleteCommentList(@PathVariable Long postId) {
         commentService.deleteCommentList(postId);
     }

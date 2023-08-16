@@ -1,11 +1,16 @@
-POST http://localhost:8080/posts
+POST http://localhost:8080/auth/signup
 Content-Type: application/json
 
 {
-  "title": "제목입니다.",
-  "content": "내용입니다."
+  "name": "ddd",
+  "password": "ddd",
+  "email": "dkdeeeekdkek@naekke.come",
+  "phoneNumber": "92918182i3"
 }
 
 ###
 
-GET http://localhost:8080/posts/2561
+POST http://localhost:8080/auth/login
+Content-Type: application/x-www-form-urlencoded
+
+username=dddd&password=dddd

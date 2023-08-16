@@ -30,7 +30,7 @@ public class User implements UserDetails {
     private Long id;
 
     @NotBlank
-    private String name;
+    private String username;
 
     @NotBlank
     private String password;
@@ -51,11 +51,14 @@ public class User implements UserDetails {
 
     private Boolean enable;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Post> posts;
+
 
     @Builder
     public User(Long id, String name, String password, String email, Authorization authorizations, Boolean enable) {
         this.id = id;
-        this.name = name;
+        this.username = name;
         this.password = password;
         this.email = email;
         this.createdDate = LocalDateTime.now();
@@ -64,7 +67,8 @@ public class User implements UserDetails {
     }
 
     @Override
-    @JsonDeserialize(using = CustomAuthorityDeserializer.class)
+    //@JsonDeserialize(using = CustomAuthorityDeserializer.class)
+    @JsonDeserialize
     @JsonSerialize
     public Collection<? extends GrantedAuthority> getAuthorities() {
         ArrayList<GrantedAuthority> auth = new ArrayList<>();
@@ -74,7 +78,7 @@ public class User implements UserDetails {
 
     @Override
     public java.lang.String getUsername() {
-        return name;
+        return username;
     }
 
     @Override

@@ -23,19 +23,19 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDetails loadUserByUsername(java.lang.String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         //todo 비밀번호를 jwt 토큰으로 가져오기
-        return userRepository.findByName(username)
+        return userRepository.findByUsername(username)
                 .orElseThrow(Unauthorized::new);
     }
 
     @Override
     public void signup(SignupForm signupForm) {
-        if (userRepository.findByName(signupForm.getName()).isPresent()) {
+        if (userRepository.findByUsername(signupForm.getUsername()).isPresent()) {
             throw new IsExistedUser();
         }
         User user = User.builder()
-                .name(signupForm.getName())
+                .name(signupForm.getUsername())
                 .email(signupForm.getEmail())
                 .password(passwordEncoder.encode(signupForm.getPassword()))
                 .enable(true)

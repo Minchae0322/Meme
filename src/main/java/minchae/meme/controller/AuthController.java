@@ -19,7 +19,20 @@ public class AuthController {
     }
 
 
-    @PostMapping("/auth/signup2")
-    public void signup2(@RequestBody User user) {
+    @PostMapping("/auth/login")
+    public String login() {
+        return "로그인페이지";
     }
+
+    @GetMapping("/")
+    public String home() {
+        return "로그인 성공";
+    }
+
+
+
+
+
+
+
 }

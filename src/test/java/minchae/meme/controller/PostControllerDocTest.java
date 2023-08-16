@@ -74,7 +74,7 @@ public class PostControllerDocTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String postCreateJson = objectMapper.writeValueAsString(postCreate);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/posts")
+        mockMvc.perform(MockMvcRequestBuilders.post("/user/writePost")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(postCreateJson))
                 .andExpect(MockMvcResultMatchers.status().isOk())

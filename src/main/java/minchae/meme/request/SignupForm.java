@@ -11,7 +11,7 @@ import lombok.Setter;
 @RequiredArgsConstructor
 public class SignupForm {
     @NotBlank
-    private String name;
+    private String username;
 
     @NotBlank
     private String password;
@@ -19,12 +19,13 @@ public class SignupForm {
     @NotBlank
     private String email;
 
+
     @NotBlank
     private String phoneNum;
 
     @Builder
     public SignupForm(String name, String password, String email, String phoneNum) {
-        this.name = name;
+        this.username = name;
         this.password = password;
         this.email = email;
         this.phoneNum = phoneNum;

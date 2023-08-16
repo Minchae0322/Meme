@@ -49,7 +49,7 @@ public class Post {
     @Column
     private boolean isHot;
 
-    @OneToOne()
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private User user;
 
 
