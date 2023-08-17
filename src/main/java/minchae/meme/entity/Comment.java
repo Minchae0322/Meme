@@ -1,7 +1,6 @@
 package minchae.meme.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
@@ -30,18 +29,20 @@ public class Comment {
     @Column
     @NotBlank
     private String comment;
-    private Long writerId;
+    @ManyToOne()
+    private User user;
     @ColumnDefault("0")
     private int recommendation;
     @ColumnDefault("0")
     private int bad;
 
+
     @Builder
-    public Comment(Long commentId, Post post, String comment, Long writerId, int recommendation, int bad) {
+    public Comment(Long commentId, Post post, String comment, User user, int recommendation, int bad) {
         this.commentId = commentId;
         this.post = post;
         this.comment = comment;
-        this.writerId = writerId;
+        this.user = user;
         this.recommendation = recommendation;
         this.bad = bad;
     }

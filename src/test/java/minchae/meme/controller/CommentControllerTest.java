@@ -96,7 +96,6 @@ class CommentControllerTest {
 
         CommentCreate commentCreate = CommentCreate.builder()
                 .comment("댓글 1")
-                .writerId(30L)
                 .build();
 
         mockMvc.perform(MockMvcRequestBuilders.post("/board/posts/{postId}/comments", postCreate.getPostId())
@@ -122,13 +121,11 @@ class CommentControllerTest {
         CommentCreate comment = CommentCreate.builder()
                 .post(post)
                 .comment("댓글입니다")
-                .writerId(24L)
                 .build();
 
         CommentCreate comment2 = CommentCreate.builder()
                 .post(post)
                 .comment("댓글입니다2")
-                .writerId(24L)
                 .build();
 
 
@@ -165,7 +162,7 @@ class CommentControllerTest {
                 .post(post)
                 .recommendation(1)
                 .comment("댓글입니다")
-                .writerId(24L)
+
                 .build();
 
         commentRepository.save(comment);
@@ -201,7 +198,7 @@ class CommentControllerTest {
         Comment comment = Comment.builder()
                 .post(post)
                 .comment("댓글입니다")
-                .writerId(24L)
+
                 .build();
 
         commentRepository.save(comment);
@@ -233,7 +230,7 @@ class CommentControllerTest {
         Comment comment = Comment.builder()
                 .post(post)
                 .comment("댓글입니다")
-                .writerId(24L)
+
                 .build();
 
         commentRepository.save(comment);
@@ -320,7 +317,7 @@ class CommentControllerTest {
         Comment comment = Comment.builder()
                 .post(post)
                 .comment("댓글입니다")
-                .writerId(24L)
+
                 .build();
 
         commentRepository.save(comment);
@@ -352,7 +349,6 @@ class CommentControllerTest {
         Comment comment = Comment.builder()
                 .post(post)
                 .comment("댓글입니다")
-                .writerId(24L)
                 .build();
 
         commentRepository.save(comment);

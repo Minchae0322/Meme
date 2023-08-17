@@ -52,8 +52,9 @@ public class User implements UserDetails {
 
     private Boolean enable;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Post> posts;
+
 
 
     @Builder

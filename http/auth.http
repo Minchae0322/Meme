@@ -1,9 +1,10 @@
+# @no-cookie-jar
 POST http://localhost:8080/auth/signup
 Content-Type: application/json
 
 {
-  "name": "ddd",
-  "password": "ddd",
+  "username": "dddf",
+  "password": "dddf",
   "email": "dkdeeeekdkek@naekke.come",
   "phoneNumber": "92918182i3"
 }
@@ -13,4 +14,4 @@ Content-Type: application/json
 POST http://localhost:8080/auth/login
 Content-Type: application/x-www-form-urlencoded
 
-username=ddd&password=wjdals12
+username=dddf&password=dddf

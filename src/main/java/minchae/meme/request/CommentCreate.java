@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import minchae.meme.entity.Post;
+import minchae.meme.entity.User;
 
 @Getter
 @Setter
@@ -12,17 +13,17 @@ import minchae.meme.entity.Post;
 public class CommentCreate {
     private Post post;
     private String comment;
-    private Long writerId;
+    private User user;
 
     private int recommendation = 0;
 
     private int bad = 0;
 
     @Builder
-    public CommentCreate(Post post, String comment, Long writerId, int recommendation, int bad) {
+    public CommentCreate(Post post, String comment, User user, int recommendation, int bad) {
         this.post = post;
         this.comment = comment;
-        this.writerId = writerId;
+        this.user = user;
         this.recommendation = recommendation;
         this.bad = bad;
     }

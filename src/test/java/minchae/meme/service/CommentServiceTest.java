@@ -60,7 +60,7 @@ class CommentServiceTest {
         Comment comment = Comment.builder()
                 .post(post)
                 .comment("댓글입니다")
-                .writerId(24L)
+
                 .build();
 
         commentRepository.save(comment);
@@ -86,7 +86,7 @@ class CommentServiceTest {
         Comment comment = Comment.builder()
                 .post(post)
                 .comment("댓글입니다")
-                .writerId(24L)
+
                 .build();
 
         commentRepository.save(comment);
@@ -112,7 +112,7 @@ class CommentServiceTest {
         Comment comment = Comment.builder()
                 .post(post)
                 .comment("댓글입니다")
-                .writerId(24L)
+
                 .build();
 
         commentRepository.save(comment);
@@ -144,7 +144,7 @@ class CommentServiceTest {
         Comment comment = Comment.builder()
                 .post(post)
                 .comment("댓글입니다")
-                .writerId(24L)
+
                 .build();
 
         commentRepository.save(comment);
@@ -172,7 +172,7 @@ class CommentServiceTest {
         Comment comment = Comment.builder()
                 .post(post)
                 .comment("댓글입니다")
-                .writerId(24L)
+
                 .build();
 
         commentRepository.save(comment);
@@ -381,7 +381,7 @@ class CommentServiceTest {
         Comment comment = Comment.builder()
                 .post(post)
                 .comment("댓글입니다")
-                .writerId(24L)
+
                 .build();
 
         commentRepository.save(comment);
@@ -412,13 +412,13 @@ class CommentServiceTest {
         Comment comment = Comment.builder()
                 .post(post)
                 .comment("댓글입니다")
-                .writerId(24L)
+
                 .build();
 
         Comment comment2 = Comment.builder()
                 .post(post)
                 .comment("댓글입니다2")
-                .writerId(24L)
+
                 .build();
 
         commentRepository.save(comment);

@@ -53,7 +53,7 @@ public class Post {
     @Column
     private final LocalDateTime createdTime = LocalDateTime.now();
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne()
     private User user;
 
 

@@ -1,6 +1,7 @@
 package minchae.meme.config;
 
 import lombok.RequiredArgsConstructor;
+import minchae.meme.auth.EmailPasswordTokenFilter;
 import minchae.meme.entity.enumClass.Authorization;
 import minchae.meme.repository.UserRepository;
 import minchae.meme.service.impl.UserDetailServiceImpl;
@@ -15,6 +16,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 @Configuration
 @EnableWebSecurity(debug = true)
@@ -23,6 +26,14 @@ public class WebSecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return null;
+    }
+
+    @Bean
+    public EmailPasswordTokenFilter emailPasswordTokenFilter() {
+        EmailPasswordTokenFilter filter = new EmailPasswordTokenFilter();
+        filter.setAuthenticationSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/"));
+        filter.setSecurityContextRepository(new HttpSessionSecurityContextRepository());
+        return filter;
     }
 
     @Bean
@@ -45,6 +56,9 @@ public class WebSecurityConfig {
                         .defaultSuccessUrl("/")
                         .usernameParameter("username")
                         .passwordParameter("password"))
+                .rememberMe(rm -> rm.rememberMeParameter("remember")
+                        .alwaysRemember(false)
+                        .tokenValiditySeconds(86400))
                 .csrf(AbstractHttpConfigurer::disable)
                 .build();
     }

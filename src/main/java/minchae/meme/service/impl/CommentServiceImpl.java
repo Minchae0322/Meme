@@ -1,7 +1,5 @@
 package minchae.meme.service.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import minchae.meme.entity.Comment;
@@ -14,7 +12,6 @@ import minchae.meme.request.CommentCreate;
 import minchae.meme.request.CommentEdit;
 import minchae.meme.response.CommentResponse;
 import minchae.meme.service.CommentService;
-import org.hibernate.tool.schema.spi.CommandAcceptanceException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -57,7 +54,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = Comment.builder()
                 .post(post)
                 .comment(commentCreate.getComment())
-                .writerId(commentCreate.getWriterId())
+                .user(commentCreate.getUser())
                 .build();
         commentRepository.save(comment);
     }
@@ -101,7 +98,7 @@ public class CommentServiceImpl implements CommentService {
                         .comment(commentCreate.getComment())
                         .bad(commentCreate.getBad())
                         .recommendation(commentCreate.getRecommendation())
-                        .writerId(commentCreate.getWriterId())
+                        .user(commentCreate.getUser())
                         .build())
                 .collect(Collectors.toList());
         commentRepository.saveAll(commentList);
