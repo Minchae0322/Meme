@@ -8,6 +8,7 @@ import minchae.meme.entity.enumClass.Authorization;
 import minchae.meme.exception.PostNotFound;
 import minchae.meme.repository.CommentRepository;
 import minchae.meme.repository.UserRepository;
+import minchae.meme.request.Page;
 import minchae.meme.request.PostCreate;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.request.PostEdit;
@@ -22,6 +23,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -74,7 +76,7 @@ class PostControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         java.lang.String postCreateJson = objectMapper.writeValueAsString(postCreate);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/user/writePost")
+        mockMvc.perform(MockMvcRequestBuilders.post("/board/user/writePost")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(postCreateJson))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -94,7 +96,7 @@ class PostControllerTest {
 
         Post postResponse = postRepository.findAll().get(0);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/user/writePost/{postId}", postResponse.getPostId()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/board/posts/{postId}", postResponse.getPostId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("글 작성중입니다"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").value("글 내용은 비밀입니다"))
@@ -114,7 +116,7 @@ class PostControllerTest {
 
         //when
         Post postResponse = postRepository.findAll().get(0);
-        mockMvc.perform(MockMvcRequestBuilders.delete("/user/writePost/{postId}", postResponse.getPostId()))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/board/user/{postId}", postResponse.getPostId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print());
 
@@ -145,7 +147,7 @@ class PostControllerTest {
         assertEquals(post.getPostId(), commentRepository.findAll().get(0).getPost().getPostId());
 
         //when
-        mockMvc.perform(MockMvcRequestBuilders.delete("/user/writePost/{postId}", post.getPostId()))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/board/user/{postId}", post.getPostId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print());
 
@@ -179,7 +181,7 @@ class PostControllerTest {
 
         //when
         Post postResponse = postRepository.findAll().get(0);
-        mockMvc.perform(MockMvcRequestBuilders.patch("/user/writePost/{postId}", postResponse.getPostId())
+        mockMvc.perform(MockMvcRequestBuilders.patch("/board/user/{postId}", postResponse.getPostId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -205,13 +207,13 @@ class PostControllerTest {
         assertEquals(postRepository.count(), 10);
 
         //when
-        mockMvc.perform(MockMvcRequestBuilders.get("/user/writePost/list?page=1&size=5"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/board/posts/list?page=1&size=5"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(5))
                 .andDo(print());
 
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/user/writePost/list?page=1&size=10"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/board/posts/list?page=1&size=10"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(10))
                 .andDo(print());
@@ -222,7 +224,7 @@ class PostControllerTest {
     @Test
     @DisplayName("게시물 받아오기 - postNotFound 404 에러 출력")
     void postNotFound() throws Exception{
-        mockMvc.perform(MockMvcRequestBuilders.get("/user/writePost/{postId}", 393L))
+        mockMvc.perform(MockMvcRequestBuilders.get("/board/posts/{postId}", 393L))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andDo(print());
 
@@ -265,7 +267,7 @@ class PostControllerTest {
 
 
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/user/writePost")
+        mockMvc.perform(MockMvcRequestBuilders.post("/board/user/writePost")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postCreate)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -278,4 +280,99 @@ class PostControllerTest {
 
     }
 
+
+    @Test
+    @DisplayName("admin 핫 게시물을 설정해준다.")
+    @WithMockUser(authorities = "ADMIN")
+    void selectHotPost() throws Exception{
+        User user = User.builder()
+                .username("jmcabc@naver.com")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password(passwordEncoder.encode("wjdals12"))
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user);
+
+
+        Post post = Post.builder()
+                .title("핫 게시물")
+                .user(user)
+                .content("핫 게시물 내용입니다.")
+                .build();
+
+        postRepository.save(post);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/setHot/{postId}", post.getPostId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(print());
+
+        assertEquals(1, postRepository.getHotList(new Page(1, 10)).size());
+    }
+
+
+    @Test
+    @DisplayName("admin 핫 게시물을 해제")
+    @WithMockUser(authorities = "ADMIN")
+    void cancelHotPost() throws Exception{
+        User user = User.builder()
+                .username("jmcabc@naver.com")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password(passwordEncoder.encode("wjdals12"))
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user);
+
+
+        Post post = Post.builder()
+                .title("핫 게시물")
+                .user(user)
+                .content("핫 게시물 내용입니다.")
+                .build();
+
+        postRepository.save(post);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/setHot/{postId}", post.getPostId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(print());
+
+        assertEquals(1, postRepository.getHotList(new Page(1, 10)).size());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/unsetHot/{postId}", post.getPostId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(print());
+
+        assertEquals(0, postRepository.getHotList(new Page(1, 10)).size());
+    }
+
+
+
+    @Test
+    @DisplayName("admin 모든 타입의 핫 게시물을 가져오기")
+    void getHotPost() throws Exception{
+        User user = User.builder()
+                .username("jmcabc@naver.com")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password(passwordEncoder.encode("wjdals12"))
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user);
+
+        List<Post> posts = IntStream.range(0, 20).mapToObj(i -> Post.builder()
+                        .title("핫 게시물")
+                        .user(user)
+                        .content("핫 게시물 내용입니다.")
+                        .build()).
+                collect(Collectors.toList());
+
+        postRepository.saveAll(posts);
+
+        IntStream.range(0, 10).forEach(i -> postService.setHotPost(posts.get(i).getPostId()));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/hotList?page=1&size=10"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(10))
+                .andDo(print());
+    }
 }

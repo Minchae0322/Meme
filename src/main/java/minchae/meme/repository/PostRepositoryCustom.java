@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface PostRepositoryCustom {
     List<Post> getPostList(Page page);
+
+    List<Post> getHotList(Page page);
 }

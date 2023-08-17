@@ -4,7 +4,10 @@ import lombok.RequiredArgsConstructor;
 import minchae.meme.entity.User;
 import minchae.meme.request.SignupForm;
 import minchae.meme.service.UserService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,8 +39,8 @@ public class AuthController {
     }
 
     @GetMapping("/")
-    public String home() {
-        return "로그인 성공";
+    public String home(@AuthenticationPrincipal User user) {
+        return user.getUsername();
     }
 
 

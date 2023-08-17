@@ -18,7 +18,18 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     public List<Post> getPostList(Page page) {
         return jpaQueryFactory.selectFrom(QPost.post)
                 .limit(page.getSize())
-                .offset((page.getPage() - 1) * 5L)
+                .orderBy(QPost.post.createdTime.desc())
+                .offset((long) (page.getPage() - 1) * page.getSize())
+                .fetch();
+    }
+
+    @Override
+    public List<Post> getHotList(Page page) {
+        return jpaQueryFactory.selectFrom(QPost.post)
+                .where(QPost.post.isHot)
+                .orderBy(QPost.post.createdTime.desc())
+                .limit(page.getSize())
+                .offset((long) (page.getPage() - 1) * page.getSize())
                 .fetch();
     }
 }

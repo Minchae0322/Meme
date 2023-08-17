@@ -77,7 +77,7 @@ class CommentControllerTest {
                         .build()).collect(Collectors.toList());
         commentRepository.saveAll(comments);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/user/writePost/{postId}/comments", post.getPostId()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/board/posts/{postId}/comments", post.getPostId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(30))
                 .andDo(print());
@@ -99,7 +99,7 @@ class CommentControllerTest {
                 .writerId(30L)
                 .build();
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/user/writePost/{postId}/comments", postCreate.getPostId())
+        mockMvc.perform(MockMvcRequestBuilders.post("/board/posts/{postId}/comments", postCreate.getPostId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(commentCreate)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -132,19 +132,19 @@ class CommentControllerTest {
                 .build();
 
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/user/writePost/{postId}/comments", post.getPostId())
+        mockMvc.perform(MockMvcRequestBuilders.post("/board/posts/{postId}/comments", post.getPostId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(comment)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print());
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/user/writePost/{postId}/comments", post.getPostId())
+        mockMvc.perform(MockMvcRequestBuilders.post("/board/posts/{postId}/comments", post.getPostId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(comment2)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/user/writePost/{postId}", post.getPostId()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/board/posts/{postId}", post.getPostId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.comments.size()").value(2))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.comments[0].comment").value("댓글입니다"))
@@ -175,14 +175,14 @@ class CommentControllerTest {
                 .comment("바뀐 댓글입니다")
                 .build();
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/user/writePost/{postId}/comments/{commentId}", post.getPostId(), comment.getCommentId())
+        mockMvc.perform(MockMvcRequestBuilders.patch("/board/posts/{postId}/comments/{commentId}", post.getPostId(), comment.getCommentId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(commentEdit)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.comment").value("바뀐 댓글입니다"))
                 .andDo(print());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/user/writePost/{postId}", post.getPostId()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/board/posts/{postId}", post.getPostId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.comments[0].comment").value("바뀐 댓글입니다"))
                 .andDo(print());
@@ -209,11 +209,11 @@ class CommentControllerTest {
         assertEquals(1, commentRepository.count());
 
         //when - 댓글이 삭제되었을 때 post 에 있는 comments 안에서도 삭제되어야 한다.
-        mockMvc.perform(MockMvcRequestBuilders.delete("/user/writePost/{postId}/comments/{commentId}", post.getPostId(), comment.getCommentId()))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/board/posts/{postId}/comments/{commentId}", post.getPostId(), comment.getCommentId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/user/writePost/{postId}", post.getPostId()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/board/posts/{postId}", post.getPostId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.comments.size()").value(0))
                 .andDo(print());
@@ -238,7 +238,7 @@ class CommentControllerTest {
 
         commentRepository.save(comment);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/user/writePost/comment/{commentId}", comment.getCommentId()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/board/posts/comment/{commentId}", comment.getCommentId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.comment").value("댓글입니다"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.writerId").value(24L))
@@ -279,7 +279,7 @@ class CommentControllerTest {
         System.out.println(">>>>>>>>>>>>" + objectMapper.writeValueAsString(comments));
 
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/user/writePost/{postId}/commentList", post.getPostId())
+        mockMvc.perform(MockMvcRequestBuilders.post("/board/posts/{postId}/commentList", post.getPostId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(commentVo)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -287,7 +287,7 @@ class CommentControllerTest {
 
         commentVo = new CommentVo(comments2);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/user/writePost/{postId}/commentList", post2.getPostId())
+        mockMvc.perform(MockMvcRequestBuilders.post("/board/posts/{postId}/commentList", post2.getPostId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(commentVo)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -297,7 +297,7 @@ class CommentControllerTest {
                 .orElseThrow();
         assertEquals(30, post1.getComments().size());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/user/writePost/{postId}", post.getPostId()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/board/posts/{postId}", post.getPostId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.comments.size()").value(30))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.comments[0].comment").value("댓글 0"))
@@ -330,7 +330,7 @@ class CommentControllerTest {
                 .comment("바뀐 댓글입니다")
                 .build();
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/user/writePost/{postId}/comments/{commentId}", post.getPostId(), comment.getCommentId())
+        mockMvc.perform(MockMvcRequestBuilders.patch("/board/posts/{postId}/comments/{commentId}", post.getPostId(), comment.getCommentId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(commentEdit)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -360,7 +360,7 @@ class CommentControllerTest {
         assertEquals(1, commentRepository.count());
 
         //when - 댓글이 삭제되었을 때 post 에 있는 comments 안에서도 삭제되어야 한다.
-        mockMvc.perform(MockMvcRequestBuilders.delete("/user/writePost/{postId}/comments/{commentId}", post.getPostId(), comment.getCommentId()))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/board/posts/{postId}/comments/{commentId}", post.getPostId(), comment.getCommentId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print());
 
@@ -402,12 +402,12 @@ class CommentControllerTest {
         commentRepository.saveAll(comments2);
 
         //when
-        mockMvc.perform(MockMvcRequestBuilders.delete("/user/writePost/{postId}/commentList", post.getPostId()))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/board/posts/{postId}/commentList", post.getPostId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print());
 
         //result
-        mockMvc.perform(MockMvcRequestBuilders.get("/user/writePost/{postId}", post.getPostId()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/board/posts/{postId}", post.getPostId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.comments.length()").value(0))
                 .andDo(print());
@@ -446,7 +446,7 @@ class CommentControllerTest {
         commentRepository.saveAll(comments2);
 
         //when
-        mockMvc.perform(MockMvcRequestBuilders.delete("/user/writePost/{postId}", post.getPostId()))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/board/posts/{postId}", post.getPostId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print());
 
@@ -475,13 +475,13 @@ class CommentControllerTest {
         commentRepository.saveAll(comments);
 
         //when 댓글의 추천을 눌렀을때
-        mockMvc.perform(MockMvcRequestBuilders.post("/user/writePost/{commentId}/up", comments.get(1).getCommentId()))
+        mockMvc.perform(MockMvcRequestBuilders.post("/board/posts/{commentId}/up", comments.get(1).getCommentId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.recommendation").value(1))
                 .andDo(print());
 
         //result 댓글 1의 추천수가 1
-        mockMvc.perform(MockMvcRequestBuilders.get("/user/writePost/{postId}", post.getPostId()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/board/posts/{postId}", post.getPostId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.comments[1].recommendation").value(1))
                 .andDo(print());
@@ -506,7 +506,7 @@ class CommentControllerTest {
 
         commentRepository.saveAll(comments);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/user/writePost/{commentId}/up", comments.get(1).getCommentId()))
+        mockMvc.perform(MockMvcRequestBuilders.post("/board/posts/{commentId}/up", comments.get(1).getCommentId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.recommendation").value(1))
                 .andDo(print());
@@ -531,7 +531,7 @@ class CommentControllerTest {
 
         commentRepository.saveAll(comments);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/user/writePost/{commentId}/bad", comments.get(1).getCommentId()))
+        mockMvc.perform(MockMvcRequestBuilders.post("/board/posts/{commentId}/bad", comments.get(1).getCommentId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.bad").value(1))
                 .andDo(print());
@@ -558,13 +558,13 @@ class CommentControllerTest {
         commentRepository.saveAll(comments);
 
         //when - 댓글 1의 비추천을 1회 눌렀을때
-        mockMvc.perform(MockMvcRequestBuilders.post("/user/writePost/{commentId}/bad", comments.get(1).getCommentId()))
+        mockMvc.perform(MockMvcRequestBuilders.post("/board/posts/{commentId}/bad", comments.get(1).getCommentId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.bad").value(1))
                 .andDo(print());
 
         //result - 댓글 1의 비추천이 1
-        mockMvc.perform(MockMvcRequestBuilders.get("/user/writePost/{postId}", post.getPostId()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/board/posts/{postId}", post.getPostId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.comments[1].bad").value(1))
                 .andDo(print());
@@ -573,7 +573,7 @@ class CommentControllerTest {
     @Test
     @DisplayName("댓글 받아오기 - commentNotFound 404 에러 출력")
     void commentNotFound() throws Exception{
-        mockMvc.perform(MockMvcRequestBuilders.get("/user/writePost/comment/{commentId}", 393L))
+        mockMvc.perform(MockMvcRequestBuilders.get("/board/posts/comment/{commentId}", 393L))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andDo(print());
         assertThrows(CommentNotFound.class,() -> {

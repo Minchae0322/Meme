@@ -18,5 +18,11 @@ public interface PostService {
     List<PostResponse> getListWherePage(Page page);
 
 
+    void setHotPost(Long postId);
+
+    void unsetHotPost(Long postId);
+
+    List<PostResponse> getHotListWherePage(Page page);
+
 }
 

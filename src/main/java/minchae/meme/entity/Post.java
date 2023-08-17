@@ -11,6 +11,7 @@ import minchae.meme.request.PostCreate;
 import minchae.meme.request.PostEdit;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +49,9 @@ public class Post {
 
     @Column
     private boolean isHot;
+
+    @Column
+    private final LocalDateTime createdTime = LocalDateTime.now();
 
     @ManyToOne(cascade = CascadeType.REMOVE)
     private User user;

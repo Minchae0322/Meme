@@ -6,8 +6,10 @@ import minchae.meme.entity.Post;
 import minchae.meme.entity.User;
 import minchae.meme.entity.enumClass.Authorization;
 import minchae.meme.repository.CommentRepository;
+import minchae.meme.repository.UserRepository;
 import minchae.meme.request.FreeBoardPage;
 import minchae.meme.repository.PostRepository;
+import minchae.meme.request.Page;
 import minchae.meme.request.PostCreate;
 import minchae.meme.request.PostEdit;
 import minchae.meme.response.PostResponse;
@@ -18,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -37,6 +40,15 @@ class PostServiceTest {
 
     @Autowired
     private CommentService commentService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private Post_MemeServiceImpl postService;
@@ -222,15 +234,100 @@ class PostServiceTest {
         assertEquals(1, postRepository.count());
         assertEquals("wjdalsco", postRepository.findAll().get(0).getUser().getUsername());
 
+    }
+
+    @Test
+    @DisplayName("admin 핫 게시물을 설정해준다.")
+    void selectHotPost() throws Exception{
+        User user = User.builder()
+                .username("jmcabc@naver.com")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password(passwordEncoder.encode("wjdals12"))
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user);
 
 
+        Post post = Post.builder()
+                .title("핫 게시물")
+                .user(user)
+                .content("핫 게시물 내용입니다.")
+                .build();
 
+        postRepository.save(post);
 
+        assertEquals(0, postRepository.getHotList(new Page(1, 10)).size());
+
+        postService.setHotPost(post.getPostId());
+
+        assertEquals(1, postRepository.getHotList(new Page(1, 10)).size());
 
     }
 
 
+    @Test
+    @DisplayName("admin 핫 게시물을 해제")
+    void cancelHotPost() throws Exception{
+        User user = User.builder()
+                .username("jmcabc@naver.com")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password(passwordEncoder.encode("wjdals12"))
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user);
 
+        Post post = Post.builder()
+                .title("핫 게시물")
+                .user(user)
+                .content("핫 게시물 내용입니다.")
+                .build();
+
+        postRepository.save(post);
+
+        postService.setHotPost(post.getPostId());
+
+        assertEquals(1, postRepository.getHotList(new Page(1, 10)).size());
+
+        postService.unsetHotPost(post.getPostId());
+
+        assertEquals(0, postRepository.getHotList(new Page(1, 10)).size());
+    }
+
+
+
+
+
+
+
+
+
+    @Test
+    @DisplayName("admin 모든 타입의 핫 게시물을 가져오기")
+    void getHotPost() throws Exception{
+        User user = User.builder()
+                .username("jmcabc@naver.com")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password(passwordEncoder.encode("wjdals12"))
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user);
+
+        List<Post> posts = IntStream.range(0, 20).mapToObj(i -> Post.builder()
+                        .title("핫 게시물")
+                        .user(user)
+                        .content("핫 게시물 내용입니다.")
+                        .build()).
+                collect(Collectors.toList());
+
+        postRepository.saveAll(posts);
+
+        IntStream.range(0, 10).forEach(i -> postService.setHotPost(posts.get(i).getPostId()));
+
+        assertEquals(10, postRepository.getHotList(new Page(1, 10)).size());
+    }
 
 
 

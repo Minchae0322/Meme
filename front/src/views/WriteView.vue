@@ -9,7 +9,7 @@ const content = ref("")
 
 
 const write = function () {
-  axios.post("http://localhost:8080/user/writePost", {
+  axios.post("http://localhost:8080/board/posts", {
     title: title.value,
     content: content.value
   })

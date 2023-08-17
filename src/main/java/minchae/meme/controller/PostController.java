@@ -20,18 +20,12 @@ public class PostController {
     private final Post_MemeServiceImpl postService;
     private final PostRepository postRepository;
 
-    @GetMapping("/user/writePost/{postId}")
+    @GetMapping("/board/posts/{postId}")
     public PostResponse getPost(@PathVariable("postId") Long postId) {
         return postService.get(postId);
     }
 
-
-    /*@GetMapping("/authTest")
-    public String authTest(UserSession userSession) {
-        return userSession.getName();
-    }*/
-
-    @PostMapping("/user/writePost")
+    @PostMapping("/board/user/writePost")
     public PostResponse writePost(@RequestBody PostCreate params) {
         postService.write(params);
         return PostResponse.builder()
@@ -41,20 +35,35 @@ public class PostController {
                 .build();
     }
 
-    @DeleteMapping("/user/writePost/{postId}")
+    @DeleteMapping("/board/user/{postId}")
     public Long deletePost(@PathVariable("postId") Long postId) {
         postService.delete(postId);
         return postId;
     }
 
-    @PatchMapping("/user/writePost/{postId}")
+    @PatchMapping("/board/user/{postId}")
     public PostResponse updatePost(@PathVariable("postId") Long postId, @RequestBody PostEdit postEdit) {
          return postService.update(postId, postEdit);
     }
 
 
-    @GetMapping("/user/writePost/list")
+    @GetMapping("/board/posts/list")
     public List<PostResponse> getPostListWherePage(@PageableDefault Page page) {
         return postService.getListWherePage(page);
+    }
+
+    @PostMapping("/admin/setHot/{postId}")
+    public void setHotPost(@PathVariable("postId") Long postId) {
+        postService.setHotPost(postId);
+    }
+
+    @PostMapping("/admin/unsetHot/{postId}")
+    public void unsetHotPost(@PathVariable Long postId) {
+        postService.unsetHotPost(postId);
+    }
+
+    @GetMapping("/hotList")
+    public List<PostResponse> unsetHotPost(Page page) {
+        return postService.getHotListWherePage(page);
     }
 }

@@ -75,4 +75,36 @@ public class Post_MemeServiceImpl implements PostService {
     }
 
 
+    @Override
+    @Transactional
+    public void setHotPost(Long postId) {
+       Post post = postRepository.findById(postId)
+               .orElseThrow(PostNotFound::new);
+       post.setHot(true);
+    }
+
+    @Override
+    @Transactional
+    public void unsetHotPost(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(PostNotFound::new);
+        post.setHot(false);
+    }
+
+    @Override
+    public List<PostResponse> getHotListWherePage(Page page) {
+        return postRepository.getHotList(page)
+                .stream()
+                .map(post -> PostResponse.builder()
+                        .postId(post.getPostId())
+                        .title(post.getTitle())
+                        .content(post.getContent())
+                        .recommendation(post.getRecommendation())
+                        .bad(post.getBad())
+                        .views(post.getViews())
+                        .user(post.getUser())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
 }

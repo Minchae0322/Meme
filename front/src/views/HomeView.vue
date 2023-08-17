@@ -7,7 +7,7 @@ import router from "@/router";
 
 const posts = ref([]);
 
-axios.get("http://localhost:8080/user/writePost/498").then((response) => {
+axios.get("http://localhost:8080/board/posts/498").then((response) => {
   posts.value.push(response.data)
 })
 
