@@ -6,6 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import minchae.meme.auth.CustomAuthorityDeserializer;
@@ -37,6 +38,7 @@ public class User implements UserDetails {
     private String password;
 
     @NotBlank
+    @Email
     private String email;
 
 

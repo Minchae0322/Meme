@@ -297,12 +297,6 @@ class PostServiceTest {
 
 
 
-
-
-
-
-
-
     @Test
     @DisplayName("admin 모든 타입의 핫 게시물을 가져오기")
     void getHotPost() throws Exception{
