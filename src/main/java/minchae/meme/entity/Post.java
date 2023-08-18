@@ -55,6 +55,8 @@ public class Post {
     @ManyToOne()
     private User user;
 
+    private String youtubeUrl;
+
     @JsonManagedReference
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private final List<Comment> comments = new ArrayList<>();
