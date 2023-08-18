@@ -1,16 +1,14 @@
 package minchae.meme.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import minchae.meme.entity.Comment;
-import minchae.meme.entity.Post;
-import minchae.meme.entity.User;
+import minchae.meme.entity.*;
 import minchae.meme.entity.enumClass.Authorization;
+import minchae.meme.exception.IsRecommended;
 import minchae.meme.repository.CommentRepository;
+import minchae.meme.repository.RecommendationRepository;
 import minchae.meme.repository.UserRepository;
 import minchae.meme.request.FreeBoardPage;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.request.Page;
-import minchae.meme.request.PostCreate;
 import minchae.meme.request.PostEdit;
 import minchae.meme.response.PostResponse;
 import minchae.meme.service.impl.Post_MemeServiceImpl;
@@ -19,12 +17,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -45,6 +39,9 @@ class PostServiceTest {
     private UserService userService;
 
     @Autowired
+    private RecommendationRepository recommendationRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -59,6 +56,8 @@ class PostServiceTest {
     @BeforeEach
     public void before() {
         postRepository.deleteAll();
+        recommendationRepository.deleteAll();
+
     }
 
     @Test
@@ -321,6 +320,107 @@ class PostServiceTest {
         IntStream.range(0, 10).forEach(i -> postService.setHotPost(posts.get(i).getPostId()));
 
         assertEquals(10, postRepository.getHotList(new Page(1, 10)).size());
+    }
+
+
+    @Test
+    @DisplayName("포스트 id 와 유저 id 에 맞는 추천 목록 확인하기.")
+    void findRecommendation() throws Exception{
+        User user = User.builder()
+                .username("jmcabc@naver.com")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password(passwordEncoder.encode("wjdals12"))
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user);
+
+        Post post = Post.builder()
+                .title("핫 게시물")
+                .user(user)
+                .content("핫 게시물 내용입니다.")
+                .build();
+
+        postRepository.save(post);
+
+        Recommendation recommendation = Recommendation.builder()
+                .post(post)
+                .user(user)
+                .build();
+        recommendationRepository.save(recommendation);
+        Recommendation recommendation1 = recommendationRepository.findByPostIdAndUserId(post.getPostId(), user.getId()).get(0);
+        assertEquals(recommendation.getId(), recommendation1.getId());
+
+    }
+
+    @Test
+    @DisplayName("게시물의 추천수를 1회 업")
+    void upRecommendation() throws Exception{
+        User user = User.builder()
+                .username("jmcabc@naver.com")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password(passwordEncoder.encode("wjdals12"))
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user);
+
+        User user2 = User.builder()
+                .username("2@naver.com")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password(passwordEncoder.encode("wjdals12"))
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user2);
+
+        Post post = Post.builder()
+                .title("핫 게시물")
+                .user(user)
+                .content("핫 게시물 내용입니다.")
+                .build();
+
+        postRepository.save(post);
+
+        assertEquals(1, postService.upRecommendation(post, user));
+        assertEquals(1, recommendationRepository.count());
+
+
+        Post upPost = postRepository.findById(post.getPostId()).orElseThrow();
+
+
+        assertEquals(2, postService.upRecommendation(upPost, user2));
+        assertEquals(2, recommendationRepository.count());
+    }
+
+
+    @Test
+    @DisplayName("같은 사람이 한 게시물의 추천을 두번 누를때 exception")
+    void upRecommendationTwo() throws Exception{
+        User user = User.builder()
+                .username("jmcabc@naver.com")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password(passwordEncoder.encode("wjdals12"))
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user);
+
+
+        Post post = Post.builder()
+                .title("핫 게시물")
+                .user(user)
+                .content("핫 게시물 내용입니다.")
+                .build();
+
+        postRepository.save(post);
+
+        assertEquals(1, postService.upRecommendation(post, user));
+        assertEquals(1, recommendationRepository.count());
+
+
+        assertThrows(IsRecommended.class, () -> postService.upRecommendation(post, user));
+
     }
 
 

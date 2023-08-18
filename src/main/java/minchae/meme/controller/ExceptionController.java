@@ -1,10 +1,7 @@
 package minchae.meme.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import minchae.meme.exception.CommentNotFound;
-import minchae.meme.exception.IsExistedUser;
-import minchae.meme.exception.PostNotFound;
-import minchae.meme.exception.Unauthorized;
+import minchae.meme.exception.*;
 import minchae.meme.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -55,6 +52,17 @@ public class ExceptionController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IsExistedUser.class)
     public ErrorResponse isExitedUser(IsExistedUser e) {
+        return ErrorResponse.builder()
+                .code("404")
+                .message(e.getMessage())
+                .build();
+    }
+
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IsRecommended.class)
+    public ErrorResponse isRecommended(IsRecommended e) {
         return ErrorResponse.builder()
                 .code("404")
                 .message(e.getMessage())

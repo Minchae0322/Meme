@@ -5,6 +5,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import minchae.meme.entity.Post;
 import minchae.meme.entity.QPost;
+import minchae.meme.entity.Recommendation;
 import minchae.meme.repository.PostRepositoryCustom;
 import minchae.meme.request.Page;
 
@@ -32,4 +33,8 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .offset((long) (page.getPage() - 1) * page.getSize())
                 .fetch();
     }
+
+
+
+
 }

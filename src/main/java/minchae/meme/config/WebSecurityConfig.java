@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -16,6 +18,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
@@ -28,13 +31,20 @@ public class WebSecurityConfig {
         return null;
     }
 
-    @Bean
+   /* @Bean
     public EmailPasswordTokenFilter emailPasswordTokenFilter() {
         EmailPasswordTokenFilter filter = new EmailPasswordTokenFilter();
         filter.setAuthenticationSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/"));
+        filter.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler("/"));
         filter.setSecurityContextRepository(new HttpSessionSecurityContextRepository());
         return filter;
     }
+
+    @Bean
+    public AuthenticationManager authenticationManage() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsPasswordService(UserDetailServiceImpl.class);
+    }*/
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {

@@ -3,8 +3,12 @@ package minchae.meme.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import minchae.meme.entity.Post;
+import minchae.meme.entity.Recommendation;
+import minchae.meme.entity.User;
+import minchae.meme.exception.IsRecommended;
 import minchae.meme.exception.PostNotFound;
 import minchae.meme.repository.CommentRepository;
+import minchae.meme.repository.RecommendationRepository;
 import minchae.meme.request.Page;
 import minchae.meme.request.PostCreate;
 import minchae.meme.request.PostEdit;
@@ -13,7 +17,6 @@ import minchae.meme.repository.PostRepository;
 import minchae.meme.service.PostService;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +25,8 @@ import java.util.stream.Collectors;
 public class Post_MemeServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+
+    private final RecommendationRepository recommendationRepository;
 
     @Override
     @Transactional
@@ -66,7 +71,7 @@ public class Post_MemeServiceImpl implements PostService {
                         .postId(post.getPostId())
                         .title(post.getTitle())
                         .content(post.getContent())
-                        .recommendation(post.getRecommendation())
+                        .recommendation(post.getRecommendations().size())
                         .bad(post.getBad())
                         .views(post.getViews())
                         .user(post.getUser())
@@ -99,12 +104,26 @@ public class Post_MemeServiceImpl implements PostService {
                         .postId(post.getPostId())
                         .title(post.getTitle())
                         .content(post.getContent())
-                        .recommendation(post.getRecommendation())
+                        .recommendation(post.getRecommendations().size())
                         .bad(post.getBad())
                         .views(post.getViews())
                         .user(post.getUser())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public int upRecommendation(Post post, User user) {
+        if (recommendationRepository.findByPostIdAndUserId(post.getPostId(), user.getId()).size() >= 1) {
+            throw new IsRecommended();
+        }
+        recommendationRepository.save(Recommendation.builder()
+                .user(user)
+                .post(post)
+                .build());
+
+        return post.getRecommendations().size() + 1;
     }
 
 }

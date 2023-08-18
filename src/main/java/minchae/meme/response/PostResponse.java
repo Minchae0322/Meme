@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import minchae.meme.entity.Comment;
 import minchae.meme.entity.Post;
+import minchae.meme.entity.Recommendation;
 import minchae.meme.entity.User;
 
 import java.util.List;
@@ -48,7 +49,7 @@ public class PostResponse {
         this.postId = post.getPostId();
         this.title = post.getTitle();
         this.content = post.getContent();
-        this.recommendation = post.getRecommendation();
+        this.recommendation = post.getRecommendations().size();
         this.bad = post.getBad();
         this.views = post.getViews();
         this.user = post.getUser();

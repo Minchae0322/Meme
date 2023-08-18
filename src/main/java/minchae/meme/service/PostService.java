@@ -1,5 +1,7 @@
 package minchae.meme.service;
 
+import minchae.meme.entity.Post;
+import minchae.meme.entity.User;
 import minchae.meme.request.Page;
 import minchae.meme.request.PostCreate;
 import minchae.meme.request.PostEdit;
@@ -23,6 +25,8 @@ public interface PostService {
     void unsetHotPost(Long postId);
 
     List<PostResponse> getHotListWherePage(Page page);
+
+    int upRecommendation(Post post, User user);
 
 }
 
