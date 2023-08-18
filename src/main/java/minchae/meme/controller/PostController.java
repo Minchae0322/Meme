@@ -2,6 +2,8 @@ package minchae.meme.controller;
 
 
 import lombok.RequiredArgsConstructor;
+import minchae.meme.entity.Post;
+import minchae.meme.entity.User;
 import minchae.meme.request.Page;
 import minchae.meme.request.PostCreate;
 import minchae.meme.request.PostEdit;
@@ -11,6 +13,7 @@ import minchae.meme.service.impl.Post_MemeServiceImpl;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -75,5 +78,11 @@ public class PostController {
     @GetMapping("/hotList")
     public List<PostResponse> unsetHotPost(Page page) {
         return postService.getHotListWherePage(page);
+    }
+
+    @PostMapping("/board/user/{postId}/up")
+    public int upRecommendation(@PathVariable("postId") Long postId, @AuthenticationPrincipal User user) {
+        Post post = postRepository.findById(postId).orElseThrow();
+        return postService.upRecommendation(post, user);
     }
 }

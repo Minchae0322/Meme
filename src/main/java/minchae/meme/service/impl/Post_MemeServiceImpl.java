@@ -41,7 +41,9 @@ public class Post_MemeServiceImpl implements PostService {
                 .content(postCreate.getContent())
                 .user(postCreate.getUser())
                 .build();
-        fileService.writeList(fileService.saveFiles(postCreate.getImageFiles(), post));
+        if (postCreate.getImageFiles() != null) {
+            fileService.writeList(fileService.saveFiles(postCreate.getImageFiles(), post));
+        }
         postRepository.save(post);
     }
 
