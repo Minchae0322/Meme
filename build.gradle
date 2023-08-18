@@ -31,6 +31,9 @@ repositories {
 }
 
 dependencies {
+    implementation 'commons-fileupload:commons-fileupload:1.4'
+    implementation 'commons-io:commons-io:2.11.0'
+    implementation 'org.apache.tika:tika-core:2.4.1'
     testImplementation 'org.projectlombok:lombok:1.18.22'
     asciidoctorExt "org.springframework.restdocs:spring-restdocs-asciidoctor:${asciidocVersion}"
     testImplementation "org.springframework.restdocs:spring-restdocs-mockmvc:${asciidocVersion}"

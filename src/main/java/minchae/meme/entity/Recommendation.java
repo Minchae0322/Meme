@@ -12,6 +12,8 @@ import org.hibernate.sql.Update;
 @Getter
 @Setter
 @RequiredArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(columnDefinition = "DATA-TYPE")
 public class Recommendation {
 
     @Id
