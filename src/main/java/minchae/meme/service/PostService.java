@@ -7,10 +7,11 @@ import minchae.meme.request.PostCreate;
 import minchae.meme.request.PostEdit;
 import minchae.meme.response.PostResponse;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface PostService {
-    void write(PostCreate postCreate);
+    void write(PostCreate postCreate) throws IOException;
     PostResponse get(Long postId);
 
     void delete(Long postId);

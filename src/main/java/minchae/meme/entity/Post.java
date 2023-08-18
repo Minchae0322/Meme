@@ -55,11 +55,12 @@ public class Post {
     @ManyToOne()
     private User user;
 
-
     @JsonManagedReference
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private final List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private final List<UploadFile> uploadFiles = new ArrayList<>();
 
 
 
@@ -67,6 +68,7 @@ public class Post {
         this.title = postEdit.getTitle();
         this.content = postEdit.getContent();
         this.views++;
+        //todo 이미지 파일이랑 url 수정도 같이
     }
 
 

@@ -8,9 +8,13 @@ import minchae.meme.request.PostEdit;
 import minchae.meme.response.PostResponse;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.service.impl.Post_MemeServiceImpl;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 
 @RestController
@@ -26,7 +30,7 @@ public class PostController {
     }
 
     @PostMapping("/board/user/writePost")
-    public PostResponse writePost(@RequestBody PostCreate params) {
+    public PostResponse writePost(@RequestBody PostCreate params) throws IOException {
         postService.write(params);
         return PostResponse.builder()
                 .title(params.getTitle())
@@ -34,6 +38,12 @@ public class PostController {
                 .user(params.getUser())
                 .build();
     }
+
+    /*@ResponseBody
+    @GetMapping("/images/{filename}")
+    public List<Resource> showImage(@PathVariable String filename) throws MalformedURLException {
+        return new UrlResource("file:" + fileStore.getFullPath(filename));
+    }*/
 
     @DeleteMapping("/board/user/{postId}")
     public Long deletePost(@PathVariable("postId") Long postId) {

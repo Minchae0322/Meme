@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import minchae.meme.entity.Post;
 import minchae.meme.entity.Recommendation;
+import minchae.meme.entity.UploadFile;
 import minchae.meme.entity.User;
 import minchae.meme.exception.IsRecommended;
 import minchae.meme.exception.PostNotFound;
@@ -14,9 +15,12 @@ import minchae.meme.request.PostCreate;
 import minchae.meme.request.PostEdit;
 import minchae.meme.response.PostResponse;
 import minchae.meme.repository.PostRepository;
+import minchae.meme.service.FileService;
 import minchae.meme.service.PostService;
+import minchae.meme.store.FileStore;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,15 +31,17 @@ public class Post_MemeServiceImpl implements PostService {
     private final CommentRepository commentRepository;
 
     private final RecommendationRepository recommendationRepository;
+    private final FileService fileService;
 
     @Override
     @Transactional
-    public void write(PostCreate postCreate) {
+    public void write(PostCreate postCreate) throws IOException {
         Post post = Post.builder()
                 .title(postCreate.getTitle())
                 .content(postCreate.getContent())
                 .user(postCreate.getUser())
                 .build();
+        fileService.writeList(fileService.saveFiles(postCreate.getImageFiles(), post));
         postRepository.save(post);
     }
 
