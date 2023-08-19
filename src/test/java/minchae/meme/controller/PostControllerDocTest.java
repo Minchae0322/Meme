@@ -7,7 +7,7 @@ import minchae.meme.repository.CommentRepository;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.request.PostCreate;
 import minchae.meme.service.CommentService;
-import minchae.meme.service.impl.Post_MemeServiceImpl;
+import minchae.meme.service.impl.PostServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,7 +42,7 @@ public class PostControllerDocTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private Post_MemeServiceImpl postService;
+    private PostServiceImpl postService;
     @Autowired
     private CommentRepository commentRepository;
     @Autowired

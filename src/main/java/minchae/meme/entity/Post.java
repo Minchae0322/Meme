@@ -9,6 +9,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import minchae.meme.request.PostEdit;
@@ -41,25 +42,25 @@ public class Post {
     @NotBlank
     private String content;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private final List<Recommendation> recommendations = new ArrayList<>();
-
-    @ColumnDefault("0")
-    private int bad;
-
-    @ColumnDefault("0")
-    private int views;
-
-    @Embedded
-    private PostFunction postFunction;
-
     @Column
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private final LocalDateTime createdTime = LocalDateTime.now();
 
+    @ColumnDefault("0")
+    private int views;
+
     @ManyToOne()
-    private User user;
+    @NotNull
+    private User author;
+
+    @Embedded
+    @NotNull
+    private PostFunction postFunction;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private final List<UpDown> upDowns = new ArrayList<>();
+
 
     private String youtubeUrl;
 
@@ -77,6 +78,26 @@ public class Post {
         this.content = postEdit.getContent();
         this.views++;
         //todo 이미지 파일이랑 url 수정도 같이
+    }
+
+    public int getRecommendation() {
+        int up = 0;
+        for (UpDown upDown : upDowns) {
+            if (upDown.getType().equals("UP")) {
+                up++;
+            }
+        }
+        return up;
+    }
+
+    public int getBad() {
+        int bad = 0;
+        for (UpDown upDown : upDowns) {
+            if (upDown.getType().equals("DOWN")) {
+                bad++;
+            }
+        }
+        return bad;
     }
 
 

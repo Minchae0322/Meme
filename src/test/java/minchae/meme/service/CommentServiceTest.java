@@ -5,11 +5,9 @@ import minchae.meme.entity.Comment;
 import minchae.meme.entity.Post;
 import minchae.meme.repository.CommentRepository;
 import minchae.meme.repository.PostRepository;
-import minchae.meme.request.CommentCreate;
 import minchae.meme.request.CommentEdit;
 import minchae.meme.response.CommentResponse;
-import minchae.meme.response.PostResponse;
-import minchae.meme.service.impl.Post_MemeServiceImpl;
+import minchae.meme.service.impl.PostServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -36,7 +34,7 @@ class CommentServiceTest {
     private CommentService commentService;
 
     @Autowired
-    private Post_MemeServiceImpl postService;
+    private PostServiceImpl postService;
 
     @BeforeEach
     public void before() {

@@ -4,14 +4,14 @@ import minchae.meme.entity.*;
 import minchae.meme.entity.enumClass.Authorization;
 import minchae.meme.exception.IsRecommended;
 import minchae.meme.repository.CommentRepository;
-import minchae.meme.repository.RecommendationRepository;
+import minchae.meme.repository.UpDownRepository;
 import minchae.meme.repository.UserRepository;
 import minchae.meme.request.FreeBoardPage;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.request.Page;
 import minchae.meme.request.PostEdit;
 import minchae.meme.response.PostResponse;
-import minchae.meme.service.impl.Post_MemeServiceImpl;
+import minchae.meme.service.impl.PostServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,7 +39,7 @@ class PostServiceTest {
     private UserService userService;
 
     @Autowired
-    private RecommendationRepository recommendationRepository;
+    private UpDownRepository updownRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -48,7 +48,7 @@ class PostServiceTest {
     private UserRepository userRepository;
 
     @Autowired
-    private Post_MemeServiceImpl postService;
+    private PostServiceImpl postService;
 
     @Autowired
     private CommentRepository commentRepository;
@@ -56,18 +56,32 @@ class PostServiceTest {
     @BeforeEach
     public void before() {
         postRepository.deleteAll();
-        recommendationRepository.deleteAll();
+        updownRepository.deleteAll();
 
     }
 
     @Test
     @DisplayName("게시물 작성")
     void writePost() {
-
         //when
+        PostFunction postFunction = PostFunction.builder()
+                .isHot(false)
+                .build();
+
+        User user = User.builder()
+                .username("wjdalsco")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password("passwordEncoder.encode(signupForm.getPassword()")
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user);
+
         Post post = Post.builder()
                 .title("첫게시물입니다")
                 .content("ㅇㅇㅇㅇㅇㅇ")
+                .postFunction(postFunction)
+                .author(user)
                 .build();
         postRepository.save(post);
         assertEquals(postRepository.count(), 1);
@@ -77,15 +91,30 @@ class PostServiceTest {
         assertEquals("첫게시물입니다", savedPost.getTitle());
         assertEquals("ㅇㅇㅇㅇㅇㅇ", savedPost.getContent());
         assertEquals(0, savedPost.getComments().size());
+        assertFalse(savedPost.getPostFunction().isHot());
     }
 
     @Test
     @DisplayName("게시물1개 조회")
     void getPost() {
         //given
+        PostFunction postFunction = PostFunction.builder()
+                .isHot(false)
+                .build();
+        User user = User.builder()
+                .username("wjdalsco")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password("passwordEncoder.encode(signupForm.getPassword()")
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user);
+
         Post post = Post.builder()
                 .title("첫게시물입니다")
                 .content("ㅇㅇㅇㅇㅇㅇ")
+                .postFunction(postFunction)
+                .author(user)
                 .build();
         postRepository.save(post);
         assertEquals(postRepository.count(), 1);
@@ -101,9 +130,23 @@ class PostServiceTest {
     @DisplayName("게시물 삭제")
     void deletePost() {
         //given
+        PostFunction postFunction = PostFunction.builder()
+                .isHot(false)
+                .build();
+        User user = User.builder()
+                .username("wjdalsco")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password("passwordEncoder.encode(signupForm.getPassword()")
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user);
+
         Post post = Post.builder()
                 .title("첫게시물입니다")
                 .content("ㅇㅇㅇㅇㅇㅇ")
+                .postFunction(postFunction)
+                .author(user)
                 .build();
         postRepository.save(post);
         assertEquals(postRepository.count(), 1);
@@ -124,9 +167,23 @@ class PostServiceTest {
     @DisplayName("게시물을 삭제했을때 게시물에 달린 댓글들 모두 삭제")
     void deletePostAndCheckWhetherCommentsAlsoDelete() {
         //given
+        PostFunction postFunction = PostFunction.builder()
+                .isHot(false)
+                .build();
+        User user = User.builder()
+                .username("wjdalsco")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password("passwordEncoder.encode(signupForm.getPassword()")
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user);
+
         Post post = Post.builder()
                 .title("첫게시물입니다")
                 .content("ㅇㅇㅇㅇㅇㅇ")
+                .postFunction(postFunction)
+                .author(user)
                 .build();
         postRepository.save(post);
         assertEquals(postRepository.count(), 1);
@@ -156,9 +213,22 @@ class PostServiceTest {
     @DisplayName("게시물 수정")
     void updatePost() {
         //given
+        PostFunction postFunction = PostFunction.builder()
+                .isHot(false)
+                .build();
+        User user = User.builder()
+                .username("wjdalsco")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password("passwordEncoder.encode(signupForm.getPassword()")
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user);
         Post postMeme = Post.builder()
                 .title("첫게시물입니다")
                 .content("변경될 내용입니다")
+                .postFunction(postFunction)
+                .author(user)
                 .build();
         postRepository.save(postMeme);
         assertEquals(postRepository.count(), 1);
@@ -185,11 +255,24 @@ class PostServiceTest {
     @DisplayName("게시물 리스트 받아오기")
     void getPostListWherePage() {
         //given
+        PostFunction postFunction = PostFunction.builder()
+                .isHot(false)
+                .build();
+        User user = User.builder()
+                .username("wjdalsco")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password("passwordEncoder.encode(signupForm.getPassword()")
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user);
+
         List<Post> posts = IntStream.range(0, 10)
                         .mapToObj(i -> Post.builder()
                                 .title("제목" + " " + i)
                                 .content("내용" + " " + i)
-
+                                .author(user)
+                                .postFunction(postFunction)
                                 .build())
                                 .collect(Collectors.toList());
         postRepository.saveAll(posts);
@@ -211,31 +294,6 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("게시물 작성 작성자 포함")
-    void writePostWithUser() throws Exception{
-        User user = User.builder()
-                .username("wjdalsco")
-                .email("jcmcmdmw@nakejqkqlw.com")
-                .password("passwordEncoder.encode(signupForm.getPassword()")
-                .enable(true)
-                .authorizations(Authorization.USER)
-                .build();
-
-
-        Post postCreate = Post.builder()
-                .title("글 작성중입니다")
-                .content("글 내용은 비밀입니다")
-                .user(user)
-                .build();
-
-        postRepository.save(postCreate);
-
-        assertEquals(1, postRepository.count());
-        assertEquals("wjdalsco", postRepository.findAll().get(0).getUser().getUsername());
-
-    }
-
-    @Test
     @DisplayName("admin 핫 게시물을 설정해준다.")
     void selectHotPost() throws Exception{
         User user = User.builder()
@@ -246,11 +304,12 @@ class PostServiceTest {
                 .authorizations(Authorization.USER)
                 .build();
         userRepository.save(user);
-
+        PostFunction postFunction = PostFunction.builder().build();
 
         Post post = Post.builder()
                 .title("핫 게시물")
-                .user(user)
+                .author(user)
+                .postFunction(postFunction)
                 .content("핫 게시물 내용입니다.")
                 .build();
 
@@ -277,9 +336,12 @@ class PostServiceTest {
                 .build();
         userRepository.save(user);
 
+        PostFunction postFunction = PostFunction.builder().build();
+
         Post post = Post.builder()
                 .title("핫 게시물")
-                .user(user)
+                .author(user)
+                .postFunction(postFunction)
                 .content("핫 게시물 내용입니다.")
                 .build();
 
@@ -308,9 +370,12 @@ class PostServiceTest {
                 .build();
         userRepository.save(user);
 
+        PostFunction postFunction = PostFunction.builder().build();
+
         List<Post> posts = IntStream.range(0, 20).mapToObj(i -> Post.builder()
                         .title("핫 게시물")
-                        .user(user)
+                        .author(user)
+                        .postFunction(postFunction)
                         .content("핫 게시물 내용입니다.")
                         .build()).
                 collect(Collectors.toList());
@@ -335,21 +400,24 @@ class PostServiceTest {
                 .build();
         userRepository.save(user);
 
+        PostFunction postFunction = PostFunction.builder().build();
+
         Post post = Post.builder()
                 .title("핫 게시물")
-                .user(user)
+                .author(user)
+                .postFunction(postFunction)
                 .content("핫 게시물 내용입니다.")
                 .build();
 
         postRepository.save(post);
 
-        Recommendation recommendation = Recommendation.builder()
+        UpDown updown = UpDown.builder()
                 .post(post)
                 .user(user)
                 .build();
-        recommendationRepository.save(recommendation);
-        Recommendation recommendation1 = recommendationRepository.findByPostIdAndUserId(post.getPostId(), user.getId()).get(0);
-        assertEquals(recommendation.getId(), recommendation1.getId());
+        updownRepository.save(updown);
+        UpDown upDown1 = updownRepository.findByPostIdAndUserId(post.getPostId(), user.getId()).get(0);
+        assertEquals(updown.getId(), upDown1.getId());
 
     }
 
@@ -374,23 +442,26 @@ class PostServiceTest {
                 .build();
         userRepository.save(user2);
 
+        PostFunction postFunction = PostFunction.builder().build();
+
         Post post = Post.builder()
                 .title("핫 게시물")
-                .user(user)
+                .author(user)
+                .postFunction(postFunction)
                 .content("핫 게시물 내용입니다.")
                 .build();
 
         postRepository.save(post);
 
         assertEquals(1, postService.upRecommendation(post, user));
-        assertEquals(1, recommendationRepository.count());
+        assertEquals(1, updownRepository.count());
 
 
         Post upPost = postRepository.findById(post.getPostId()).orElseThrow();
 
 
         assertEquals(2, postService.upRecommendation(upPost, user2));
-        assertEquals(2, recommendationRepository.count());
+        assertEquals(2, updownRepository.count());
     }
 
 
@@ -406,17 +477,19 @@ class PostServiceTest {
                 .build();
         userRepository.save(user);
 
+        PostFunction postFunction = PostFunction.builder().build();
 
         Post post = Post.builder()
                 .title("핫 게시물")
-                .user(user)
+                .author(user)
+                .postFunction(postFunction)
                 .content("핫 게시물 내용입니다.")
                 .build();
 
         postRepository.save(post);
 
         assertEquals(1, postService.upRecommendation(post, user));
-        assertEquals(1, recommendationRepository.count());
+        assertEquals(1, updownRepository.count());
 
 
         assertThrows(IsRecommended.class, () -> postService.upRecommendation(post, user));

@@ -9,24 +9,19 @@ import minchae.meme.request.PostCreate;
 import minchae.meme.request.PostEdit;
 import minchae.meme.response.PostResponse;
 import minchae.meme.repository.PostRepository;
-import minchae.meme.service.impl.Post_MemeServiceImpl;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
+import minchae.meme.service.impl.PostServiceImpl;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 public class PostController {
 
-    private final Post_MemeServiceImpl postService;
+    private final PostServiceImpl postService;
     private final PostRepository postRepository;
 
     @GetMapping("/board/posts/{postId}")
@@ -35,13 +30,8 @@ public class PostController {
     }
 
     @PostMapping(value = "/board/user/writePost")
-    public PostResponse writePost(@RequestBody PostCreate params) throws IOException {
+    public void writePost(@RequestBody PostCreate params) throws IOException {
         postService.write(params);
-        return PostResponse.builder()
-                .title(params.getTitle())
-                .content(params.getContent())
-                .user(params.getUser())
-                .build();
     }
 
     /*@ResponseBody

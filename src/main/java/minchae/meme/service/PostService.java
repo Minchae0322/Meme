@@ -30,5 +30,7 @@ public interface PostService {
 
     int upRecommendation(Post post, User user);
 
+    int upBad(Post post, User user);
+
 }
 

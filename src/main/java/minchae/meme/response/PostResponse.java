@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import minchae.meme.entity.Comment;
 import minchae.meme.entity.Post;
-import minchae.meme.entity.Recommendation;
+import minchae.meme.entity.PostFunction;
 import minchae.meme.entity.User;
 
 import java.util.List;
@@ -22,26 +22,27 @@ public class PostResponse {
 
     private String content;
 
+    private User author;
     private int recommendation;
-
     private int bad;
 
     private int views;
 
-    private User user;
+    private PostFunction postFunction;
 
     private List<Comment> comments;
 
 
     @Builder
-    public PostResponse(Long postId, String title, String content, int recommendation, int bad, int views, User user, List<Comment> comments) {
+    public PostResponse(Long postId, String title, String content, User author, int recommendation, int bad, int views, PostFunction postFunction, List<Comment> comments) {
         this.postId = postId;
         this.title = title;
         this.content = content;
+        this.author = author;
         this.recommendation = recommendation;
         this.bad = bad;
         this.views = views;
-        this.user = user;
+        this.postFunction = postFunction;
         this.comments = comments;
     }
 
@@ -49,10 +50,11 @@ public class PostResponse {
         this.postId = post.getPostId();
         this.title = post.getTitle();
         this.content = post.getContent();
-        this.recommendation = post.getRecommendations().size();
+        this.author = post.getAuthor();
+        this.recommendation = post.getRecommendation();
         this.bad = post.getBad();
         this.views = post.getViews();
-        this.user = post.getUser();
+        this.postFunction = post.getPostFunction();
         this.comments = post.getComments();
         return this;
     }

@@ -1,20 +1,14 @@
 package minchae.meme.entity;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
-import org.hibernate.sql.Update;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
 @Setter
 @RequiredArgsConstructor
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(columnDefinition = "DATA-TYPE")
-public class Recommendation {
+public class UpDown {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,9 +20,13 @@ public class Recommendation {
     @ManyToOne
     private User user;
 
+    @Column
+    private String type;
+
     @Builder
-    public Recommendation(Post post, User user) {
+    public UpDown(Post post, User user, String type) {
         this.post = post;
         this.user = user;
+        this.type = type;
     }
 }

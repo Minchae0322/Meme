@@ -1,19 +1,19 @@
 package minchae.meme.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import minchae.meme.entity.Comment;
-import minchae.meme.entity.Post;
-import minchae.meme.entity.User;
+import minchae.meme.entity.*;
 import minchae.meme.entity.enumClass.Authorization;
 import minchae.meme.exception.PostNotFound;
 import minchae.meme.repository.CommentRepository;
+import minchae.meme.repository.UpDownRepository;
 import minchae.meme.repository.UserRepository;
 import minchae.meme.request.Page;
 import minchae.meme.request.PostCreate;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.request.PostEdit;
+import minchae.meme.response.PostResponse;
 import minchae.meme.service.CommentService;
-import minchae.meme.service.impl.Post_MemeServiceImpl;
+import minchae.meme.service.impl.PostServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -47,7 +47,7 @@ class PostControllerTest {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private Post_MemeServiceImpl postService;
+    private PostServiceImpl postService;
     @Autowired
     private CommentRepository commentRepository;
     @Autowired
@@ -56,22 +56,34 @@ class PostControllerTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UpDownRepository upDownRepository;
 
     @Autowired
     private PostRepository postRepository;
 
     @BeforeEach
     public void before() {
-        commentRepository.deleteAll();
-        postRepository.deleteAll();
+       commentRepository.deleteAll();
+       postRepository.deleteAll();
     }
 
     @Test
     @DisplayName("글 작성")
     public void writePost() throws Exception {
+        User user = User.builder()
+                .username("wjdalsco")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password("passwordEncoder.encode(signupForm.getPassword()")
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user);
+
         PostCreate postCreate = PostCreate.builder()
                 .title("글 작성중입니다")
                 .content("글 내용은 비밀입니다")
+                .user(user)
                 .build();
         ObjectMapper objectMapper = new ObjectMapper();
         java.lang.String postCreateJson = objectMapper.writeValueAsString(postCreate);
@@ -80,14 +92,15 @@ class PostControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(postCreateJson))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("글 작성중입니다"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.content").value("글 내용은 비밀입니다"))
                 .andDo(print());
+
+        assertEquals(1, postRepository.count());
     }
 
     @Test
     @DisplayName("게시물1개 조회")
     public void getPost() throws Exception {
+
         PostCreate postCreate = PostCreate.builder()
                 .title("글 작성중입니다")
                 .content("글 내용은 비밀입니다")
@@ -109,7 +122,6 @@ class PostControllerTest {
         PostCreate postCreate = PostCreate.builder()
                 .title("글 작성중입니다")
                 .content("글 내용은 비밀입니다")
-
                 .build();
         postService.write(postCreate);
 
@@ -293,11 +305,15 @@ class PostControllerTest {
                 .authorizations(Authorization.USER)
                 .build();
         userRepository.save(user);
-
+        PostFunction postFunction = PostFunction
+                .builder()
+                .isHot(false)
+                .build();
 
         Post post = Post.builder()
                 .title("핫 게시물")
-                .user(user)
+                .author(user)
+                .postFunction(postFunction)
                 .content("핫 게시물 내용입니다.")
                 .build();
 
@@ -324,10 +340,14 @@ class PostControllerTest {
                 .build();
         userRepository.save(user);
 
-
+        PostFunction postFunction = PostFunction
+                .builder()
+                .isHot(false)
+                .build();
         Post post = Post.builder()
                 .title("핫 게시물")
-                .user(user)
+                .author(user)
+                .postFunction(postFunction)
                 .content("핫 게시물 내용입니다.")
                 .build();
 
@@ -360,9 +380,15 @@ class PostControllerTest {
                 .build();
         userRepository.save(user);
 
+        PostFunction postFunction = PostFunction
+                .builder()
+                .isHot(false)
+                .build();
+
         List<Post> posts = IntStream.range(0, 20).mapToObj(i -> Post.builder()
                         .title("핫 게시물")
-                        .user(user)
+                        .author(user)
+                        .postFunction(postFunction)
                         .content("핫 게시물 내용입니다.")
                         .build()).
                 collect(Collectors.toList());

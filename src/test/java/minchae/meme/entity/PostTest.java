@@ -2,9 +2,8 @@ package minchae.meme.entity;
 
 import minchae.meme.repository.CommentRepository;
 import minchae.meme.repository.PostRepository;
-import minchae.meme.response.PostResponse;
 import minchae.meme.service.CommentService;
-import minchae.meme.service.impl.Post_MemeServiceImpl;
+import minchae.meme.service.impl.PostServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,7 @@ class PostTest {
     private CommentService commentService;
 
     @Autowired
-    private Post_MemeServiceImpl postService;
+    private PostServiceImpl postService;
 
     @BeforeEach
     public void before() {

@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 public class PostFunction {
 
-    private boolean isHot;
+    private boolean isHot = false;
 
 
     @Builder
