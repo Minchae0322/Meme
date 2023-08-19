@@ -2,10 +2,7 @@ package minchae.meme.service.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import minchae.meme.entity.Post;
-import minchae.meme.entity.Recommendation;
-import minchae.meme.entity.UploadFile;
-import minchae.meme.entity.User;
+import minchae.meme.entity.*;
 import minchae.meme.exception.IsRecommended;
 import minchae.meme.exception.PostNotFound;
 import minchae.meme.repository.CommentRepository;
@@ -94,7 +91,9 @@ public class Post_MemeServiceImpl implements PostService {
     public void setHotPost(Long postId) {
        Post post = postRepository.findById(postId)
                .orElseThrow(PostNotFound::new);
-       post.setHot(true);
+       PostFunction postFunction = post.getPostFunction();
+       postFunction.setHot(true);
+       post.setPostFunction(postFunction);
     }
 
     @Override
@@ -102,7 +101,9 @@ public class Post_MemeServiceImpl implements PostService {
     public void unsetHotPost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFound::new);
-        post.setHot(false);
+        PostFunction postFunction = post.getPostFunction();
+        postFunction.setHot(true);
+        post.setPostFunction(postFunction);
     }
 
     @Override

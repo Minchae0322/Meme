@@ -442,7 +442,7 @@ class CommentControllerTest {
         commentRepository.saveAll(comments2);
 
         //when
-        mockMvc.perform(MockMvcRequestBuilders.delete("/board/posts/{postId}", post.getPostId()))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/board/user/{postId}", post.getPostId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print());
 

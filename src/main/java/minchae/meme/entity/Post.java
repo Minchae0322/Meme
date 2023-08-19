@@ -2,6 +2,10 @@ package minchae.meme.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotBlank;
@@ -46,10 +50,12 @@ public class Post {
     @ColumnDefault("0")
     private int views;
 
-    @Column
-    private boolean isHot;
+    @Embedded
+    private PostFunction postFunction;
 
     @Column
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private final LocalDateTime createdTime = LocalDateTime.now();
 
     @ManyToOne()

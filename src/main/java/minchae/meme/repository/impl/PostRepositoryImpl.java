@@ -27,7 +27,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     @Override
     public List<Post> getHotList(Page page) {
         return jpaQueryFactory.selectFrom(QPost.post)
-                .where(QPost.post.isHot)
+                .where(QPost.post.postFunction.isHot)
                 .orderBy(QPost.post.createdTime.desc())
                 .limit(page.getSize())
                 .offset((long) (page.getPage() - 1) * page.getSize())
