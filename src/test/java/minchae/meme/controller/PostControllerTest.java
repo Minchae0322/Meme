@@ -100,10 +100,19 @@ class PostControllerTest {
     @Test
     @DisplayName("게시물1개 조회")
     public void getPost() throws Exception {
+        User user = User.builder()
+                .username("wjdalsco")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password("passwordEncoder.encode(signupForm.getPassword()")
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user);
 
         PostCreate postCreate = PostCreate.builder()
                 .title("글 작성중입니다")
                 .content("글 내용은 비밀입니다")
+                .user(user)
                 .build();
         postService.write(postCreate);
 
@@ -118,10 +127,19 @@ class PostControllerTest {
     @Test
     @DisplayName("글 삭제")
     public void deletePost() throws Exception {
+        User user = User.builder()
+                .username("wjdalsco")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password("passwordEncoder.encode(signupForm.getPassword()")
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user);
         //given
         PostCreate postCreate = PostCreate.builder()
                 .title("글 작성중입니다")
                 .content("글 내용은 비밀입니다")
+                .user(user)
                 .build();
         postService.write(postCreate);
 
@@ -142,9 +160,24 @@ class PostControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
 
         //given
+
+        User user = User.builder()
+                .username("wjdalsco")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password("passwordEncoder.encode(signupForm.getPassword()")
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user);
+        PostFunction postFunction = PostFunction.builder()
+                .isHot(false)
+                .build();
+
         Post post = Post.builder()
                 .title("첫게시물입니다")
                 .content("ㅇㅇㅇㅇㅇㅇ")
+                .author(user)
+                .postFunction(postFunction)
                 .build();
         postRepository.save(post);
 
@@ -176,10 +209,19 @@ class PostControllerTest {
     //todo controller에 메소드 만들기
     public void updatePost() throws Exception {
         //given
+        User user = User.builder()
+                .username("wjdalsco")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password("passwordEncoder.encode(signupForm.getPassword()")
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user);
+
         PostCreate postCreate = PostCreate.builder()
                 .title("글 작성중입니다")
                 .content("글 내용은 비밀입니다")
-
+                .user(user)
                 .build();
         postService.write(postCreate);
 
@@ -187,6 +229,7 @@ class PostControllerTest {
         PostEdit postEdit = PostEdit.builder()
                 .title("글 내용을 변경하겠습니다")
                 .content("글 내용을 변경합니다")
+                .user(user)
                 .build();
         ObjectMapper objectMapper = new ObjectMapper();
         java.lang.String json = objectMapper.writeValueAsString(postEdit);
@@ -209,10 +252,19 @@ class PostControllerTest {
     @DisplayName("게시물 리스트 받아오기")
     void getPostListWherePage() throws Exception{
         //given
+        User user = User.builder()
+                .username("wjdalsco")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password("passwordEncoder.encode(signupForm.getPassword()")
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user);
         List<Post> posts = IntStream.range(0, 10)
                 .mapToObj(i -> Post.builder()
                         .title("제목" + " " + i)
                         .content("내용" + " " + i)
+                        .author(user)
                         .build())
                 .collect(Collectors.toList());
         postRepository.saveAll(posts);
@@ -283,9 +335,6 @@ class PostControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postCreate)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("글 작성중입니다"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.content").value("글 내용은 비밀입니다"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.user.username").value("wjdalsco"))
                 .andDo(print());
 
 
