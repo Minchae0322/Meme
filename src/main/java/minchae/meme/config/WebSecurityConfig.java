@@ -58,7 +58,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/**").permitAll()
-                        .requestMatchers("/user/posts").hasAuthority("USER")
+                        //.requestMatchers("/user/posts").hasAuthority("USER")
                         .requestMatchers("/").hasAnyAuthority("USER", "ADMIN", "MANAGER"))
                 .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
                         .failureUrl("/auth/login")

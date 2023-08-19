@@ -32,6 +32,7 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
+    @Transactional
     public void signup(SignupForm signupForm) {
         if (userRepository.findByUsername(signupForm.getUsername()).isPresent()) {
             throw new IsExistedUser();

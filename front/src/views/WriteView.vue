@@ -7,23 +7,21 @@ import router from "@/router";
 const title = ref("")
 const content = ref("")
 const images = ref("")
-
-const uploaded = function () {
-  images : document.querySelector('.real-upload')
-};
+const youtubeUrl = /(http:|https:)?(\/\/)?(www\.)?(youtube.com|youtu.be)\/(watch|embed)?(\?v=|\/)?(\S+)?/g
 
 const write = function () {
   axios.post("http://localhost:8080/board/user/writePost", {
     title: title.value,
-    content: content.value,
-
-    imageFiles: images[0].value
+    content: content.value
   })
       .then(() => {
         router.replace({
           name: "home"
         })
 })}
+
+
+
 
 
 
@@ -36,9 +34,10 @@ const write = function () {
 
 
     <body>
+    <div>
 
-    <div class="input-container">
-      <input @change = uploaded type="file" class="real-upload" accept="image/*" required multiple>
+
+
     </div>
   <div>
 

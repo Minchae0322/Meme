@@ -21,6 +21,7 @@ public class FileServiceImpl implements FileService {
 
     private final FileStore fileStore;
     @Override
+    @Transactional
     public void write(UploadFile uploadFile) {
         fileRepository.save(uploadFile);
     }

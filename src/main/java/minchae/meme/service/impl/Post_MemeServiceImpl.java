@@ -19,6 +19,7 @@ import minchae.meme.service.FileService;
 import minchae.meme.service.PostService;
 import minchae.meme.store.FileStore;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -35,15 +36,15 @@ public class Post_MemeServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public void write(PostCreate postCreate) throws IOException {
+    public void write(PostCreate postCreate) throws IOException {  // 첨부 이미지) throws IOException {
         Post post = Post.builder()
                 .title(postCreate.getTitle())
                 .content(postCreate.getContent())
                 .user(postCreate.getUser())
                 .build();
-        if (postCreate.getImageFiles() != null) {
-            fileService.writeList(fileService.saveFiles(postCreate.getImageFiles(), post));
-        }
+       /* if (imageFiles != null) {
+            fileService.writeList(fileService.saveFiles(imageFiles, post));
+        }*/
         postRepository.save(post);
     }
 

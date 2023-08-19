@@ -50,6 +50,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public void write(Post post, CommentCreate commentCreate) {
         Comment comment = Comment.builder()
                 .post(post)
@@ -69,6 +70,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public void deleteCommentList(Long postId) {
         commentRepository.deleteCommentListWherePostId(postId);
     }
@@ -92,6 +94,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public void writeCommentList(List<CommentCreate> commentCreateList) {
         List<Comment> commentList = commentCreateList.stream().map(commentCreate -> Comment.builder()
                         .post(commentCreate.getPost())

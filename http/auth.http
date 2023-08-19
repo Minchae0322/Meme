@@ -15,3 +15,18 @@ POST http://localhost:8080/auth/login
 Content-Type: application/x-www-form-urlencoded
 
 username=dddf&password=dddf
+
+
+###
+
+POST http://localhost:8080/board/user/writePost
+Content-Type: application/json
+Content-Type: multipart/form-data
+
+
+{
+  "title": "dddf",
+  "content": "dddf",
+  "images": "C:\\사진\\화면 캡처 2023-02-20 173844.png"
+
+}

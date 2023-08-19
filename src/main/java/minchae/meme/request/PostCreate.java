@@ -1,5 +1,6 @@
 package minchae.meme.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,12 +8,14 @@ import lombok.Setter;
 import minchae.meme.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.Serializable;
 import java.util.List;
 
 @NoArgsConstructor
 @Getter
 @Setter
-public class PostCreate {
+@JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
+public class PostCreate implements Serializable {
 
     private Long postId;
 
@@ -22,17 +25,14 @@ public class PostCreate {
 
     private User user;
 
-    private List<MultipartFile> imageFiles;    // 첨부 이미지
-
     private String youtubeUrl;
 
     @Builder
-    public PostCreate(Long postId, String title, String content, User user, List<MultipartFile> imageFiles, String youtubeUrl) {
+    public PostCreate(Long postId, String title, String content, User user, String youtubeUrl) {
         this.postId = postId;
         this.title = title;
         this.content = content;
         this.user = user;
-        this.imageFiles = imageFiles;
         this.youtubeUrl = youtubeUrl;
     }
 }
