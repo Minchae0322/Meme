@@ -4,15 +4,19 @@
 import {ref} from "vue";
 import axios from 'axios'
 
-const posts = [
-  {id: 1, title:"제목1",content:"내용 1"}
-]
+const posts = ref([])
 
+axios.get("http://localhost:8080/board/posts/list?page=1&size=5")
+.then((response) => {
+  response.data.forEach((r: any) => {
+    posts.value.push(r)
+  })
+})
 </script>
 
 
 <template>
- <el-result>
+ <ul>
    <li v-for="post in posts" key="postId">
      <div>
        {{post.title}}
@@ -25,7 +29,7 @@ const posts = [
    </li>
 
 
- </el-result>
+ </ul>
 </template>
 
 
