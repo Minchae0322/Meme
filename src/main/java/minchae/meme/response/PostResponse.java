@@ -25,7 +25,6 @@ public class PostResponse {
     private User author;
     private int recommendation;
     private int bad;
-
     private int views;
 
     private PostFunction postFunction;

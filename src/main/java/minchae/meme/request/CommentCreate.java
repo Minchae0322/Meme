@@ -15,16 +15,10 @@ public class CommentCreate {
     private String comment;
     private User user;
 
-    private int recommendation = 0;
-
-    private int bad = 0;
-
     @Builder
-    public CommentCreate(Post post, String comment, User user, int recommendation, int bad) {
+    public CommentCreate(Post post, String comment, User user) {
         this.post = post;
         this.comment = comment;
         this.user = user;
-        this.recommendation = recommendation;
-        this.bad = bad;
     }
 }

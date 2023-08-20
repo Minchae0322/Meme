@@ -3,9 +3,11 @@ package minchae.meme.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import minchae.meme.entity.Comment;
+import minchae.meme.entity.CommentFunction;
 import minchae.meme.entity.Post;
 import minchae.meme.exception.CommentNotFound;
 import minchae.meme.exception.PostNotFound;
+import minchae.meme.exception.Unauthorized;
 import minchae.meme.repository.CommentRepository;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.request.CommentCreate;
@@ -52,10 +54,12 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public void write(Post post, CommentCreate commentCreate) {
+        CommentFunction commentFunction = CommentFunction.builder().build();
         Comment comment = Comment.builder()
                 .post(post)
                 .comment(commentCreate.getComment())
                 .user(commentCreate.getUser())
+                .commentFunction(commentFunction)
                 .build();
         commentRepository.save(comment);
     }
@@ -65,6 +69,9 @@ public class CommentServiceImpl implements CommentService {
     public CommentResponse update(Long commentId, CommentEdit commentEdit) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFound::new);
+        if (!comment.getUser().getUsername().equals(commentEdit.getAuthor().getUsername())) {
+            throw new Unauthorized();
+        }
         comment.update(commentEdit);
         return CommentResponse.builder().build().commentToCommentResponse(comment);
     }
@@ -75,7 +82,7 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.deleteCommentListWherePostId(postId);
     }
 
-    @Override
+    /*@Override
     @Transactional
     public CommentResponse upRecommendation(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
@@ -91,19 +98,13 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(CommentNotFound::new);
         comment.setBad(comment.getBad() + 1);
         return CommentResponse.builder().build().commentToCommentResponse(comment);
-    }
+    }*/
 
     @Override
     @Transactional
     public void writeCommentList(List<CommentCreate> commentCreateList) {
-        List<Comment> commentList = commentCreateList.stream().map(commentCreate -> Comment.builder()
-                        .post(commentCreate.getPost())
-                        .comment(commentCreate.getComment())
-                        .bad(commentCreate.getBad())
-                        .recommendation(commentCreate.getRecommendation())
-                        .user(commentCreate.getUser())
-                        .build())
-                .collect(Collectors.toList());
-        commentRepository.saveAll(commentList);
+        for (CommentCreate commentCreate : commentCreateList) {
+            write(commentCreate.getPost(), commentCreate);
+        }
     }
 }

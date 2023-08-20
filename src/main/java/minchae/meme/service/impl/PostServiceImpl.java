@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import minchae.meme.entity.*;
 import minchae.meme.exception.IsRecommended;
 import minchae.meme.exception.PostNotFound;
+import minchae.meme.exception.Unauthorized;
 import minchae.meme.repository.CommentRepository;
 import minchae.meme.repository.UpDownRepository;
 import minchae.meme.request.Page;
@@ -64,6 +65,9 @@ public class PostServiceImpl implements PostService {
     public PostResponse update(Long postId, PostEdit postEdit) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFound::new);
+        if (!post.getAuthor().getUsername().equals(postEdit.getUser().getUsername())) {
+            throw new Unauthorized();
+        }
         post.update(postEdit);
         return PostResponse.builder().build().postToPostResponse(post);
     }
@@ -122,6 +126,9 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public int upRecommendation(Post post, User user) {
+        if (user == null) {
+            throw new Unauthorized();
+        }
         if (updownRepository.findByPostIdAndUserId(post.getPostId(), user.getId()).size() >= 1) {
             throw new IsRecommended();
         }

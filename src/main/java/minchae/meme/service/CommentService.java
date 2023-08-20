@@ -20,9 +20,9 @@ public interface CommentService {
 
     void deleteCommentList(Long postId);
 
-    CommentResponse upRecommendation(Long commentId);
+  /*  CommentResponse upRecommendation(Long commentId);
 
-    CommentResponse upBad(Long commentId);
+    CommentResponse upBad(Long commentId);*/
 
     void writeCommentList(List<CommentCreate> commentCreateList);
 }

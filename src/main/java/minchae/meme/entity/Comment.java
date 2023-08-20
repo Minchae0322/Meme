@@ -3,17 +3,15 @@ package minchae.meme.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 import minchae.meme.request.CommentEdit;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class Comment {
 
     @Id
@@ -30,21 +28,21 @@ public class Comment {
     @NotBlank
     private String comment;
     @ManyToOne()
+    @NotNull
     private User user;
-    @ColumnDefault("0")
-    private int recommendation;
-    @ColumnDefault("0")
-    private int bad;
+
+    @Embedded
+    @NotNull
+    private CommentFunction commentFunction;
 
 
     @Builder
-    public Comment(Long commentId, Post post, String comment, User user, int recommendation, int bad) {
+    public Comment(Long commentId, Post post, String comment, User user, CommentFunction commentFunction) {
         this.commentId = commentId;
         this.post = post;
         this.comment = comment;
         this.user = user;
-        this.recommendation = recommendation;
-        this.bad = bad;
+        this.commentFunction = commentFunction;
     }
 
     public void update(CommentEdit commentEdit) {

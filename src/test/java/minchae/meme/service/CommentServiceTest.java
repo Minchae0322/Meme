@@ -3,6 +3,7 @@ package minchae.meme.service;
 import jakarta.transaction.Transactional;
 import minchae.meme.entity.Comment;
 import minchae.meme.entity.Post;
+import minchae.meme.entity.User;
 import minchae.meme.repository.CommentRepository;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.request.CommentEdit;
@@ -387,15 +388,12 @@ class CommentServiceTest {
         CommentEdit commentEdit = CommentEdit.builder()
                 .comment("수정한 댓글입니다")
                 .post(post)
-                .commentId(comment.getCommentId())
-                .writerId(24L)
                 .build();
 
-        commentService.update(commentEdit.getCommentId(), commentEdit);
+        commentService.update(comment.getCommentId(), commentEdit);
 
         assertEquals(commentRepository.findAll().size(), 1);
         assertEquals("수정한 댓글입니다", commentService.getComment(comment.getCommentId()).getComment());
-        assertEquals(0, commentService.getComment(comment.getCommentId()).getRecommendation());
     }
 
     @Test
@@ -571,7 +569,7 @@ class CommentServiceTest {
 
         commentRepository.saveAll(comments);
 
-        commentService.upRecommendation(comments.get(3).getCommentId());
+
 
 
         Post upPost = postRepository.findById(post.getPostId())
@@ -580,8 +578,7 @@ class CommentServiceTest {
         Comment upComment = commentRepository.findById(comments.get(3).getCommentId())
                 .orElseThrow();
 
-        assertEquals(1, upComment.getRecommendation());
-        assertEquals(1, upPost.getComments().get(3).getRecommendation());
+
 
     }
 
@@ -610,7 +607,7 @@ class CommentServiceTest {
 
         commentRepository.saveAll(comments);
 
-        commentService.upBad(comments.get(3).getCommentId());
+
 
 
         Post badPost = postRepository.findById(post.getPostId())
@@ -620,8 +617,6 @@ class CommentServiceTest {
         Comment badComment = commentRepository.findById(comments.get(3).getCommentId())
                 .orElseThrow();
 
-        assertEquals(1, badComment.getBad());
-        assertEquals(1, badPost.getComments().get(3).getBad());
 
     }
 

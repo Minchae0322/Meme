@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import minchae.meme.entity.Comment;
+import minchae.meme.entity.CommentFunction;
 import minchae.meme.entity.Post;
 import minchae.meme.entity.User;
 
@@ -19,18 +20,16 @@ public class CommentResponse {
     private String comment;
     private User user;
 
-    private int recommendation = 0;
+    private CommentFunction commentFunction;
 
-    private int bad = 0;
 
     @Builder
-    public CommentResponse(Long commentId, Post post, String comment, User writerId, int recommendation, int bad) {
+    public CommentResponse(Long commentId, Post post, String comment, User user, CommentFunction commentFunction) {
         this.commentId = commentId;
         this.post = post;
         this.comment = comment;
-        this.user = writerId;
-        this.recommendation = recommendation;
-        this.bad = bad;
+        this.user = user;
+        this.commentFunction = commentFunction;
     }
 
     public CommentResponse commentToCommentResponse(Comment comment) {
@@ -38,8 +37,7 @@ public class CommentResponse {
         this.post = comment.getPost();
         this.comment = comment.getComment();
         this.user = comment.getUser();
-        this.recommendation = comment.getRecommendation();
-        this.bad = comment.getBad();
+        this.commentFunction = comment.getCommentFunction();
         return this;
     }
 }

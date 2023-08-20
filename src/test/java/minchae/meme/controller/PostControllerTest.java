@@ -32,8 +32,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @SpringBootTest
@@ -69,6 +68,73 @@ class PostControllerTest {
     }
 
     @Test
+    @DisplayName("글 작성 직후 추천 수는 0, 비추천 수도 0, 조회수 0, 핫 게시물은 false 이다.")
+    public void initPost() throws Exception {
+        User user = User.builder()
+                .username("wjdalsco")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password("rkrkwkqkwj12")
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user);
+
+        PostCreate postCreate = PostCreate.builder()
+                .title("글 작성중입니다")
+                .content("글 내용은 비밀입니다")
+                .user(user)
+                .build();
+        ObjectMapper objectMapper = new ObjectMapper();
+        java.lang.String postCreateJson = objectMapper.writeValueAsString(postCreate);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/board/user/writePost")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(postCreateJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(print());
+
+        Post posted = postRepository.findAll().get(0);
+
+        assertEquals(1, postRepository.count());
+        assertEquals(0, posted.getRecommendation());
+        assertEquals(0, posted.getBad());
+        assertFalse(posted.getPostFunction().isHot());
+    }
+
+
+    @Test
+    @DisplayName("글 작성 직후 댓글은 없다.")
+    public void initPostComment() throws Exception {
+        User user = User.builder()
+                .username("wjdalsco")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password("passwordEncoder.encode(signupForm.getPassword()")
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user);
+
+        PostCreate postCreate = PostCreate.builder()
+                .title("글 작성중입니다")
+                .content("글 내용은 비밀입니다")
+                .user(user)
+                .build();
+        ObjectMapper objectMapper = new ObjectMapper();
+        java.lang.String postCreateJson = objectMapper.writeValueAsString(postCreate);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/board/user/writePost")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(postCreateJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(print());
+
+        Post posted = postRepository.findAll().get(0);
+
+        assertEquals(1, postRepository.count());
+        assertEquals(0, posted.getComments().size());
+    }
+
+    @Test
     @DisplayName("글 작성")
     public void writePost() throws Exception {
         User user = User.builder()
@@ -89,8 +155,8 @@ class PostControllerTest {
         java.lang.String postCreateJson = objectMapper.writeValueAsString(postCreate);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/board/user/writePost")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(postCreateJson))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(postCreateJson))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print());
 
@@ -122,6 +188,51 @@ class PostControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("글 작성중입니다"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").value("글 내용은 비밀입니다"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.postFunction.hot").value(false))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("게시물1개 조회2")
+    public void getPost2() throws Exception {
+        User user = User.builder()
+                .username("wjdalsco")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password("passwordEncoder.encode(signupForm.getPassword()")
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user);
+
+        User user2 = User.builder()
+                .username("wjdalswwco")
+                .email("jcmcmdmw@nakeewqlw.com")
+                .password("passwordEncoder.encode(signupForm.getPassword()")
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user2);
+
+        PostCreate postCreate = PostCreate.builder()
+                .title("글 작성중입니다")
+                .content("글 내용은 비밀입니다")
+                .user(user)
+                .build();
+        postService.write(postCreate);
+        Post postResponse = postRepository.findAll().get(0);
+
+
+        postService.setHotPost(postResponse.getPostId());
+        postService.upRecommendation(postResponse, user2);
+
+        Post postResponse2 = postRepository.findAll().get(0);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/board/posts/{postId}", postResponse.getPostId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("글 작성중입니다"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content").value("글 내용은 비밀입니다"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.postFunction.hot").value(true))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.recommendation").value(1))
                 .andDo(print());
     }
     @Test
@@ -260,11 +371,17 @@ class PostControllerTest {
                 .authorizations(Authorization.USER)
                 .build();
         userRepository.save(user);
+
+        PostFunction postFunction = PostFunction.builder()
+                .isHot(false)
+                .build();
+
         List<Post> posts = IntStream.range(0, 10)
                 .mapToObj(i -> Post.builder()
                         .title("제목" + " " + i)
                         .content("내용" + " " + i)
                         .author(user)
+                        .postFunction(postFunction)
                         .build())
                 .collect(Collectors.toList());
         postRepository.saveAll(posts);

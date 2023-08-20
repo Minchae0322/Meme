@@ -1,25 +1,21 @@
 package minchae.meme.request;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import minchae.meme.entity.Post;
+import minchae.meme.entity.User;
 
 @Getter
 @Setter
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class CommentEdit {
     private Post post;
-    private Long commentId;
     private String comment;
-    private Long writerId;
+    private User author;
 
     @Builder
-    public CommentEdit(Post post, Long commentId, String comment, Long writerId) {
+    public CommentEdit(Post post, String comment, User author) {
         this.post = post;
-        this.commentId = commentId;
         this.comment = comment;
-        this.writerId = writerId;
+        this.author = author;
     }
 }
