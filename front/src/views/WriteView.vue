@@ -6,14 +6,20 @@ import router from "@/router";
 
 const title = ref("")
 const content = ref("")
-const images = ref("")
+
+
+
 const youtubeUrl = /(http:|https:)?(\/\/)?(www\.)?(youtube.com|youtu.be)\/(watch|embed)?(\?v=|\/)?(\S+)?/g
+
 
 const write = function () {
   axios.post("http://localhost:8080/board/user/writePost", {
     title: title.value,
-    content: content.value
+    content: content.value,
+
+
   })
+
       .then(() => {
         router.replace({
           name: "home"
@@ -40,6 +46,9 @@ const write = function () {
 
     </div>
   <div>
+    <div>
+      <input type="file"  id="image" ref="image" />
+    </div>
 
     <div>
       <el-text  class="mx-1" type="primary">제목</el-text>

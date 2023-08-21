@@ -55,9 +55,9 @@ class AuthControllerTest {
     @DisplayName("회원가입")
     public void signup() throws Exception {
         SignupForm signupForm = SignupForm.builder()
-                .username("정민채")
+                .username("jmcanc@naver.com")
                 .email("jmcabc@naver.com1")
-                .password("wjdals12")
+                .password(passwordEncoder.encode("wjdals12"))
                 .phoneNum("01035573336")
                 .build();
 
@@ -75,8 +75,8 @@ class AuthControllerTest {
     public void login() throws Exception {
         SignupForm signupForm = SignupForm.builder()
                 .username("ddd")
-                .email("jmcabc@naver.com1")
-                .password("wjdals12")
+                .email("jmcabc@naver.com12")
+                .password(passwordEncoder.encode("wjdals12"))
                 .phoneNum("01035573336")
                 .build();
 

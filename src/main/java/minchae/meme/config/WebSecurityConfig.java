@@ -1,8 +1,10 @@
 package minchae.meme.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import minchae.meme.auth.EmailPasswordTokenFilter;
 import minchae.meme.entity.enumClass.Authorization;
+import minchae.meme.handler.LoginFailHandler;
 import minchae.meme.repository.UserRepository;
 import minchae.meme.service.impl.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +12,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -25,17 +29,18 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 @Configuration
 @EnableWebSecurity(debug = true)
 public class WebSecurityConfig {
-
+    private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return null;
     }
 
-   /* @Bean
+  /*  @Bean
     public EmailPasswordTokenFilter emailPasswordTokenFilter() {
         EmailPasswordTokenFilter filter = new EmailPasswordTokenFilter();
         filter.setAuthenticationSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/"));
-        filter.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler("/"));
+        filter.setAuthenticationFailureHandler(new LoginFailHandler(new ObjectMapper()));
         filter.setSecurityContextRepository(new HttpSessionSecurityContextRepository());
         return filter;
     }
@@ -43,7 +48,9 @@ public class WebSecurityConfig {
     @Bean
     public AuthenticationManager authenticationManage() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsPasswordService(UserDetailServiceImpl.class);
+        provider.setUserDetailsService(new UserDetailServiceImpl(userRepository, passwordEncoder));
+        provider.setPasswordEncoder(passwordEncoder);
+        return new ProviderManager(provider);
     }*/
 
     @Bean
