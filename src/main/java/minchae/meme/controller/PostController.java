@@ -67,7 +67,7 @@ public class PostController {
         postService.unsetHotPost(postId);
     }
 
-    @GetMapping("/hotList")
+    @GetMapping("/board/hotList")
     public List<PostResponse> unsetHotPost(Page page) {
         return postService.getHotListWherePage(page);
     }

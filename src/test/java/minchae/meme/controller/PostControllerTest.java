@@ -366,7 +366,7 @@ class PostControllerTest {
         User user = User.builder()
                 .username("wjdalsco")
                 .email("jcmcmdmw@nakejqkqlw.com")
-                .password("passwordEncoder.encode(signupForm.getPassword()")
+                .password(passwordEncoder.encode("다다다자"))
                 .enable(true)
                 .authorizations(Authorization.USER)
                 .build();

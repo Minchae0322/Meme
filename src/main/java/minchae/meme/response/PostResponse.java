@@ -22,7 +22,7 @@ public class PostResponse {
 
     private String content;
 
-    private User author;
+    private String author;
     private int recommendation;
     private int bad;
     private int views;
@@ -33,7 +33,7 @@ public class PostResponse {
 
 
     @Builder
-    public PostResponse(Long postId, String title, String content, User author, int recommendation, int bad, int views, PostFunction postFunction, List<Comment> comments) {
+    public PostResponse(Long postId, String title, String content, String author, int recommendation, int bad, int views, PostFunction postFunction, List<Comment> comments) {
         this.postId = postId;
         this.title = title;
         this.content = content;
@@ -49,7 +49,7 @@ public class PostResponse {
         this.postId = post.getPostId();
         this.title = post.getTitle();
         this.content = post.getContent();
-        this.author = post.getAuthor();
+        this.author = post.getAuthor().getUsername();
         this.recommendation = post.getRecommendation();
         this.bad = post.getBad();
         this.views = post.getViews();

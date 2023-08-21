@@ -24,6 +24,7 @@ axios.get("http://localhost:8080/board/posts/list?page=1&size=5")
      </div>
      <div>
         {{post.content}}
+       {{post.author}}
      </div>
 
    </li>

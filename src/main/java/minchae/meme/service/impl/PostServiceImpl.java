@@ -105,14 +105,7 @@ public class PostServiceImpl implements PostService {
     public List<PostResponse> getHotListWherePage(Page page) {
         return postRepository.getHotList(page)
                 .stream()
-                .map(post -> PostResponse.builder()
-                        .postId(post.getPostId())
-                        .title(post.getTitle())
-                        .content(post.getContent())
-                        .recommendation(post.getUpDowns().size())
-                        .views(post.getViews())
-                        .author(post.getAuthor())
-                        .build())
+                .map(post -> PostResponse.builder().build().postToPostResponse(post))
                 .collect(Collectors.toList());
     }
 
