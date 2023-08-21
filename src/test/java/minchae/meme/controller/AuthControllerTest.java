@@ -55,9 +55,9 @@ class AuthControllerTest {
     @DisplayName("회원가입")
     public void signup() throws Exception {
         SignupForm signupForm = SignupForm.builder()
-                .username("jmcanc@naver.com")
+                .username("ffff")
                 .email("jmcabc@naver.com1")
-                .password(passwordEncoder.encode("wjdals12"))
+                .password("wjdals12")
                 .phoneNum("01035573336")
                 .build();
 
@@ -95,9 +95,9 @@ class AuthControllerTest {
     @DisplayName("로그인에 실패할 시 loginPage 로 redirect 된다.")
     public void loginUser() throws Exception {
         User user = User.builder()
-                .username("wjdalsco")
+                .username("fff")
                 .email("jcmcmdmw@nakejqkqlw.com")
-                .password("passwordEncoder.encode(signupForm.getPassword()")
+                .password("123")
                 .enable(true)
                 .authorizations(Authorization.ADMIN)
                 .build();

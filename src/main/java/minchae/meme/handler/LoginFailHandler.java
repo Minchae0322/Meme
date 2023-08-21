@@ -19,7 +19,7 @@ public class LoginFailHandler implements AuthenticationFailureHandler {
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .code("400")
-                .message("아이디 비밀번호 오류")
+                .message("아이디 비밀번호 khkhkhhkhk오류")
 
                 .build();
 
