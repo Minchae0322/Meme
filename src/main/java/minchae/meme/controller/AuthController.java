@@ -23,8 +23,8 @@ public class AuthController {
 
 
     @PostMapping("/auth/login")
-    public String login() {
-        return "username";
+    public String login(@AuthenticationPrincipal User user) {
+        return user.getUsername();
     }
 
 

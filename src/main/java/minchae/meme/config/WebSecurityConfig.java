@@ -43,7 +43,7 @@ public class WebSecurityConfig {
     @Bean
     public EmailPasswordTokenFilter emailPasswordTokenFilter() {
         EmailPasswordTokenFilter filter = new EmailPasswordTokenFilter();
-        filter.setAuthenticationSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/board/"));
+        filter.setAuthenticationSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/auth/login"));
         filter.setAuthenticationFailureHandler(new LoginFailHandler(new ObjectMapper()));
         filter.setSecurityContextRepository(new HttpSessionSecurityContextRepository());
         filter.setAuthenticationManager(authenticationManage());
