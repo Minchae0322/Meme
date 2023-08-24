@@ -50,6 +50,8 @@ public class WebSecurityConfig {
         return filter;
     }
 
+
+
     @Bean
     public AuthenticationManager authenticationManage() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();

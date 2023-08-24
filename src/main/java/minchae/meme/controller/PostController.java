@@ -11,8 +11,10 @@ import minchae.meme.response.PostResponse;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.service.impl.PostServiceImpl;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,16 +31,26 @@ public class PostController {
         return postService.get(postId);
     }
 
-    @PostMapping(value = "/board/user/writePost")
+  /*  @PostMapping(value = "/board/user/writePost")
     public void writePost(@RequestBody PostCreate params) throws IOException {
         postService.write(params);
-    }
+    }*/
 
     /*@ResponseBody
     @GetMapping("/images/{filename}")
     public List<Resource> showImage(@PathVariable String filename) throws MalformedURLException {
         return new UrlResource("file:" + fileStore.getFullPath(filename));
     }*/
+
+   /* @PostMapping(value = "/board/user/writePost", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public void writePost(@RequestPart PostCreate params, @RequestPart("imageFile") MultipartFile multipartFile) throws IOException {
+        postService.write(params);
+    }*/
+
+    @PostMapping(value = "/board/user/writePost", consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
+    public void writePost( @RequestPart(value = "imageFile", required=false) MultipartFile multipartFile) throws IOException {
+        System.out.println(multipartFile.getName());
+    }
 
     @DeleteMapping("/board/user/{postId}")
     public Long deletePost(@PathVariable("postId") Long postId) {

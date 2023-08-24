@@ -27,6 +27,7 @@ public class PostCreate implements Serializable {
 
     private String youtubeUrl;
 
+
     @Builder
     public PostCreate(Long postId, String title, String content, User user, String youtubeUrl) {
         this.postId = postId;

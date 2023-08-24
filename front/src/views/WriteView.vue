@@ -10,15 +10,19 @@ let images = new Image()
 
 
 const youtubeUrl = /(http:|https:)?(\/\/)?(www\.)?(youtube.com|youtu.be)\/(watch|embed)?(\?v=|\/)?(\S+)?/g
+const frm = new FormData()
 
-
-const write = function () {
-
-
-  axios.post("http://localhost:8080/board/user/writePost", {
-    title: title.value,
-    content: content.value,
-    image: imageUrl
+/*const write = function () {
+  const file = document.querySelector("#image").files[0]
+  images.src = URL.createObjectURL(file)
+  console.log(images)
+  axios.post("http://localhost:8080/board/user/writePost",{
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+   // title: title.value,
+    //content: content.value,
+    imageFile: images
 
   })
       .then(() => {
@@ -26,7 +30,22 @@ const write = function () {
           name: "home"
         })
 
-      })}
+      })}*/
+
+
+const write = function () {
+  const file = document.querySelector("#image").files[0]
+
+  frm.append("imageFile", file);
+  console.log(images)
+  axios.post("http://localhost:8080/board/user/writePost", frm, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+      .then()
+
+}
 
 const submit = document.getElementById("submitButton");
 //Submit 버튼 클릭시 이미지 보여주기
@@ -61,6 +80,7 @@ const upload = function (image) {
   //이미지를 image-show div에 추가
   const container = document.getElementById('image-show');
   container.appendChild(newImage);
+
 };
 
 
@@ -93,7 +113,7 @@ const upload = function (image) {
               👉 CLICK HERE! 👈
             </label>
           </div>
-          <input type="file" id="image" name="chooseFile" accept="image/*" multiple @change = upload(this) >
+          <input type="file" enctype="multipart/form-data" id="image" name="chooseFile" accept="image/*" multiple @change = upload(this)  >
         </form>
 
         <div class="fileContainer">
