@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
@@ -46,6 +47,9 @@ class AuthControllerTest {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
+    @Autowired
+    private MessageSource messageSource;
+
     @BeforeEach
     public void before() {
         userRepository.deleteAll();
@@ -55,11 +59,12 @@ class AuthControllerTest {
     @DisplayName("회원가입")
     public void signup() throws Exception {
         SignupForm signupForm = SignupForm.builder()
-                .username("ffff")
+                .username("ffeffe")
                 .email("jmcabc@naver.com1")
                 .password("wjdals12")
                 .phoneNum("01035573336")
                 .build();
+
 
         mockMvc.perform(MockMvcRequestBuilders.post("/auth/signup")
                         .contentType(MediaType.APPLICATION_JSON)
