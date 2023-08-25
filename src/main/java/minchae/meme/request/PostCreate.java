@@ -17,8 +17,6 @@ import java.util.List;
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
 public class PostCreate implements Serializable {
 
-    private Long postId;
-
     private String title;
 
     private String content;
@@ -29,11 +27,12 @@ public class PostCreate implements Serializable {
 
 
     @Builder
-    public PostCreate(Long postId, String title, String content, User user, String youtubeUrl) {
-        this.postId = postId;
+    public PostCreate(String title, String content, User user, String youtubeUrl) {
         this.title = title;
         this.content = content;
         this.user = user;
         this.youtubeUrl = youtubeUrl;
     }
+
+
 }

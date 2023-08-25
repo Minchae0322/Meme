@@ -4,12 +4,17 @@ package minchae.meme.controller;
 import lombok.RequiredArgsConstructor;
 import minchae.meme.entity.Post;
 import minchae.meme.entity.User;
+import minchae.meme.entity.enumClass.Authorization;
+import minchae.meme.parser.PostJsonParser;
+import minchae.meme.repository.UserRepository;
 import minchae.meme.request.Page;
 import minchae.meme.request.PostCreate;
 import minchae.meme.request.PostEdit;
 import minchae.meme.response.PostResponse;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.service.impl.PostServiceImpl;
+import org.apache.tomcat.util.json.JSONParser;
+import org.json.JSONObject;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,6 +30,8 @@ public class PostController {
 
     private final PostServiceImpl postService;
     private final PostRepository postRepository;
+
+    private final UserRepository userRepository;
 
     @GetMapping("/board/posts/{postId}")
     public PostResponse getPost(@PathVariable("postId") Long postId) {
@@ -42,15 +49,24 @@ public class PostController {
         return new UrlResource("file:" + fileStore.getFullPath(filename));
     }*/
 
-   /* @PostMapping(value = "/board/user/writePost", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public void writePost(@RequestPart PostCreate params, @RequestPart("imageFile") MultipartFile multipartFile) throws IOException {
+    @PostMapping(value = "/board/user/writePost", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public void writePost(@RequestPart("jsonData") PostCreate params, @RequestPart(value = "imageFile") MultipartFile multipartFile, @AuthenticationPrincipal User user) throws IOException {
+        User user1 = User.builder()
+                .username("wjdalsco")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password("passwordEncoder.encode(signupForm.getPassword()")
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user1);
+        params.setUser(user1);
         postService.write(params);
-    }*/
-
-    @PostMapping(value = "/board/user/writePost", consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
-    public void writePost( @RequestPart(value = "imageFile", required=false) MultipartFile multipartFile) throws IOException {
-        System.out.println(multipartFile.getName());
     }
+
+   /* @PostMapping(value = "/board/user/writePost", consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
+    public void writePost( @RequestPart(value = "imageFile") MultipartFile multipartFile) throws IOException {
+        System.out.println(multipartFile.getOriginalFilename());
+    }*/
 
     @DeleteMapping("/board/user/{postId}")
     public Long deletePost(@PathVariable("postId") Long postId) {

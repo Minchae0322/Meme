@@ -31,6 +31,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.json:json:20211205'
     implementation 'org.apache.commons:commons-fileupload2:2.0.0-M1'
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'org.apache.tika:tika-core:2.4.1'

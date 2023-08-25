@@ -4,6 +4,7 @@ import {ref} from "vue";
 import axios from 'axios'
 import router from "@/router";
 
+
 const title = ref("")
 const content = ref("")
 let images = new Image()
@@ -35,13 +36,18 @@ const frm = new FormData()
 
 const write = function () {
   const file = document.querySelector("#image").files[0]
+  let params = JSON.stringify({ title: title.value, content: content.value });
 
+  frm.append("jsonData", new Blob([JSON.stringify({ title: title.value, content: content.value })], {type: "application/json"}));
   frm.append("imageFile", file);
+
   console.log(images)
   axios.post("http://localhost:8080/board/user/writePost", frm, {
     headers: {
       'Content-Type': 'multipart/form-data'
-    }
+
+    },
+
   })
       .then()
 
