@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface PostService {
-    void write(PostCreate postCreate) throws IOException;
+    void write(PostCreate postCreate, MultipartFile multipartFile) throws IOException;
     PostResponse get(Long postId);
 
     void delete(Long postId);

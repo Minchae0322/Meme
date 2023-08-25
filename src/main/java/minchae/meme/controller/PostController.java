@@ -13,6 +13,7 @@ import minchae.meme.request.PostEdit;
 import minchae.meme.response.PostResponse;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.service.impl.PostServiceImpl;
+import minchae.meme.store.FileStore;
 import org.apache.tomcat.util.json.JSONParser;
 import org.json.JSONObject;
 import org.springframework.data.web.PageableDefault;
@@ -33,24 +34,17 @@ public class PostController {
 
     private final UserRepository userRepository;
 
+
+
     @GetMapping("/board/posts/{postId}")
     public PostResponse getPost(@PathVariable("postId") Long postId) {
         return postService.get(postId);
     }
 
-  /*  @PostMapping(value = "/board/user/writePost")
-    public void writePost(@RequestBody PostCreate params) throws IOException {
-        postService.write(params);
-    }*/
 
-    /*@ResponseBody
-    @GetMapping("/images/{filename}")
-    public List<Resource> showImage(@PathVariable String filename) throws MalformedURLException {
-        return new UrlResource("file:" + fileStore.getFullPath(filename));
-    }*/
 
     @PostMapping(value = "/board/user/writePost", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public void writePost(@RequestPart("jsonData") PostCreate params, @RequestPart(value = "imageFile") MultipartFile multipartFile, @AuthenticationPrincipal User user) throws IOException {
+    public void writePost(@RequestPart("post") PostCreate params, @RequestPart(value = "imageFile", required = false) MultipartFile multipartFile, @AuthenticationPrincipal User user) throws IOException {
         User user1 = User.builder()
                 .username("wjdalsco")
                 .email("jcmcmdmw@nakejqkqlw.com")
@@ -60,13 +54,10 @@ public class PostController {
                 .build();
         userRepository.save(user1);
         params.setUser(user1);
-        postService.write(params);
+
+        postService.write(params, multipartFile);
     }
 
-   /* @PostMapping(value = "/board/user/writePost", consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
-    public void writePost( @RequestPart(value = "imageFile") MultipartFile multipartFile) throws IOException {
-        System.out.println(multipartFile.getOriginalFilename());
-    }*/
 
     @DeleteMapping("/board/user/{postId}")
     public Long deletePost(@PathVariable("postId") Long postId) {

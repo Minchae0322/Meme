@@ -15,7 +15,9 @@ import minchae.meme.response.PostResponse;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.service.FileService;
 import minchae.meme.service.PostService;
+import minchae.meme.store.FileStore;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,9 +31,11 @@ public class PostServiceImpl implements PostService {
     private final UpDownRepository updownRepository;
     private final FileService fileService;
 
+    private final FileStore fileStore;
+
     @Override
     @Transactional
-    public void write(PostCreate postCreate) throws IOException {  // 첨부 이미지) throws IOException {
+    public void write(PostCreate postCreate, MultipartFile multipartFile) throws IOException {  // 첨부 이미지) throws IOException {
         PostFunction postFunction = PostFunction.builder()
                 .isHot(false)
                 .build();
@@ -43,6 +47,7 @@ public class PostServiceImpl implements PostService {
                 .postFunction(postFunction)
                 .build();
         postRepository.save(post);
+        fileStore.storeFile(multipartFile, post);
     }
 
     @Override

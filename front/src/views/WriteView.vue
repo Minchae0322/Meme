@@ -38,7 +38,7 @@ const write = function () {
   const file = document.querySelector("#image").files[0]
   let params = JSON.stringify({ title: title.value, content: content.value });
 
-  frm.append("jsonData", new Blob([JSON.stringify({ title: title.value, content: content.value })], {type: "application/json"}));
+  frm.append("post", new Blob([JSON.stringify({ title: title.value, content: content.value })], {type: "application/json"}));
   frm.append("imageFile", file);
 
   console.log(images)
@@ -99,17 +99,6 @@ const upload = function (image) {
 
 <template>
   <header>
-
-  </header>
-
-
-  <body>
-  <div>
-
-
-
-  </div>
-  <div>
     <div class="container">
       <div class="image-upload" id="image-upload">
 
@@ -119,7 +108,7 @@ const upload = function (image) {
               👉 CLICK HERE! 👈
             </label>
           </div>
-          <input type="file" enctype="multipart/form-data" id="image" name="chooseFile" accept="image/*" multiple @change = upload(this)  >
+          <input type="file" enctype="multipart/form-data" id="image" name="chooseFile" accept="image/*" multiple @change = upload(this) >
         </form>
 
         <div class="fileContainer">
@@ -135,6 +124,17 @@ const upload = function (image) {
 
       <div class="image-show" id="image-show"></div>
     </div>
+  </header>
+
+
+  <body>
+  <div>
+
+
+
+  </div>
+  <div>
+
   </div>
 
   <div>
