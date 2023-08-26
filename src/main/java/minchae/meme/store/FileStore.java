@@ -12,15 +12,17 @@ import java.util.UUID;
 import java.util.List;
 
 @Component
-public class FileStore {
+public class FileStore implements Store{
 
     String rootPath = System.getProperty("user.dir");
 
     // 프로젝트 루트 경로에 있는 files 디렉토리
     private final String fileDir = rootPath + "/files/";
 
+    @Override
     public String getFullPath(String filename) { return fileDir + filename; }
 
+    @Override
     public UploadFile storeFile(MultipartFile multipartFile, Post post) throws IOException {
 
         if(multipartFile.isEmpty()) {
@@ -42,6 +44,7 @@ public class FileStore {
                 .build();
     }
 
+    @Override
     // 파일이 여러개 들어왔을 때 처리해주는 부분
     public List<UploadFile> storeFiles(List<MultipartFile> multipartFiles, Post post) throws IOException {
         List<UploadFile> storeFileResult = new ArrayList<>();
@@ -54,7 +57,8 @@ public class FileStore {
     }
 
     // 확장자 추출
-    private String extractExt(String originalFilename) {
+    @Override
+    public String extractExt(String originalFilename) {
         int pos = originalFilename.lastIndexOf(".");
         return originalFilename.substring(pos + 1);
     }

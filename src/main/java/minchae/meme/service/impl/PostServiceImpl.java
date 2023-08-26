@@ -31,7 +31,6 @@ public class PostServiceImpl implements PostService {
     private final UpDownRepository updownRepository;
     private final FileService fileService;
 
-    private final FileStore fileStore;
 
     @Override
     @Transactional
@@ -47,7 +46,7 @@ public class PostServiceImpl implements PostService {
                 .postFunction(postFunction)
                 .build();
         postRepository.save(post);
-        fileStore.storeFile(multipartFile, post);
+        fileService.saveFile(multipartFile, post);
     }
 
     @Override
