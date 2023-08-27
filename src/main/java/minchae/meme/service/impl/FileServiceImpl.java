@@ -6,7 +6,6 @@ import minchae.meme.entity.Post;
 import minchae.meme.entity.UploadFile;
 import minchae.meme.repository.UploadFileRepository;
 import minchae.meme.service.FileService;
-import minchae.meme.store.FileStore;
 import minchae.meme.store.Store;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,9 +39,10 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public UploadFile saveFile(MultipartFile file, Post post) throws IOException {
+    public void saveFile(MultipartFile file, Post post) throws IOException {
         UploadFile uploadFile = fileStore.storeFile(file, post);
-        write(uploadFile);
-        return uploadFile;
+        if (uploadFile != null) {
+            write(uploadFile);
+        }
     }
 }

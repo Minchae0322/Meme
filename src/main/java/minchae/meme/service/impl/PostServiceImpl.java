@@ -46,7 +46,10 @@ public class PostServiceImpl implements PostService {
                 .postFunction(postFunction)
                 .build();
         postRepository.save(post);
-        fileService.saveFile(multipartFile, post);
+        if (multipartFile != null) {
+            fileService.saveFile(multipartFile, post);
+        }
+
     }
 
     @Override

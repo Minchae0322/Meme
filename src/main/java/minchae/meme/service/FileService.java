@@ -16,5 +16,5 @@ public interface FileService {
     List<UploadFile> saveFiles(List<MultipartFile> files, Post post) throws IOException;
 
 
-    UploadFile saveFile(MultipartFile file, Post post) throws IOException;
+    void saveFile(MultipartFile file, Post post) throws IOException;
 }
