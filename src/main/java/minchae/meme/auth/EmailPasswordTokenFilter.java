@@ -22,7 +22,7 @@ public class EmailPasswordTokenFilter extends AbstractAuthenticationProcessingFi
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
         EmailPassword emailPassword = new ObjectMapper().readValue(request.getInputStream(), EmailPassword.class);
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = UsernamePasswordAuthenticationToken.unauthenticated(
-                emailPassword.email,
+                emailPassword.username,
                 emailPassword.password
         );
 
@@ -33,7 +33,7 @@ public class EmailPasswordTokenFilter extends AbstractAuthenticationProcessingFi
 
     @Getter
     static class EmailPassword {
-        private String email;
+        private String username;
         private String password;
     }
 

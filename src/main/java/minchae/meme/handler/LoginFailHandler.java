@@ -20,11 +20,11 @@ public class LoginFailHandler implements AuthenticationFailureHandler {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .code("400")
                 .message("아이디 비밀번호 khkhkhhkhk오류")
-
                 .build();
 
 
 
         response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+        response.sendRedirect("/auth/login");
     }
 }

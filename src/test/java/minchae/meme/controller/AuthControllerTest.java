@@ -6,6 +6,7 @@ import minchae.meme.entity.Post;
 import minchae.meme.entity.User;
 import minchae.meme.entity.enumClass.Authorization;
 import minchae.meme.repository.UserRepository;
+import minchae.meme.request.Login;
 import minchae.meme.request.SignupForm;
 import minchae.meme.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -91,8 +92,17 @@ class AuthControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/auth/login?username=ddd&password=wjdals12"))
+        Login login = Login.builder()
+                .username("ddd")
+                .password("wjdals12")
+                .build();
+
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(login)))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/"));
+        //.andExpect(MockMvcResultMatchers.redirectedUrl());
 
     }
 
@@ -108,9 +118,16 @@ class AuthControllerTest {
                 .build();
         userRepository.save(user);
 
+        Login login = Login.builder()
+                .username("username")
+                .password("password")
+                .build();
+
 
         //when login 이 성공했을때는 /로 redirect 된다. /의 권한은 USER 이다.
-        mockMvc.perform(MockMvcRequestBuilders.post("/auth/login?username=ddd&password=wjdals112"))
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(login)))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/auth/login"));
                 //.andExpect(MockMvcResultMatchers.redirectedUrl());
 
@@ -128,7 +145,15 @@ class AuthControllerTest {
                 .build();
         userRepository.save(user);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/auth/login?username=jmcabc@naver.com&password=wjdals12"))
+        Login login = Login.builder()
+                .username("jmcabc@naver.com")
+                .password(passwordEncoder.encode("wjdals12"))
+                .build();
+
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(login)))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/"));
 
 

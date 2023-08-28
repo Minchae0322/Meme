@@ -55,4 +55,12 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
                 .orElseThrow(IsNotExistUser::new);
         user.changeAuth(Authorization.valueOf(auth));
     }
+
+    @Override
+    @Transactional
+    public void changeNickName(Long userId, String nickName) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(IsNotExistUser::new);
+        user.setNickName(nickName);
+    }
 }

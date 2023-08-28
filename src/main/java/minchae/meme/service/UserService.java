@@ -10,5 +10,7 @@ public interface UserService {
 
     void changeAuth(Long userId, String auth);
 
+    void changeNickName(Long userId, String nickName);
+
 
 }

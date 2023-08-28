@@ -6,6 +6,7 @@ import minchae.meme.response.UserInfoResponse;
 import minchae.meme.service.UserService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -17,5 +18,11 @@ public class UserController {
     @GetMapping("/user/information")
     public UserInfoResponse home(@AuthenticationPrincipal User user) {
         return UserInfoResponse.builder().build().userToUserInfo(user);
+    }
+
+    @PostMapping("/user/information/changeName")
+    public void changeNickName(Long userId, String nickName) {
+        userService.changeNickName(userId, nickName);
+
     }
 }
