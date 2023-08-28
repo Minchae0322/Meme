@@ -49,7 +49,7 @@ public class PostResponse {
         this.postId = post.getPostId();
         this.title = post.getTitle();
         this.content = post.getContent();
-        this.author = post.getAuthor().getUsername();
+        this.author = post.getAuthor().getNickName();
         this.recommendation = post.getRecommendation();
         this.bad = post.getBad();
         this.views = post.getViews();

@@ -41,6 +41,8 @@ public class User implements UserDetails {
     @Email
     private String email;
 
+    private String nickName;
+
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -67,6 +69,7 @@ public class User implements UserDetails {
         this.email = email;
         this.createdDate = LocalDateTime.now();
         this.authorizations = authorizations;
+        this.nickName = username;
         this.enable = enable;
     }
 

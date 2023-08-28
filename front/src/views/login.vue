@@ -26,7 +26,7 @@ const write = function () {
 
   </header>
   <body>
-  <div>
+  <div class = "system">
     <el-text  class="mx-1" type="primary">아이디</el-text>
     <el-input v-model = "username" placeholder="ddd"/>
 

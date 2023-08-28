@@ -4,7 +4,10 @@ import { RouterLink, RouterView } from 'vue-router'
 </script>
 
 <template>
+
   <el-header>
+
+    <label>최신 MEME</label>
     <nav>
       <RouterLink to="/">Home</RouterLink>
       <RouterLink to="/write">글 작성</RouterLink>
@@ -13,12 +16,17 @@ import { RouterLink, RouterView } from 'vue-router'
 
     </nav>
   </el-header>
- <p>
 
- </p>
   <RouterView />
 </template>
 
 <style>
+ * {
+   color: aliceblue;
+   margin: 15px;
+ }
 
+ a {
+   color: antiquewhite;
+ }
 </style>

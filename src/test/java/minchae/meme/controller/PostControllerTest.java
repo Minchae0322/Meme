@@ -180,7 +180,7 @@ class PostControllerTest {
                 .content("글 내용은 비밀입니다")
                 .user(user)
                 .build();
-        postService.write(postCreate);
+        postService.write(postCreate, null);
 
         Post postResponse = postRepository.findAll().get(0);
 
@@ -218,7 +218,7 @@ class PostControllerTest {
                 .content("글 내용은 비밀입니다")
                 .user(user)
                 .build();
-        postService.write(postCreate);
+        postService.write(postCreate, null);
         Post postResponse = postRepository.findAll().get(0);
 
 
@@ -252,7 +252,7 @@ class PostControllerTest {
                 .content("글 내용은 비밀입니다")
                 .user(user)
                 .build();
-        postService.write(postCreate);
+        postService.write(postCreate, null);
 
 
         //when
@@ -334,7 +334,7 @@ class PostControllerTest {
                 .content("글 내용은 비밀입니다")
                 .user(user)
                 .build();
-        postService.write(postCreate);
+        postService.write(postCreate, null);
 
 
         PostEdit postEdit = PostEdit.builder()

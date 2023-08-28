@@ -18,17 +18,17 @@ public class CommentResponse {
     private Long commentId;
     private Post post;
     private String comment;
-    private User user;
+    private String author;
 
     private CommentFunction commentFunction;
 
 
     @Builder
-    public CommentResponse(Long commentId, Post post, String comment, User user, CommentFunction commentFunction) {
+    public CommentResponse(Long commentId, Post post, String comment, String author, CommentFunction commentFunction) {
         this.commentId = commentId;
         this.post = post;
         this.comment = comment;
-        this.user = user;
+        this.author = author;
         this.commentFunction = commentFunction;
     }
 
@@ -36,7 +36,7 @@ public class CommentResponse {
         this.commentId = comment.getCommentId();
         this.post = comment.getPost();
         this.comment = comment.getComment();
-        this.user = comment.getUser();
+        this.author = comment.getUser().getNickName();
         this.commentFunction = comment.getCommentFunction();
         return this;
     }

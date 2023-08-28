@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import minchae.meme.auth.EmailPasswordTokenFilter;
 import minchae.meme.entity.enumClass.Authorization;
 import minchae.meme.handler.LoginFailHandler;
+import minchae.meme.handler.LoginSuccessHandler;
 import minchae.meme.repository.UserRepository;
 import minchae.meme.service.impl.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class WebSecurityConfig {
     @Bean
     public EmailPasswordTokenFilter emailPasswordTokenFilter() {
         EmailPasswordTokenFilter filter = new EmailPasswordTokenFilter();
-        filter.setAuthenticationSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/auth/login"));
+        filter.setAuthenticationSuccessHandler(new LoginSuccessHandler());
         filter.setAuthenticationFailureHandler(new LoginFailHandler(new ObjectMapper()));
         filter.setSecurityContextRepository(new HttpSessionSecurityContextRepository());
         filter.setAuthenticationManager(authenticationManage());
@@ -74,9 +75,10 @@ public class WebSecurityConfig {
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/error").permitAll()
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers("/board/posts/list").hasAnyAuthority("USER","ADMIN","MANAGER")
                         .requestMatchers("/user/posts").hasAuthority("USER")
-                        .requestMatchers("/").hasAnyAuthority("USER", "ADMIN", "MANAGER"))
+                        .requestMatchers("/user/**").hasAnyAuthority("USER")
+                        .requestMatchers("/").permitAll())
                /* .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
                         .failureUrl("/auth/login")
                         .loginProcessingUrl("/auth/login")

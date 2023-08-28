@@ -58,6 +58,7 @@ public class Post {
     @NotNull
     private PostFunction postFunction;
 
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private final List<UpDown> upDowns = new ArrayList<>();
 

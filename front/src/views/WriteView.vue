@@ -99,6 +99,13 @@ const upload = function (image) {
 
 <template>
   <header>
+
+  </header>
+
+
+  <body>
+  <el-main>
+  <div>
     <div class="container">
       <div class="image-upload" id="image-upload">
 
@@ -124,12 +131,6 @@ const upload = function (image) {
 
       <div class="image-show" id="image-show"></div>
     </div>
-  </header>
-
-
-  <body>
-  <div>
-
 
 
   </div>
@@ -152,7 +153,7 @@ const upload = function (image) {
     />
   </div>
   <el-button type="primary" @click = "write()">글 작성 완료</el-button>
-
+  </el-main>
   </body>
 
 </template>
@@ -162,5 +163,7 @@ const upload = function (image) {
 
 
 <style>
-
+  * {
+    margin: 20px;
+  }
 </style>
