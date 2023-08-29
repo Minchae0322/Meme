@@ -1,10 +1,10 @@
-# @no-cookie-jar
+
 POST http://localhost:8080/auth/signup
 Content-Type: application/json
 
 {
-  "username": "dddf",
-  "password": "dddf",
+  "username": "dddfwee",
+  "password": "dddfwee",
   "email": "dkdeeeekdkek@naekke.come",
   "phoneNumber": "92918182i3"
 }
@@ -18,13 +18,14 @@ username=dddf&password=dddf
 
 ###
 
+
 # @no-redirect
 POST http://localhost:8080/auth/login
 Content-Type:application/json
 
 {
-  "email": "dddf",
-  "password": "dddf"
+  "username": "dddfwee",
+  "password": "dddfwee"
 }
 
 ###
@@ -46,3 +47,4 @@ GET http://localhost:8080/board/posts/list?page=1&size=5
 
 ###
 GET http://localhost:8080/user/information
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkZGRmd2UiLCJhdXRoIjoiVVNFUiIsImV4cCI6MTY5MzM4ODE5N30.Qr1oMZPqtvplaqjK8PXZcnvqjgXW2CnwhjDZKqkTRdQ

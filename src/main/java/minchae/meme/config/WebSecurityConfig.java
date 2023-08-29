@@ -3,6 +3,8 @@ package minchae.meme.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import minchae.meme.auth.EmailPasswordTokenFilter;
+import minchae.meme.auth.JwtAuthenticationFilter;
+import minchae.meme.auth.provider.JwtTokenProvider;
 import minchae.meme.entity.enumClass.Authorization;
 import minchae.meme.handler.LoginFailHandler;
 import minchae.meme.handler.LoginSuccessHandler;
@@ -19,6 +21,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,6 +39,8 @@ public class WebSecurityConfig {
     private final UserRepository userRepository;
 
     private PasswordEncoder passwordEncoder;
+
+    private final JwtTokenProvider jwtTokenProvider;
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return null;
@@ -44,7 +49,7 @@ public class WebSecurityConfig {
     @Bean
     public EmailPasswordTokenFilter emailPasswordTokenFilter() {
         EmailPasswordTokenFilter filter = new EmailPasswordTokenFilter();
-        filter.setAuthenticationSuccessHandler(new LoginSuccessHandler());
+        filter.setAuthenticationSuccessHandler(new LoginSuccessHandler(jwtTokenProvider));
         filter.setAuthenticationFailureHandler(new LoginFailHandler(new ObjectMapper()));
         filter.setSecurityContextRepository(new HttpSessionSecurityContextRepository());
         filter.setAuthenticationManager(authenticationManage());
@@ -71,14 +76,10 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .addFilterBefore(emailPasswordTokenFilter(), UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/admin/**").hasAuthority("ADMIN")
-                        .requestMatchers("/error").permitAll()
-                        .requestMatchers("/board/posts/list").hasAnyAuthority("USER","ADMIN","MANAGER")
-                        .requestMatchers("/user/posts").hasAuthority("USER")
-                        .requestMatchers("/user/**").hasAnyAuthority("USER")
-                        .requestMatchers("/").permitAll())
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), EmailPasswordTokenFilter.class)
+                .formLogin(AbstractHttpConfigurer::disable)
+                .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
                /* .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
                         .failureUrl("/auth/login")
                         .loginProcessingUrl("/auth/login")
