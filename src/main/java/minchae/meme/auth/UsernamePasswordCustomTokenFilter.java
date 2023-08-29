@@ -12,9 +12,9 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 
 import java.io.IOException;
 
-public class EmailPasswordTokenFilter extends AbstractAuthenticationProcessingFilter {
+public class UsernamePasswordCustomTokenFilter extends AbstractAuthenticationProcessingFilter {
 
-    public EmailPasswordTokenFilter() {
+    public UsernamePasswordCustomTokenFilter() {
         super("/auth/login");
     }
 

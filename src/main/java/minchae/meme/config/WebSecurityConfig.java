@@ -2,15 +2,13 @@ package minchae.meme.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import minchae.meme.auth.EmailPasswordTokenFilter;
+import minchae.meme.auth.UsernamePasswordCustomTokenFilter;
 import minchae.meme.auth.JwtAuthenticationFilter;
 import minchae.meme.auth.provider.JwtTokenProvider;
-import minchae.meme.entity.enumClass.Authorization;
 import minchae.meme.handler.LoginFailHandler;
 import minchae.meme.handler.LoginSuccessHandler;
 import minchae.meme.repository.UserRepository;
 import minchae.meme.service.impl.UserDetailServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -22,15 +20,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -47,8 +44,8 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public EmailPasswordTokenFilter emailPasswordTokenFilter() {
-        EmailPasswordTokenFilter filter = new EmailPasswordTokenFilter();
+    public UsernamePasswordCustomTokenFilter emailPasswordTokenFilter() {
+        UsernamePasswordCustomTokenFilter filter = new UsernamePasswordCustomTokenFilter();
         filter.setAuthenticationSuccessHandler(new LoginSuccessHandler(jwtTokenProvider));
         filter.setAuthenticationFailureHandler(new LoginFailHandler(new ObjectMapper()));
         filter.setSecurityContextRepository(new HttpSessionSecurityContextRepository());
@@ -66,6 +63,19 @@ public class WebSecurityConfig {
         return new ProviderManager(provider);
     }
 
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.addAllowedOrigin("http://localhost:5173");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
 
 
     @Bean
@@ -76,7 +86,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .addFilterBefore(emailPasswordTokenFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), EmailPasswordTokenFilter.class)
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordCustomTokenFilter.class)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())

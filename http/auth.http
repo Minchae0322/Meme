@@ -3,7 +3,7 @@ POST http://localhost:8080/auth/signup
 Content-Type: application/json
 
 {
-  "username": "dddfwee",
+  "username": "ssssss",
   "password": "dddfwee",
   "email": "dkdeeeekdkek@naekke.come",
   "phoneNumber": "92918182i3"
@@ -24,7 +24,7 @@ POST http://localhost:8080/auth/login
 Content-Type:application/json
 
 {
-  "username": "dddfwee",
+  "username": "ssssss",
   "password": "dddfwee"
 }
 
@@ -47,4 +47,4 @@ GET http://localhost:8080/board/posts/list?page=1&size=5
 
 ###
 GET http://localhost:8080/user/information
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkZGRmd2UiLCJhdXRoIjoiVVNFUiIsImV4cCI6MTY5MzM4ODE5N30.Qr1oMZPqtvplaqjK8PXZcnvqjgXW2CnwhjDZKqkTRdQ
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzc3Nzc3MiLCJhdXRoIjoiVVNFUiIsImV4cCI6MTY5MzM5OTA3N30.sNSP5Nm8uQJyWfoYE31GcC1Nf0KW8EGSum09p8HO-_Y

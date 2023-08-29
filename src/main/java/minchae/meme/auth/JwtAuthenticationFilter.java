@@ -1,5 +1,6 @@
 package minchae.meme.auth;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,6 +29,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 "/auth/signup"
         );
 
+        UsernamePasswordCustomTokenFilter.EmailPassword emailPassword = new ObjectMapper().readValue(request.getInputStream(), UsernamePasswordCustomTokenFilter.EmailPassword.class);
+
         String url = String.valueOf(request.getRequestURL());
         for (String s : list) {
             if (url.contains(s)) {
@@ -48,6 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
 
+            response.sendRedirect("/");
 
 
     }

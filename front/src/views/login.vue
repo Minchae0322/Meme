@@ -1,18 +1,19 @@
-<script setup lang = "ts">
+<script setup lang = "js">
 import axios from "axios";
-import router from "@/router/index.js";
 import {ref} from "vue";
 
 
 const username = ref("")
 const password = ref("")
+const config = {"Content-Type": 'application/json'};
 const write = function () {
-  axios.post("http://localhost:8080/auth/login", {
+  axios.post("http://localhost:8080/auth/login",{
     username: username.value,
     password: password.value
 
 
-  })
+  },
+  )
       .then(() => {
         router.replace({
           name: "home"
