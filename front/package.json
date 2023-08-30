@@ -39,7 +39,7 @@
   },
 
 
-  "proxy": "http://localhost:8080/auth/login"
+  "proxy": "http://localhost:8080"
 
 
 }

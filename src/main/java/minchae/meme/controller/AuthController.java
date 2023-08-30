@@ -58,8 +58,8 @@ public class AuthController {
     }
 
     @GetMapping("/")
-    public String home(@AuthenticationPrincipal User user) {
-        return user.getUsername();
+    public String home() {
+        return "홈 입니다";
     }
 
 

@@ -12,13 +12,8 @@ const write = function () {
     password: password.value
 
 
-  },
-  )
-      .then(() => {
-        router.replace({
-          name: "home"
-        })
-      })}
+  }
+  )}
 </script>
 
 <template>

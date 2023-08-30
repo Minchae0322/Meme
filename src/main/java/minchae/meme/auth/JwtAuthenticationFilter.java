@@ -26,10 +26,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         List<String> list = List.of(
                 "/auth/login",
-                "/auth/signup"
-        );
+                "/auth/signup",
+                "/board/posts/list");
 
-        UsernamePasswordCustomTokenFilter.EmailPassword emailPassword = new ObjectMapper().readValue(request.getInputStream(), UsernamePasswordCustomTokenFilter.EmailPassword.class);
+        if (StringUtils.pathEquals(request.getMethod(), "OPTIONS")) {
+            return;
+        }
 
         String url = String.valueOf(request.getRequestURL());
         for (String s : list) {
