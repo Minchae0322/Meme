@@ -1,7 +1,9 @@
 package minchae.meme.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
@@ -20,16 +22,23 @@ public class UsernamePasswordCustomTokenFilter extends AbstractAuthenticationPro
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
+
+        if (request.getMethod().equals("OPTIONS")) {
+            return this.getAuthenticationManager().authenticate(null);
+        }
+
         EmailPassword emailPassword = new ObjectMapper().readValue(request.getInputStream(), EmailPassword.class);
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = UsernamePasswordAuthenticationToken.unauthenticated(
                 emailPassword.username,
                 emailPassword.password
         );
 
+
         usernamePasswordAuthenticationToken.setDetails(this.authenticationDetailsSource.buildDetails(request));
 
         return this.getAuthenticationManager().authenticate(usernamePasswordAuthenticationToken);
     }
+
 
     @Getter
     static class EmailPassword {

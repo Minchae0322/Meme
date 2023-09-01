@@ -15,7 +15,9 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:5173")
-                .exposedHeaders("jwt-token");
+                .exposedHeaders("Authorization")
+                .allowedMethods("*") // 기타 설정
+                .allowedHeaders("*");
 
     }
 

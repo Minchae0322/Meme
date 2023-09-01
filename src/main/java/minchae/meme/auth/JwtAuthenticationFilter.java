@@ -29,7 +29,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 "/auth/signup",
                 "/board/posts/list");
 
-        if (StringUtils.pathEquals(request.getMethod(), "OPTIONS")) {
+            response.setHeader("Access-Control-Allow-Origin", "*");
+        if (request.getRequestURI().contains("/auth/login") && request.getMethod().equals("OPTIONS")) {
+            filterChain.doFilter(request, response);
             return;
         }
 
@@ -53,7 +55,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
 
-            response.sendRedirect("/");
+           // response.sendRedirect("/");
 
 
     }
