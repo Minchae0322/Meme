@@ -23,10 +23,6 @@ public class UsernamePasswordCustomTokenFilter extends AbstractAuthenticationPro
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
 
-        if (request.getMethod().equals("OPTIONS")) {
-            return this.getAuthenticationManager().authenticate(null);
-        }
-
         EmailPassword emailPassword = new ObjectMapper().readValue(request.getInputStream(), EmailPassword.class);
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = UsernamePasswordAuthenticationToken.unauthenticated(
                 emailPassword.username,

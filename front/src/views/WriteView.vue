@@ -42,16 +42,16 @@ const write = function () {
   frm.append("imageFile", file);
 
   console.log(images)
-  axios.post("http://localhost:8080/board/user/writePost", frm, {
-    headers: {
-      'Content-Type': 'multipart/form-data'
 
-    },
+    axios.post("http://localhost:8080/board/user/writePost", frm, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzc3MiLCJhdXRoIjoiVVNFUiIsImV4cCI6MTY5MzcyODE2N30.RyQWGbnOYtLMAXtZeCAWHUXRPLIqdbf5HygSYKy4fOQ"
+      },
 
-  })
-      .then()
-
+    })
 }
+
 
 const submit = document.getElementById("submitButton");
 //Submit 버튼 클릭시 이미지 보여주기

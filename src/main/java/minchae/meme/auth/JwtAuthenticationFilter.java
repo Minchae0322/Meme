@@ -29,11 +29,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 "/auth/signup",
                 "/board/posts/list");
 
-            response.setHeader("Access-Control-Allow-Origin", "*");
-        if (request.getRequestURI().contains("/auth/login") && request.getMethod().equals("OPTIONS")) {
-            filterChain.doFilter(request, response);
+        /*if (request.getMethod().equals("OPTIONS")) {
+            response.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+
+            response.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Authorization");
             return;
-        }
+        }*/
 
         String url = String.valueOf(request.getRequestURL());
         for (String s : list) {
@@ -54,8 +55,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
                 return;
             }
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            //response.sendRedirect("/auth/login");
 
-           // response.sendRedirect("/");
 
 
     }

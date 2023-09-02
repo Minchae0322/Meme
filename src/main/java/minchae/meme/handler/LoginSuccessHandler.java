@@ -26,7 +26,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         response.setContentType(APPLICATION_JSON_VALUE);
         response.setHeader("Authorization", tokenInfo.getAccessToken());
         response.setStatus(HttpServletResponse.SC_OK);
-        response.sendRedirect("/");
+        //response.sendRedirect("/");
     }
 }
 
