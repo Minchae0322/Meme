@@ -11,7 +11,7 @@ let images = new Image()
 
 
 const youtubeUrl = /(http:|https:)?(\/\/)?(www\.)?(youtube.com|youtu.be)\/(watch|embed)?(\?v=|\/)?(\S+)?/g
-const frm = new FormData()
+const frm = new FormData();
 
 /*const write = function () {
   const file = document.querySelector("#image").files[0]
@@ -32,8 +32,15 @@ const frm = new FormData()
         })
 
       })}*/
+    const checkLogin = function() {
+      if (!localStorage.getItem("accessToken")) {
+        router.replace({name: "login"})
+      }
+      console.log("실행")
+      return 0
+    }
 
-
+    checkLogin();
 const write = function () {
   const file = document.querySelector("#image").files[0]
   let params = JSON.stringify({ title: title.value, content: content.value });
@@ -46,10 +53,11 @@ const write = function () {
     axios.post("http://localhost:8080/board/user/writePost", frm, {
       headers: {
         'Content-Type': 'multipart/form-data',
-        'Authorization': "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzc3MiLCJhdXRoIjoiVVNFUiIsImV4cCI6MTY5MzcyODE2N30.RyQWGbnOYtLMAXtZeCAWHUXRPLIqdbf5HygSYKy4fOQ"
+        'Authorization': localStorage.getItem("accessToken")
       },
 
     })
+  console.log(localStorage.getItem("accessToken"))
 }
 
 

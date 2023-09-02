@@ -1,6 +1,11 @@
 <script setup lang="js">
 import { RouterLink, RouterView } from 'vue-router'
 
+
+const login = function () {
+
+};
+
 </script>
 
 <template>
