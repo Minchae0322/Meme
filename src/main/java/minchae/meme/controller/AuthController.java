@@ -57,7 +57,7 @@ public class AuthController {
         return "username";
     }
 
-    @GetMapping("/")
+    @GetMapping("/home")
     public String home() {
         return "홈 입니다";
     }
