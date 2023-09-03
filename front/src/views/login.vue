@@ -2,11 +2,22 @@
 import axios from "axios";
 import {ref} from "vue";
 
+const isAlphaNumeric = function(password) {
+  // 정규 표현식을 사용하여 영문자와 숫자로만 이루어진지 확인
+  const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
+  return regex.test(password);
+}
 
 let username = ref("")
 let password = ref("")
 axios.defaults.withCredentials = true; // withCredentials 전역 설정
 const write = function () {
+  if (!isAlphaNumeric(password.value)) {
+    // 비밀번호가 영문자와 숫자로만 이루어져 있지 않으면 메시지 표시
+    const errorMessage = '비밀번호는 영문자와 숫자로만 입력해야 합니다.';
+    this.$message.error(errorMessage);
+    return;
+  }
   axios.post("http://localhost:8080/auth/login", {
         username: username.value,
         password: password.value
