@@ -6,6 +6,7 @@ const login = function () {
 
 <template>
   <div class="container">
+
     <el-header>
       <label>최신 MEME</label>
       <nav>
@@ -27,19 +28,24 @@ const login = function () {
 
 <style>
 * {
-  color: aliceblue;
+  background-color: white; /* 배경색을 흰색으로 설정 */
 }
 
 a {
-  color: rgba(252, 132, 132, 0.45);
+  color: rgba(232, 63, 63, 0.45);
 }
+
+label {
+  color: #05203b;
+}
+
 
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
-  justify-content: center; /* 가로 가운데 정렬을 위해 아이템 가운데 정렬 */
+  width: 80vw;
+  justify-content: flex-end;
 }
 
 nav {
@@ -49,16 +55,16 @@ nav {
 }
 
 el-header {
-  width: 100%;
+  width: 100vw;
   text-align: center;
   padding: 10px 0;
 }
 
 main {
   max-width: 100vw;
-  flex-grow: 1;
-
-  overflow-y: auto; /* 내용이 화면을 벗어날 경우 스크롤 표시 */
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 10px;
 }
 
 .router {

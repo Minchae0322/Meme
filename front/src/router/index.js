@@ -4,6 +4,8 @@ import WriteView from '../views/WriteView.vue';
 import PostListView from '../views/PostListView.vue';
 import login from "../views/login.vue";
 
+import Signup from "../views/SignupView.vue";
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -16,7 +18,12 @@ const router = createRouter({
       path: "/write",
       name: "write",
       component: WriteView
-    }
+    },
+    {
+      path: '/signup', // 회원가입 페이지 경로
+      name: 'Signup',
+      component: Signup, // 회원가입 컴포넌트
+    },
 
     ,
     {
