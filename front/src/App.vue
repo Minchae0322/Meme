@@ -1,9 +1,12 @@
 <script setup lang="js">
-import {RouterLink, RouterView, useRouter} from 'vue-router'
-import router from "@/router";
 import {ref} from "vue";
 import axios from "axios";
 
+
+import { useRouter } from "vue-router";
+
+
+const router = useRouter()
 
 const isLogin = ref("로그아웃");
 const loginRouter = ref('/logout');
@@ -14,6 +17,8 @@ function checkLogin(){
       isLogin.value = "로그인";
       loginRouter.value = "/login"
     console.log("로그인 필요")
+  } else {
+    isLogin.value = "로그아웃";
   }
 
   return 0
@@ -41,7 +46,9 @@ function handleLogout() {
     router.push('/login'); // 로그인 상태가 아니면 클릭하면 /login으로 이동
   } else {
     logout(); // 로그아웃 상태이면 로그아웃 함수 호출
+    router.go(0)
   }
+
 }
 
 checkLogin();
@@ -59,7 +66,7 @@ checkLogin();
           <RouterLink to="/posts">글 목록</RouterLink>
 
         </nav>
-      <el-button id = "logout" @click = handleLogout()>{{ isLogin }}</el-button>
+
       <div>
 
 
@@ -70,7 +77,7 @@ checkLogin();
 
     </el-header>
 
-
+    <el-button id = "logout" @click = handleLogout()>{{ isLogin }}</el-button>
 
         <RouterView />
 
