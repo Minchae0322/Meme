@@ -62,7 +62,12 @@ public class AuthController {
         return "홈 입니다";
     }
 
+    @PostMapping("/auth/logout")
+    public String logout(String username, String password) {
 
+
+        return "logout";
+    }
 
 
 

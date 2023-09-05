@@ -106,9 +106,7 @@ const upload = function (image) {
 </script>
 
 <template>
-  <header>
 
-  </header>
 
 
   <body>

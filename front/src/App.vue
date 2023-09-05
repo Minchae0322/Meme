@@ -1,28 +1,80 @@
 <script setup lang="js">
-import { RouterLink, RouterView } from 'vue-router'
-const login = function () {
-};
+import {RouterLink, RouterView, useRouter} from 'vue-router'
+import router from "@/router";
+import {ref} from "vue";
+import axios from "axios";
+
+
+const isLogin = ref("로그아웃");
+const loginRouter = ref('/logout');
+
+function checkLogin(){
+  if (!localStorage.getItem("accessToken")) {
+    console.log(localStorage.getItem("accessToken"))
+      isLogin.value = "로그인";
+      loginRouter.value = "/login"
+    console.log("로그인 필요")
+  }
+
+  return 0
+}
+
+
+
+const logout = function () {
+  axios.post("http://localhost:8080/auth/logout", {} ,{headers: {
+        'Authorization': localStorage.getItem("accessToken")
+  }}
+  ).then((response) => {
+    if (response.status === 200) {
+      localStorage.removeItem("accessToken");
+      console.log('access 토큰 :', "로그아웃");
+    }
+
+
+  })
+
+}
+
+function handleLogout() {
+  if (isLogin.value === "로그인") {
+    router.push('/login'); // 로그인 상태가 아니면 클릭하면 /login으로 이동
+  } else {
+    logout(); // 로그아웃 상태이면 로그아웃 함수 호출
+  }
+}
+
+checkLogin();
+
 </script>
 
 <template>
   <div class="container">
 
     <el-header>
-      <label>최신 MEME</label>
-      <nav>
-        <RouterLink to="/home">Home</RouterLink>
-        <RouterLink to="/write">글 작성</RouterLink>
-        <RouterLink to="/login">로그인</RouterLink>
-        <RouterLink to="/posts">글 목록</RouterLink>
-      </nav>
+        <label>최신 MEME</label>
+        <nav>
+          <RouterLink to="/home">Home</RouterLink>
+          <RouterLink to="/write">글 작성</RouterLink>
+          <RouterLink to="/posts">글 목록</RouterLink>
+
+        </nav>
+      <el-button id = "logout" @click = handleLogout()>{{ isLogin }}</el-button>
+      <div>
+
+
+      </div>
+
+
+
+
     </el-header>
 
 
-    <main>
-      <div class="router">
+
         <RouterView />
-      </div>
-    </main>
+
+
   </div>
 </template>
 

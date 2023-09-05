@@ -3,8 +3,9 @@ import HomeView from '../views/HomeView.vue'
 import WriteView from '../views/WriteView.vue';
 import PostListView from '../views/PostListView.vue';
 import login from "../views/login.vue";
-
+import logout from "../views/logout.vue";
 import Signup from "../views/SignupView.vue";
+import app from "../App.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -24,8 +25,12 @@ const router = createRouter({
       name: 'Signup',
       component: Signup, // 회원가입 컴포넌트
     },
+    {
+      path: '/logout',
+      name: 'logout',
+      component: HomeView
+    },
 
-    ,
     {
       path: "/posts",
       name: "postList",
@@ -36,8 +41,9 @@ const router = createRouter({
     {
       path: "/login",
       name: "login",
-      component: login
-    }
+      component: logout
+    },
+
     // {
     //   path: '/about',
     //   name: 'about',

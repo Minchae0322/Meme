@@ -45,19 +45,12 @@ const write = function () {
 
 
       <div class="custom-container">
-        <div>
-          <h1>Sign In</h1>
-          <el-form>
-            <el-form-item label="Username">
-              <el-input v-model="username" placeholder="Enter your username"></el-input>
-            </el-form-item>
-            <el-form-item label="Password">
-              <el-input v-model="password" placeholder="Enter your password" type="password"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="login">Login</el-button>
-            </el-form-item>
-          </el-form>
+        <h1>Sign In</h1>
+        <div class="usernameContainer">
+          <el-input id = "inputUsername" v-model="username" placeholder="아이디를 입력해주세요"></el-input>
+        </div>
+        <div class = "passwordContainer">
+          <el-input v-model="password" placeholder="비밀번호를 입력해주세요" type="password"></el-input>
         </div>
 
       </div>
@@ -75,76 +68,47 @@ const write = function () {
 
 </template>
 
-<style scoped>
-.login-container {
+<style scoped>/*
+.custom-container {
   width: 40vw;
-  margin: 0 auto;
+  margin: 0 auto; !* Center-align horizontally *!
   padding: 20px;
-  text-align: center; /* 가로 중앙 정렬을 위해 텍스트 가운데 정렬 */
-
+  text-align: center;
   border: 1px solid #ddd;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-
-  align-items: center; /* 수직 중앙 정렬을 위해 아이템 가운데 정렬 */
-}
-
+  align-items: center; !* Center-align vertically *!
+  justify-content: center; !* Center-align horizontally *!
+}*/
 .usernameContainer {
-  display: flex; /* 가로로 배치 */
-  flex-direction: row; /* 가로로 배치 */
-  align-items: center; /* 수직 중앙 정렬을 위해 아이템 가운데 정렬 */
-  justify-content: flex-start; /* 왼쪽 정렬을 위해 아이템을 왼쪽으로 정렬 */
-}
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  width: 90%;
 
-.passwordContainer {
-  display: flex; /* 가로로 배치 */
-  flex-direction: row; /* 가로로 배치 */
-  align-items: center; /* 수직 중앙 정렬을 위해 아이템 가운데 정렬 */
-  justify-content: flex-start; /* 왼쪽 정렬을 위해 아이템을 왼쪽으로 정렬 */
 }
 
 
-
-
-.login-container h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #064183;
-}
-
-/* 입력 필드 및 레이블 스타일링 */
-
-
-el-input {
-  width: 100%; /* 가로 길이를 100%로 설정 */
-  height: 80px; /* 원하는 세로 길이로 설정 */
-  line-height: 20px; /* 세로 중앙 정렬을 위해 line-height 설정 */
-}
-
-label,
-el-input {
-  margin-right: 2px; /* 원하는 간격으로 조정 */
-  margin-left: 0px; /* 원하는 간격으로 조정 */
-}
-
-.form-group label {
-  font-weight: bold;
+.id {
+  aspect-ratio: 3 / 1;
+  font-size: 12px;
+  margin-right: 20px; /* Add margin between label and input */
 }
 
 
 
-/* 로그인 버튼 스타일링 */
-.el-button {
-  width: 40%;
 
-  border-radius: 3px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  background-color: #040a0e;
-  color: #000000;
-  border: none;
-}
+
+
+
+
+
+
+
+
+
+
 
 </style>
