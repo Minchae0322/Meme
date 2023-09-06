@@ -68,4 +68,15 @@ public class ExceptionController {
                 .message(e.getMessage())
                 .build();
     }
+
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IsWrongIdAndPassword.class)
+    public ErrorResponse isWrongIdAndPassword(IsWrongIdAndPassword e) {
+        return ErrorResponse.builder()
+                .code("400")
+                .message(e.getMessage())
+                .build();
+    }
 }

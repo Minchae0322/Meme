@@ -6,6 +6,7 @@ import minchae.meme.entity.User;
 import minchae.meme.entity.enumClass.Authorization;
 import minchae.meme.exception.IsExistedUser;
 import minchae.meme.exception.IsNotExistUser;
+import minchae.meme.exception.IsWrongIdAndPassword;
 import minchae.meme.exception.Unauthorized;
 import minchae.meme.repository.UserRepository;
 import minchae.meme.request.SignupForm;
@@ -28,7 +29,7 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         //todo 비밀번호를 jwt 토큰으로 가져오기
         return userRepository.findByUsername(username)
-                .orElseThrow(Unauthorized::new);
+                .orElseThrow(IsWrongIdAndPassword::new);
     }
 
     @Override

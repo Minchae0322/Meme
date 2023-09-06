@@ -7,6 +7,7 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
+import minchae.meme.exception.IsWrongIdAndPassword;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -33,6 +34,7 @@ public class UsernamePasswordCustomTokenFilter extends AbstractAuthenticationPro
         usernamePasswordAuthenticationToken.setDetails(this.authenticationDetailsSource.buildDetails(request));
 
         return this.getAuthenticationManager().authenticate(usernamePasswordAuthenticationToken);
+
     }
 
 

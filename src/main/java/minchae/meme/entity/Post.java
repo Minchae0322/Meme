@@ -72,6 +72,7 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private final List<UploadFile> uploadFiles = new ArrayList<>();
 
+    private String postType;
 
 
     public void update(PostEdit postEdit) {
