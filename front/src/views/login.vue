@@ -1,6 +1,8 @@
 <script setup lang = "js">
 import axios from "axios";
-import {ref} from "vue";
+import { ref, onMounted, onUpdated} from "vue";
+
+
 import { useRouter } from "vue-router";
 
 
@@ -32,7 +34,8 @@ const write = function () {
           localStorage.setItem('accessToken', accessToken);
         }
         console.log('access 토큰 :', accessToken);
-        location.reload()
+
+        router.replace("/home")
         isLogin.value = true;
 
       }

@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import WriteView from '../views/WriteView.vue';
 import PostListView from '../views/PostListView.vue';
 import login from "../views/login.vue";
+import read from "../views/readView.vue";
 import Signup from "../views/SignupView.vue";
 import app from "../App.vue";
 
@@ -37,6 +38,13 @@ const router = createRouter({
       name: "login",
       component: login
     },
+
+    {
+      path: "/read/:postId",
+      name: "read",
+      component: read,
+      props: true
+    }
 
     // {
     //   path: '/about',
