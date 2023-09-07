@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import minchae.meme.auth.provider.JwtTokenProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -27,7 +29,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         List<String> list = List.of(
                 "/auth",
                 "/home",
-                "/board");
+                "/board/posts");
 
         /*if (request.getMethod().equals("OPTIONS")) {
             response.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");

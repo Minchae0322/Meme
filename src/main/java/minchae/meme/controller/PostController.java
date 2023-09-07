@@ -2,9 +2,11 @@ package minchae.meme.controller;
 
 
 import lombok.RequiredArgsConstructor;
+import minchae.meme.auth.provider.JwtTokenProvider;
 import minchae.meme.entity.Post;
 import minchae.meme.entity.User;
 import minchae.meme.entity.enumClass.Authorization;
+import minchae.meme.exception.IsNotExistUser;
 import minchae.meme.parser.PostJsonParser;
 import minchae.meme.repository.UserRepository;
 import minchae.meme.request.Page;
@@ -18,11 +20,15 @@ import org.apache.tomcat.util.json.JSONParser;
 import org.json.JSONObject;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -30,6 +36,8 @@ import java.util.List;
 public class PostController {
 
     private final PostServiceImpl postService;
+
+    private final JwtTokenProvider jwtTokenProvider;
     private final PostRepository postRepository;
 
     private final UserRepository userRepository;
@@ -42,9 +50,8 @@ public class PostController {
     }
 
 
-
     @PostMapping(value = "/board/user/writePost", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public void writePost(@RequestPart("post") PostCreate params, @RequestPart(value = "imageFile", required = false) MultipartFile multipartFile, @AuthenticationPrincipal User user) throws IOException {
+    public void writePost(@RequestHeader("Authorization") String token, @RequestPart("post") PostCreate params, @RequestPart(value = "imageFile", required = false) MultipartFile multipartFile) throws IOException {
         User user1 = User.builder()
                 .username("wjdalsco")
                 .email("jcmcmdmw@nakejqkqlw.com")
@@ -52,9 +59,9 @@ public class PostController {
                 .enable(true)
                 .authorizations(Authorization.USER)
                 .build();
-        userRepository.save(user1);
-        params.setUser(user1);
-
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        params.setUser(user);
         postService.write(params, multipartFile);
     }
 
