@@ -14,6 +14,7 @@ import minchae.meme.request.PostCreate;
 import minchae.meme.request.PostEdit;
 import minchae.meme.response.PostResponse;
 import minchae.meme.repository.PostRepository;
+import minchae.meme.service.FileService;
 import minchae.meme.service.impl.PostServiceImpl;
 import minchae.meme.store.FileStore;
 import org.apache.tomcat.util.json.JSONParser;
@@ -38,6 +39,8 @@ public class PostController {
     private final PostServiceImpl postService;
 
     private final JwtTokenProvider jwtTokenProvider;
+
+    private final FileService fileService;
     private final PostRepository postRepository;
 
     private final UserRepository userRepository;
@@ -51,18 +54,14 @@ public class PostController {
 
 
     @PostMapping(value = "/board/user/writePost", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public void writePost(@RequestHeader("Authorization") String token, @RequestPart("post") PostCreate params, @RequestPart(value = "imageFile", required = false) MultipartFile multipartFile) throws IOException {
-        User user1 = User.builder()
-                .username("wjdalsco")
-                .email("jcmcmdmw@nakejqkqlw.com")
-                .password("passwordEncoder.encode(signupForm.getPassword()")
-                .enable(true)
-                .authorizations(Authorization.USER)
-                .build();
+    public void writePost(@RequestPart("post") PostCreate params, @RequestPart(value = "imageFile", required = false) List<MultipartFile> multipartFiles) throws IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
         params.setUser(user);
-        postService.write(params, multipartFile);
+        Post post = postService.write(params);
+        if (multipartFiles != null ) {
+            fileService.saveFiles(multipartFiles, post);
+        }
     }
 
 

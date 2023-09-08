@@ -34,7 +34,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public void write(PostCreate postCreate, MultipartFile multipartFile) throws IOException {  // 첨부 이미지) throws IOException {
+    public Post write(PostCreate postCreate) {  // 첨부 이미지) throws IOException {
         PostFunction postFunction = PostFunction.builder()
                 .isHot(false)
                 .build();
@@ -46,10 +46,7 @@ public class PostServiceImpl implements PostService {
                 .postFunction(postFunction)
                 .build();
         postRepository.save(post);
-        if (multipartFile != null) {
-            fileService.saveFile(multipartFile, post);
-        }
-
+        return post;
     }
 
     @Override
