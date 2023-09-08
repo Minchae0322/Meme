@@ -4,32 +4,27 @@ package minchae.meme.controller;
 import lombok.RequiredArgsConstructor;
 import minchae.meme.auth.provider.JwtTokenProvider;
 import minchae.meme.entity.Post;
+import minchae.meme.entity.UploadFile;
 import minchae.meme.entity.User;
-import minchae.meme.entity.enumClass.Authorization;
-import minchae.meme.exception.IsNotExistUser;
-import minchae.meme.parser.PostJsonParser;
 import minchae.meme.repository.UserRepository;
 import minchae.meme.request.Page;
 import minchae.meme.request.PostCreate;
 import minchae.meme.request.PostEdit;
+import minchae.meme.response.FileResponse;
 import minchae.meme.response.PostResponse;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.service.FileService;
 import minchae.meme.service.impl.PostServiceImpl;
-import minchae.meme.store.FileStore;
-import org.apache.tomcat.util.json.JSONParser;
-import org.json.JSONObject;
+import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -52,6 +47,12 @@ public class PostController {
         return postService.get(postId);
     }
 
+    @GetMapping("/board/posts/{postId}/image")
+    public FileResponse getPostImage(@PathVariable("postId") Long postId) throws IOException {
+        List<UploadFile> uploadFiles = postService.getPostUploadFile(postId);
+        return fileService.getFiles(uploadFiles);
+    }
+
 
     @PostMapping(value = "/board/user/writePost", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public void writePost(@RequestPart("post") PostCreate params, @RequestPart(value = "imageFile", required = false) List<MultipartFile> multipartFiles) throws IOException {
@@ -59,7 +60,7 @@ public class PostController {
         User user = (User) authentication.getPrincipal();
         params.setUser(user);
         Post post = postService.write(params);
-        if (multipartFiles != null ) {
+        if (multipartFiles != null) {
             fileService.saveFiles(multipartFiles, post);
         }
     }

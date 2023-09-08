@@ -15,11 +15,8 @@ import minchae.meme.response.PostResponse;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.service.FileService;
 import minchae.meme.service.PostService;
-import minchae.meme.store.FileStore;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,6 +45,7 @@ public class PostServiceImpl implements PostService {
         postRepository.save(post);
         return post;
     }
+
 
     @Override
     public PostResponse get(Long postId) {
@@ -103,6 +101,13 @@ public class PostServiceImpl implements PostService {
         PostFunction postFunction = post.getPostFunction();
         postFunction.setHot(false);
         post.setPostFunction(postFunction);
+    }
+
+    @Override
+    public List<UploadFile> getPostUploadFile(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(PostNotFound::new);
+        return post.getUploadFiles();
     }
 
     @Override

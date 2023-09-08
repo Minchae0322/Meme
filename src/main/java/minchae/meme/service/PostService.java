@@ -1,6 +1,7 @@
 package minchae.meme.service;
 
 import minchae.meme.entity.Post;
+import minchae.meme.entity.UploadFile;
 import minchae.meme.entity.User;
 import minchae.meme.request.Page;
 import minchae.meme.request.PostCreate;
@@ -25,6 +26,8 @@ public interface PostService {
     void setHotPost(Long postId);
 
     void unsetHotPost(Long postId);
+
+    List<UploadFile> getPostUploadFile(Long postId);
 
     List<PostResponse> getHotListWherePage(Page page);
 

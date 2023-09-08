@@ -8,6 +8,10 @@ import minchae.meme.entity.Comment;
 import minchae.meme.entity.Post;
 import minchae.meme.entity.PostFunction;
 import minchae.meme.entity.User;
+import minchae.meme.store.FileHandler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.FieldError;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -32,6 +36,7 @@ public class PostResponse {
     private List<Comment> comments;
 
 
+
     @Builder
     public PostResponse(Long postId, String title, String content, String author, int recommendation, int bad, int views, PostFunction postFunction, List<Comment> comments) {
         this.postId = postId;
@@ -44,6 +49,8 @@ public class PostResponse {
         this.postFunction = postFunction;
         this.comments = comments;
     }
+
+
 
     public PostResponse postToPostResponse(Post post) {
         this.postId = post.getPostId();

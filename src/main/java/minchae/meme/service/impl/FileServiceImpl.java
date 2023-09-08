@@ -5,8 +5,11 @@ import lombok.RequiredArgsConstructor;
 import minchae.meme.entity.Post;
 import minchae.meme.entity.UploadFile;
 import minchae.meme.repository.UploadFileRepository;
+import minchae.meme.response.FileResponse;
 import minchae.meme.service.FileService;
-import minchae.meme.store.Store;
+import minchae.meme.store.FileHandler;
+import minchae.meme.store.InMemoryMultipartFile;
+import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,7 +22,7 @@ public class FileServiceImpl implements FileService {
 
     private final UploadFileRepository fileRepository;
 
-    private final Store fileStore;
+    private final FileHandler fileHandler;
     @Override
     @Transactional
     public void write(UploadFile uploadFile) {
@@ -34,13 +37,29 @@ public class FileServiceImpl implements FileService {
 
     @Override
     @Transactional
-    public List<UploadFile> saveFiles(List<MultipartFile> files, Post post) throws IOException {
-        return fileStore.storeFiles(files, post);
+    public void saveFiles(List<MultipartFile> files, Post post) throws IOException {
+        List<UploadFile> uploadFiles = fileHandler.storeFiles(files, post);
+        if (uploadFiles != null) {
+            writeList(uploadFiles);
+
+        }
+    }
+
+    @Override
+    public FileResponse getFiles(List<UploadFile> uploadFiles) throws IOException {
+        return FileResponse.builder()
+                .multipartFileList(fileHandler.extractFiles(uploadFiles))
+                .build();
+    }
+
+    @Override
+    public MultipartFile getFile(UploadFile uploadFile) throws IOException {
+        return fileHandler.extractFile(uploadFile);
     }
 
     @Override
     public void saveFile(MultipartFile file, Post post) throws IOException {
-        UploadFile uploadFile = fileStore.storeFile(file, post);
+        UploadFile uploadFile = fileHandler.storeFile(file, post);
         if (uploadFile != null) {
             write(uploadFile);
         }
