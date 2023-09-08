@@ -17,7 +17,9 @@ public interface FileService {
 
     void saveFiles(List<MultipartFile> files, Post post) throws IOException;
 
-    FileResponse getFiles(List<UploadFile> uploadFiles) throws IOException;
+    FileResponse getFiles(Long postId) throws IOException;
+
+    List<UploadFile> getUploadFilesByPostId(Long postId);
 
     MultipartFile getFile(UploadFile uploadFile) throws IOException;
 

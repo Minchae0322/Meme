@@ -27,7 +27,6 @@ public interface PostService {
 
     void unsetHotPost(Long postId);
 
-    List<UploadFile> getPostUploadFile(Long postId);
 
     List<PostResponse> getHotListWherePage(Page page);
 

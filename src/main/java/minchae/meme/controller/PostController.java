@@ -49,8 +49,7 @@ public class PostController {
 
     @GetMapping("/board/posts/{postId}/image")
     public FileResponse getPostImage(@PathVariable("postId") Long postId) throws IOException {
-        List<UploadFile> uploadFiles = postService.getPostUploadFile(postId);
-        return fileService.getFiles(uploadFiles);
+        return fileService.getFiles(postId);
     }
 
 

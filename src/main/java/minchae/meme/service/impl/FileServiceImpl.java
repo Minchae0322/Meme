@@ -23,6 +23,7 @@ public class FileServiceImpl implements FileService {
     private final UploadFileRepository fileRepository;
 
     private final FileHandler fileHandler;
+
     @Override
     @Transactional
     public void write(UploadFile uploadFile) {
@@ -46,10 +47,16 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public FileResponse getFiles(List<UploadFile> uploadFiles) throws IOException {
+    public FileResponse getFiles(Long postId) throws IOException {
         return FileResponse.builder()
-                .multipartFileList(fileHandler.extractFiles(uploadFiles))
+                .multipartFileList(fileHandler.extractFiles(getUploadFilesByPostId(postId)))
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public List<UploadFile> getUploadFilesByPostId(Long postId) {
+        return fileRepository.findUploadFilesByPostId(postId);
     }
 
     @Override

@@ -103,12 +103,6 @@ public class PostServiceImpl implements PostService {
         post.setPostFunction(postFunction);
     }
 
-    @Override
-    public List<UploadFile> getPostUploadFile(Long postId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(PostNotFound::new);
-        return post.getUploadFiles();
-    }
 
     @Override
     public List<PostResponse> getHotListWherePage(Page page) {
