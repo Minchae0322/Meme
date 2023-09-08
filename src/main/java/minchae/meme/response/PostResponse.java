@@ -1,5 +1,6 @@
 package minchae.meme.response;
 
+import jakarta.transaction.Transactional;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -52,6 +53,7 @@ public class PostResponse {
 
 
 
+    @Transactional
     public PostResponse postToPostResponse(Post post) {
         this.postId = post.getPostId();
         this.title = post.getTitle();

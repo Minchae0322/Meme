@@ -20,7 +20,7 @@ export default {
   },
   methods: {
     fetchPost() {
-      const url = 'http://localhost:8080/board/posts/33';
+      const url = 'http://localhost:8080/board/posts/99';
 
       axios.get(url)
           .then((response) => {
