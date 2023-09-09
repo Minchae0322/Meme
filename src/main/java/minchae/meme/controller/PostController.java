@@ -17,14 +17,20 @@ import minchae.meme.service.FileService;
 import minchae.meme.service.impl.PostServiceImpl;
 import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -48,8 +54,21 @@ public class PostController {
     }
 
     @GetMapping("/board/posts/{postId}/image")
-    public FileResponse getPostImage(@PathVariable("postId") Long postId) throws IOException {
-        return fileService.getFiles(postId);
+    public ResponseEntity<List<String>> getPostImage(@PathVariable("postId") Long postId) throws IOException {
+        List<? extends MultipartFile> imageFiles = fileService.getFiles(postId).getMultipartFileList();
+        if (imageFiles.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<String> imageBase64List = new ArrayList<>();
+
+        for (MultipartFile imageFile : imageFiles) {
+            byte[] imageData = imageFile.getBytes();
+            String imageBase64 = Base64.getEncoder().encodeToString(imageData);
+            imageBase64List.add(imageBase64);
+        }
+
+        return ResponseEntity.ok(imageBase64List);
     }
 
 

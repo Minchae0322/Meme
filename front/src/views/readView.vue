@@ -1,34 +1,30 @@
 <template>
   <div>
-    <button @click="fetchPost">포스트 가져오기</button>
-    <div v-if="post">
-      <h1>{{ post.title }}</h1>
-      <p>{{ post.content }}</p>
-      <img :src="post.imageUrl" alt="포스트 이미지" />
+    <button @click="loadImages">Load Images</button>
+    <div v-for="(imageData, index) in imageList" :key="index">
+      <img :src="imageData" alt="Image" />
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   data() {
     return {
-      post: null,
+      imageList: [], // 이미지 데이터를 저장할 배열
     };
   },
   methods: {
-    fetchPost() {
-      const url = 'http://localhost:8080/board/posts/99';
-
-      axios.get(url)
+    loadImages() {
+      // Spring Boot에서 이미지 데이터 가져오는 API 호출
+      axios.get("http://localhost:8080/board/posts/103/image")
           .then((response) => {
-            // 서버에서 받아온 데이터를 post 변수에 저장
-            this.post = response.data;
+            this.imageList = response.data;
           })
           .catch((error) => {
-            console.error('데이터를 가져오는 중 오류 발생:', error);
+            console.error("Error loading images", error);
           });
     },
   },
