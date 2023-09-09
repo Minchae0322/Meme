@@ -12,6 +12,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import minchae.meme.entity.enumClass.PostType;
 import minchae.meme.request.PostEdit;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -72,7 +73,7 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private final List<UploadFile> uploadFiles = new ArrayList<>();
 
-    private String postType;
+    private PostType postType;
 
 
     public void update(PostEdit postEdit) {

@@ -3,6 +3,7 @@ package minchae.meme.service;
 import minchae.meme.entity.Post;
 import minchae.meme.entity.UploadFile;
 import minchae.meme.entity.User;
+import minchae.meme.entity.enumClass.PostType;
 import minchae.meme.request.Page;
 import minchae.meme.request.PostCreate;
 import minchae.meme.request.PostEdit;
@@ -27,6 +28,8 @@ public interface PostService {
 
     void unsetHotPost(Long postId);
 
+
+    List<PostResponse> getPostListByPostType(Page page, PostType postType);
 
     List<PostResponse> getHotListWherePage(Page page);
 

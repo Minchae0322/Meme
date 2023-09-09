@@ -25,14 +25,15 @@ public class PostCreate implements Serializable {
 
     private String youtubeUrl;
 
+    private String postType;
+
 
     @Builder
-    public PostCreate(String title, String content, User user, String youtubeUrl) {
+    public PostCreate(String title, String content, User user, String youtubeUrl, String postType) {
         this.title = title;
         this.content = content;
         this.user = user;
         this.youtubeUrl = youtubeUrl;
+        this.postType = postType;
     }
-
-
 }

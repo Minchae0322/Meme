@@ -3,6 +3,7 @@ package minchae.meme.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import minchae.meme.entity.*;
+import minchae.meme.entity.enumClass.PostType;
 import minchae.meme.exception.IsRecommended;
 import minchae.meme.exception.PostNotFound;
 import minchae.meme.exception.Unauthorized;
@@ -41,6 +42,7 @@ public class PostServiceImpl implements PostService {
                 .content(postCreate.getContent())
                 .author(postCreate.getUser())
                 .postFunction(postFunction)
+                .postType(PostType.valueOf(postCreate.getPostType()))
                 .build();
         postRepository.save(post);
         return post;
@@ -101,6 +103,11 @@ public class PostServiceImpl implements PostService {
         PostFunction postFunction = post.getPostFunction();
         postFunction.setHot(false);
         post.setPostFunction(postFunction);
+    }
+
+    @Override
+    public List<PostResponse> getPostListByPostType(Page page, PostType postType) {
+        return null;
     }
 
 
