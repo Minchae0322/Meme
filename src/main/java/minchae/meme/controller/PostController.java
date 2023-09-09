@@ -16,6 +16,8 @@ import minchae.meme.repository.PostRepository;
 import minchae.meme.service.FileService;
 import minchae.meme.service.impl.PostServiceImpl;
 import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,7 +32,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -54,21 +55,27 @@ public class PostController {
     }
 
     @GetMapping("/board/posts/{postId}/image")
-    public ResponseEntity<List<String>> getPostImage(@PathVariable("postId") Long postId) throws IOException {
+    public ResponseEntity<byte[]> getPostImage(@PathVariable("postId") Long postId) throws IOException {
         List<? extends MultipartFile> imageFiles = fileService.getFiles(postId).getMultipartFileList();
+
         if (imageFiles.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        List<String> imageBase64List = new ArrayList<>();
-
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
         for (MultipartFile imageFile : imageFiles) {
+            // 각 이미지 파일의 바이트 데이터를 합칩니다.
             byte[] imageData = imageFile.getBytes();
-            String imageBase64 = Base64.getEncoder().encodeToString(imageData);
-            imageBase64List.add(imageBase64);
+            baos.write(imageData);
         }
 
-        return ResponseEntity.ok(imageBase64List);
+        byte[] combinedImageData = baos.toByteArray();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG); // 이미지인 경우에는 해당 MIME 타입을 설정합니다.
+        headers.setContentLength(combinedImageData.length);
+
+        return new ResponseEntity<>(combinedImageData, headers, HttpStatus.OK);
     }
 
 
