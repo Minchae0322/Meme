@@ -107,7 +107,11 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostResponse> getPostListByPostType(Page page, PostType postType) {
-        return null;
+        return postRepository.findPostsByPostTypeAndPage(page, postType)
+                .stream()
+                .map(post -> PostResponse.builder()
+                        .build().postToPostResponse(post))
+                .collect(Collectors.toList());
     }
 
 

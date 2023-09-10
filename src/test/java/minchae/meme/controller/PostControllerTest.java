@@ -21,7 +21,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -36,8 +38,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static net.bytebuddy.matcher.ElementMatchers.any;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -71,6 +77,35 @@ class PostControllerTest {
        postRepository.deleteAll();
     }
 
+
+    @Test
+    public void testWritePost() throws Exception {
+        // Define your test data
+        String accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzc3MiLCJhdXRoIjoiVVNFUiIsImV4cCI6MTY5NDM1NjU3Mn0.iCnyxBqVXaPvnXR9MzZQz3od337XqhGgFMzQeavWPlQ";
+        PostCreate postCreate = new PostCreate();
+        postCreate.setTitle("Test Title");
+        postCreate.setContent("Test Content");
+
+        // Create a mock MultipartFile for the image file
+        MockMultipartFile imageFile = new MockMultipartFile(
+                "imageFile", "test-image.jpg", "image/jpeg", "image data".getBytes()
+        );
+        String json = new ObjectMapper().writeValueAsString(postCreate);
+
+        // Perform the POST request
+        mockMvc.perform(
+                        multipart("/board/user/writePost")
+                                .param("post", json)
+                                .header("Authorization", accessToken)
+
+                                .contentType(MediaType.APPLICATION_JSON)
+                                //.param("post", json)
+
+                )
+                .andExpect(status().isOk());
+
+    }
+
     @Test
     @DisplayName("글 작성 직후 추천 수는 0, 비추천 수도 0, 조회수 0, 핫 게시물은 false 이다.")
     public void initPost() throws Exception {
@@ -89,14 +124,13 @@ class PostControllerTest {
                 "test-image-content".getBytes(StandardCharsets.UTF_8)  // 파일 데이터 (이진)
         );
 
-        mockMvc.perform(MockMvcRequestBuilders
-                        .multipart("/board/user/writePost")
+        mockMvc.perform(multipart("/board/user/writePost")
                         .file(imageFile)  // 이미지 파일 추가
                         .file("post", postCreateJson.getBytes(StandardCharsets.UTF_8))  // JSON 데이터 추가
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .characterEncoding(StandardCharsets.UTF_8.name())
                         .header("Authorization", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzc3MiLCJhdXRoIjoiVVNFUiIsImV4cCI6MTY5NDIzMDkxNn0.SatDpYdsI69CK3ymug8AjwX0Y1StYQVCBKcKRDtTtqM"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(status().isOk());
 
 
         /*Post posted = postRepository.findAll().get(0);
@@ -131,7 +165,7 @@ class PostControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/board/user/writePost")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(postCreateJson))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andDo(print());
 
         Post posted = postRepository.findAll().get(0);
@@ -163,7 +197,7 @@ class PostControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/board/user/writePost")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(postCreateJson))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andDo(print());
 
         assertEquals(1, postRepository.count());
@@ -192,7 +226,7 @@ class PostControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/board/posts/{postId}", postResponse.getPostId())
                         .header("Authorization", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzc3MiLCJhdXRoIjoiVVNFUiIsImV4cCI6MTY5NDIzMDkxNn0.SatDpYdsI69CK3ymug8AjwX0Y1StYQVCBKcKRDtTtqM"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("글 작성중입니다"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").value("글 내용은 비밀입니다"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.postFunction.hot").value(false))
@@ -235,7 +269,7 @@ class PostControllerTest {
         Post postResponse2 = postRepository.findAll().get(0);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/board/posts/{postId}", postResponse.getPostId()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("글 작성중입니다"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").value("글 내용은 비밀입니다"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.postFunction.hot").value(true))
@@ -265,7 +299,7 @@ class PostControllerTest {
         //when
         Post postResponse = postRepository.findAll().get(0);
         mockMvc.perform(MockMvcRequestBuilders.delete("/board/user/{postId}", postResponse.getPostId()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andDo(print());
 
         Assertions.assertEquals(postRepository.count(), 0);
@@ -311,7 +345,7 @@ class PostControllerTest {
 
         //when
         mockMvc.perform(MockMvcRequestBuilders.delete("/board/user/{postId}", post.getPostId()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andDo(print());
 
 
@@ -357,7 +391,7 @@ class PostControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.patch("/board/user/{postId}", postResponse.getPostId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("글 내용을 변경하겠습니다"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").value("글 내용을 변경합니다"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.postId").value(postResponse.getPostId()))
@@ -396,13 +430,13 @@ class PostControllerTest {
 
         //when
         mockMvc.perform(MockMvcRequestBuilders.get("/board/posts/list?page=1&size=5"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(5))
                 .andDo(print());
 
 
         mockMvc.perform(MockMvcRequestBuilders.get("/board/posts/list?page=1&size=10"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(10))
                 .andDo(print());
 
@@ -413,7 +447,7 @@ class PostControllerTest {
     @DisplayName("게시물 받아오기 - postNotFound 404 에러 출력")
     void postNotFound() throws Exception{
         mockMvc.perform(MockMvcRequestBuilders.get("/board/posts/{postId}", 393L))
-                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(status().isNotFound())
                 .andDo(print());
 
         assertThrows(PostNotFound.class,() -> {
@@ -458,7 +492,7 @@ class PostControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/board/user/writePost")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(postCreate)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andDo(print());
 
 
@@ -493,7 +527,7 @@ class PostControllerTest {
         postRepository.save(post);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/setHot/{postId}", post.getPostId()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andDo(print());
 
         assertEquals(1, postRepository.getHotList(new Page(1, 10)).size());
@@ -527,13 +561,13 @@ class PostControllerTest {
         postRepository.save(post);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/setHot/{postId}", post.getPostId()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andDo(print());
 
         assertEquals(1, postRepository.getHotList(new Page(1, 10)).size());
 
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/unsetHot/{postId}", post.getPostId()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andDo(print());
 
         assertEquals(0, postRepository.getHotList(new Page(1, 10)).size());

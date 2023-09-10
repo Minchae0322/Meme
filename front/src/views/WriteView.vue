@@ -45,7 +45,7 @@ const write = function () {
   const file = document.querySelector("#image").files[0]
   let params = JSON.stringify({ title: title.value, content: content.value });
 
-  frm.append("post", new Blob([JSON.stringify({ title: title.value, content: content.value })], {type: "application/json"}));
+  frm.append("post", new Blob([JSON.stringify({ title: title.value, content: content.value, postType: "ALL" })], {type: "application/json"}));
   frm.append("imageFile", file);
 
   console.log(images)
