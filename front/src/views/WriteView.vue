@@ -1,4 +1,3 @@
-
 <script setup lang = "js">
 import {ref} from "vue";
 import axios from 'axios'
@@ -32,15 +31,15 @@ const frm = new FormData();
         })
 
       })}*/
-    const checkLogin = function() {
-      if (!localStorage.getItem("accessToken")) {
-        router.replace({name: "login"})
-      }
-      console.log("실행")
-      return 0
-    }
+const checkLogin = function() {
+  if (!localStorage.getItem("accessToken")) {
+    router.replace({name: "login"})
+  }
+  console.log("실행")
+  return 0
+}
 
-    checkLogin();
+checkLogin();
 const write = function () {
   const file = document.querySelector("#image").files[0]
   let params = JSON.stringify({ title: title.value, content: content.value });
@@ -50,13 +49,13 @@ const write = function () {
 
   console.log(images)
 
-    axios.post("http://localhost:8080/board/user/writePost", frm, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'Authorization': localStorage.getItem("accessToken")
-      },
+  axios.post("http://localhost:8080/board/user/writePost", frm, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'Authorization': localStorage.getItem("accessToken")
+    },
 
-    })
+  })
   console.log(localStorage.getItem("accessToken"))
 }
 
@@ -106,70 +105,124 @@ const upload = function (image) {
 </script>
 
 <template>
+  <div class="container">
+    <header class="header">글 작성</header>
 
-
-
-  <body>
-  <el-main>
-  <div>
-    <div class="container">
-      <div class="image-upload" id="image-upload">
-
-        <form method="post" enctype="multipart/form-data">
-          <div class="button">
-            <label for="chooseFile">
-              👉 CLICK HERE! 👈
-            </label>
-          </div>
-          <input type="file" enctype="multipart/form-data" id="image" name="chooseFile" accept="image/*" multiple @change = upload(this) >
-        </form>
-
-        <div class="fileContainer">
-          <div class="fileInput">
-            <p>FILE NAME: </p>
-            <p id="fileName"></p>
-          </div>
-          <div class="buttonContainer">
-            <div class="submitButton" id="submitButton" @click = showImage >SUBMIT </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="image-show" id="image-show"></div>
+    <div class="file-upload">
+      <label for="image" class="file-upload-label">
+        📸 Upload Image
+      </label>
+      <input
+          type="file"
+          id="image"
+          name="image"
+          accept="image/*"
+          @change="uploadImage"
+      />
     </div>
 
+    <div class="image-preview">
+      <div class="image-container">
+        <img
+            :src="imageUrl"
+            alt="Uploaded Image"
+            class="uploaded-image"
+            v-if="imageUrl"
+        />
+      </div>
+    </div>
 
+    <div class="form-container">
+      <div class="input-container">
+        <label class="input-label">제목</label>
+        <el-input v-model="title" placeholder="제목을 입력하세요"></el-input>
+      </div>
+
+      <div class="input-container">
+        <label class="input-label">내용</label>
+        <el-input
+            v-model="content"
+            type="textarea"
+            rows="10"
+            placeholder="내용을 입력하세요"
+        ></el-input>
+      </div>
+
+      <el-button type="primary" @click="writePost">글 작성 완료</el-button>
+    </div>
   </div>
-  <div>
-
-  </div>
-
-  <div>
-    <el-text  class="mx-1" type="primary">제목</el-text>
-    <el-input v-model = "title" placeholder="제목을 입력하세여"></el-input>
-  </div>
-
-  <div>
-    <el-input
-        v-model="content"
-        :cols = "30"
-        :rows="15"
-        type="textarea"
-        placeholder="Please input"
-    />
-  </div>
-  <el-button type="primary" @click = "write()">글 작성 완료</el-button>
-  </el-main>
-  </body>
-
 </template>
 
+<style scoped>
+.container {
+  margin: 20px;
+  width: 90vw;
+  text-align: center;
+}
 
+.header {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333; /* Change the header text color */
+}
 
+.file-upload {
+  margin-bottom: 20px;
+}
 
+.file-upload-label {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
 
-<style>
-  * {
-    margin: 20px;
-  }
+.file-upload-label:hover {
+  background-color: #45a049;
+}
+
+.image-preview {
+  text-align: center;
+}
+
+.image-container {
+  max-width: 100%; /* Ensure the image doesn't overflow */
+}
+
+.uploaded-image {
+  max-width: 100%;
+  height: auto; /* Maintain aspect ratio */
+  border: 1px solid #ccc; /* Add a subtle border around the image */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a shadow to the image */
+}
+
+.input-container {
+  margin-bottom: 20px;
+}
+
+.input-label {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333; /* Change the label text color */
+}
+
+.el-input {
+  width: 100%;
+  max-width: 500px; /* Limit input width for better readability */
+  font-size: 16px;
+}
+
+.el-button {
+  margin-top: 20px;
+  background-color: #4caf50;
+  color: white;
+  font-weight: bold;
+}
+
+.el-button:hover {
+  background-color: #45a049;
+}
 </style>

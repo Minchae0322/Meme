@@ -83,6 +83,7 @@ public class Post {
         //todo 이미지 파일이랑 url 수정도 같이
     }
 
+    @Transactional
     public int getRecommendation() {
         int up = 0;
         for (UpDown upDown : upDowns) {
@@ -93,6 +94,7 @@ public class Post {
         return up;
     }
 
+    @Transactional
     public int getBad() {
         int bad = 0;
         for (UpDown upDown : upDowns) {

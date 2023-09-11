@@ -1,6 +1,7 @@
 package minchae.meme.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import minchae.meme.entity.*;
 import minchae.meme.entity.enumClass.Authorization;
 import minchae.meme.exception.PostNotFound;
@@ -127,66 +128,62 @@ class PostControllerTest {
     }
 
     @Test
+    @Transactional
     @DisplayName("글 작성 직후 추천 수는 0, 비추천 수도 0, 조회수 0, 핫 게시물은 false 이다.")
     public void initPost() throws Exception {
-        PostCreate postCreate = PostCreate.builder()
-                .title("글 작성중입니다")
-                .content("글 내용은 비밀입니다")
-                .build();
-        ObjectMapper objectMapper = new ObjectMapper();
-        String postCreateJson = objectMapper.writeValueAsString(postCreate);
+        PostCreate postCreate = new PostCreate();
+        postCreate.setTitle("Test Title");
+        postCreate.setContent("Test Content");
+        postCreate.setPostType("ALL");
 
-        // MockMultipartFile 객체 생성 (파일 업로드를 시뮬레이트)
+        // when
         MockMultipartFile imageFile = new MockMultipartFile(
-                "imageFile",                   // 파일 필드 이름
-                "test-image.jpg",              // 파일 이름
-                MediaType.IMAGE_JPEG_VALUE,    // 파일 컨텐츠 타입
-                "test-image-content".getBytes(StandardCharsets.UTF_8)  // 파일 데이터 (이진)
+                "imageFile", "test-image.jpg", "image/jpeg", "image data".getBytes()
         );
-
+        String json = new ObjectMapper().writeValueAsString(postCreate);
+        MockMultipartFile notice = new MockMultipartFile("post", "post", "application/json", json.getBytes(StandardCharsets.UTF_8));
+        // Perform the POST request
         mockMvc.perform(multipart("/board/user/writePost")
-                        .file(imageFile)  // 이미지 파일 추가
-                        .file("post", postCreateJson.getBytes(StandardCharsets.UTF_8))  // JSON 데이터 추가
-                        .contentType(MediaType.MULTIPART_FORM_DATA)
-                        .characterEncoding(StandardCharsets.UTF_8.name())
-                        .header("Authorization", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzc3MiLCJhdXRoIjoiVVNFUiIsImV4cCI6MTY5NDIzMDkxNn0.SatDpYdsI69CK3ymug8AjwX0Y1StYQVCBKcKRDtTtqM"))
-                .andExpect(status().isOk());
+                .file(notice)
+                .file(imageFile)
+                .header("Authorization", ACCESS_TOKEN)
+        ).andExpect(status().isOk());
+
+        assertEquals(1, postRepository.count());
 
 
-        /*Post posted = postRepository.findAll().get(0);
+        Post posted = postRepository.findAll().get(0);
 
         assertEquals(1, postRepository.count());
         assertEquals(0, posted.getRecommendation());
         assertEquals(0, posted.getBad());
-        assertFalse(posted.getPostFunction().isHot());*/
+        assertFalse(posted.getPostFunction().isHot());
     }
 
 
     @Test
+    @Transactional
     @DisplayName("글 작성 직후 댓글은 없다.")
     public void initPostComment() throws Exception {
-        User user = User.builder()
-                .username("wjdalsco")
-                .email("jcmcmdmw@nakejqkqlw.com")
-                .password("passwordEncoder.encode(signupForm.getPassword()")
-                .enable(true)
-                .authorizations(Authorization.USER)
-                .build();
-        userRepository.save(user);
+        PostCreate postCreate = new PostCreate();
+        postCreate.setTitle("Test Title");
+        postCreate.setContent("Test Content");
+        postCreate.setPostType("ALL");
 
-        PostCreate postCreate = PostCreate.builder()
-                .title("글 작성중입니다")
-                .content("글 내용은 비밀입니다")
-                .user(user)
-                .build();
-        ObjectMapper objectMapper = new ObjectMapper();
-        java.lang.String postCreateJson = objectMapper.writeValueAsString(postCreate);
+        // when
+        MockMultipartFile imageFile = new MockMultipartFile(
+                "imageFile", "test-image.jpg", "image/jpeg", "image data".getBytes()
+        );
+        String json = new ObjectMapper().writeValueAsString(postCreate);
+        MockMultipartFile notice = new MockMultipartFile("post", "post", "application/json", json.getBytes(StandardCharsets.UTF_8));
+        // Perform the POST request
+        mockMvc.perform(multipart("/board/user/writePost")
+                .file(notice)
+                .file(imageFile)
+                .header("Authorization", ACCESS_TOKEN)
+        ).andExpect(status().isOk());
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/board/user/writePost")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(postCreateJson))
-                .andExpect(status().isOk())
-                .andDo(print());
+        assertEquals(1, postRepository.count());
 
         Post posted = postRepository.findAll().get(0);
 
@@ -195,32 +192,26 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("글 작성")
-    public void writePost() throws Exception {
-        User user = User.builder()
-                .username("wjdalsco")
-                .email("jcmcmdmw@nakejqkqlw.com")
-                .password("passwordEncoder.encode(signupForm.getPassword()")
-                .enable(true)
-                .authorizations(Authorization.USER)
-                .build();
-        userRepository.save(user);
-
+    @Transactional
+    @DisplayName("글 작성 title 과 content 는 NotBlank")
+    public void titleAndContentShouldBeNotBlank() throws Exception {
         PostCreate postCreate = PostCreate.builder()
-                .title("글 작성중입니다")
-                .content("글 내용은 비밀입니다")
-                .user(user)
+                .postType("ALL")
                 .build();
-        ObjectMapper objectMapper = new ObjectMapper();
-        java.lang.String postCreateJson = objectMapper.writeValueAsString(postCreate);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/board/user/writePost")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(postCreateJson))
-                .andExpect(status().isOk())
-                .andDo(print());
+        // when
+        MockMultipartFile imageFile = new MockMultipartFile(
+                "imageFile", "test-image.jpg", "image/jpeg", "image data".getBytes()
+        );
+        String json = new ObjectMapper().writeValueAsString(postCreate);
+        MockMultipartFile notice = new MockMultipartFile("post", "post", "application/json", json.getBytes(StandardCharsets.UTF_8));
+        // Perform the POST request
+        mockMvc.perform(multipart("/board/user/writePost")
+                .file(notice)
+                .file(imageFile)
+                .header("Authorization", ACCESS_TOKEN)
+        ).andExpect(status().is4xxClientError());
 
-        assertEquals(1, postRepository.count());
     }
 
     @Test

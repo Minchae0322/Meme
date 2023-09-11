@@ -33,7 +33,10 @@ axios.get("http://localhost:8080/home").then((response) => {
 
 
 <template>
+<body>
 
+
+</body>
 
 </template>
 
@@ -42,6 +45,10 @@ axios.get("http://localhost:8080/home").then((response) => {
 li {
   margin-bottom: 1rem;
 }
-
+body {
+  background: white;
+  margin: 0 auto;
+  display: flow;
+}
 
 </style>

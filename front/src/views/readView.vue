@@ -18,7 +18,7 @@ export default {
   },
   methods: {
     loadImage() {
-      const postId = 105; // 실제 포스트 ID로 대체하세요
+      const postId = 129; // 실제 포스트 ID로 대체하세요
       // HTTP GET 요청을 사용하여 Spring Boot 백엔드로 요청을 보냅니다.
       // 요청을 보내는 데 axios 또는 선택한 다른 HTTP 라이브러리를 사용할 수 있습니다.
       // API 엔드포인트 '/api/board/posts/'를 실제 엔드포인트로 대체하세요.

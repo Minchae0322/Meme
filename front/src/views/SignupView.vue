@@ -65,11 +65,12 @@ const write = function () {
 
 </script>
 
-<style>
+<style scoped>
 
 .registration {
   width: 30%;
   align-items: center;
+  padding-bottom: 20px;
   margin: 0 auto; /* Add this line to horizontally center the element */
 }
 

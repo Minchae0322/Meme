@@ -69,10 +69,11 @@ const write = function () {
 
 </template>
 
-<style>
+<style scoped>
 .login{
   width: 30%;
   align-items: center;
+  padding-top: 50px;
   margin: 0 auto; /* Add this line to horizontally center the element */
 }
 .container{

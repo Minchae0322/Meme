@@ -1,8 +1,6 @@
 
   <template>
-    <div class="main">
-
-
+    <body>
     <header>
 
 
@@ -13,11 +11,17 @@
       </div>
 
       <ul class="nav">
-        <nav>
+        <li>
         <RouterLink to="/home">Home</RouterLink>
-        <RouterLink to="/write">글 작성</RouterLink>
-        <RouterLink to="/posts">글 목록</RouterLink>
-        </nav>
+        </li>
+        <li>
+          <RouterLink to="/write">글 작성</RouterLink>
+        </li>
+        <li>
+            <RouterLink to="/posts">글 목록</RouterLink>
+        </li>
+
+
       </ul>
 
       <div class="nav_link">
@@ -38,8 +42,7 @@
       <RouterView />
     </main>
 
-
-    </div>
+    </body>
   </template>
 
 
@@ -112,36 +115,42 @@ checkLogin();
 
 
 <style>
-.main {
-  display: flow;
-}
+
+
 .nav_bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 5vw;
-
-  padding: 6px 12px;
-  width: 85vw;
+  height: 7vw;
+  margin-left: 100px;
+  padding: 6px 20px;
+  margin-top: 20px;
+  width: 90vw;
 }
 
 header {
   margin: 0;
-
 }
+
 
 
 body {
   background: white;
-  margin: 0;
+  margin: 0 auto;
+  display: flow;
 }
 
 .nav {
   display: flex;
-  justify-content: left;
+  margin-left: 100px;
   font-size: 20px;
-  padding-left: 100px;
-  width: 50%;
+  width: 60%;
+}
+
+.nav li{
+  margin: 9px 20px;
+  background: white;
+  padding: 10px;
 }
 
 .nav_logo {
@@ -153,7 +162,7 @@ body {
 }
 
 .nav_link  {
-  width: 35%;
+  width: 20%;
   font-size: 12px;
 }
 
