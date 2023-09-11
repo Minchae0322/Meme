@@ -19,7 +19,6 @@ public class SignupForm {
     @NotBlank
     private String email;
 
-
     @NotBlank
     private String phoneNum;
 

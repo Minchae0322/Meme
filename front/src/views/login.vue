@@ -51,76 +51,104 @@ const write = function () {
 </script>
 
 <template>
-  <div class = "container">
 
-
-
-
-      <div class="custom-container">
-        <h1>Sign In</h1>
-        <div class="usernameContainer">
-          <el-input id = "inputUsername" v-model="username" placeholder="아이디를 입력해주세요"></el-input>
-        </div>
-        <div class = "passwordContainer">
-          <el-input v-model="password" placeholder="비밀번호를 입력해주세요" type="password"></el-input>
-        </div>
-
-      </div>
-
+  <div class="login form">
+    <header>Login</header>
+    <form action="#">
+      <input id = "inputUsername" v-model="username" type="text" placeholder="Enter your email">
+      <input type="password" v-model="password" placeholder="Enter your password">
+      <a href="#">Forgot password?</a>
+      <input type="button"  @click = "write" class="button" value="Login">
+    </form>
+    <div class="signup">
+        <span class="signup">Don't have an account?
+         <label for="check">Signup</label>
+        </span>
+    </div>
   </div>
-
-
-
-
-  <el-button type="primary" @click = "write()">로그인</el-button>
-
-
-
-
 
 </template>
 
-<style scoped>/*
-.custom-container {
-  width: 40vw;
-  margin: 0 auto; !* Center-align horizontally *!
-  padding: 20px;
-  text-align: center;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  align-items: center; !* Center-align vertically *!
-  justify-content: center; !* Center-align horizontally *!
-}*/
-.usernameContainer {
+<style>
+.login{
+  width: 30%;
   align-items: center;
-  display: flex;
-  flex-direction: row;
-  width: 90%;
-
+  margin: 0 auto; /* Add this line to horizontally center the element */
 }
-
-
-.id {
-  aspect-ratio: 3 / 1;
-  font-size: 12px;
-  margin-right: 20px; /* Add margin between label and input */
+.container{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  max-width: 430px;
+  width: 100%;
+  background: #fff;
+  border-radius: 7px;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.3);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
+.container .registration{
+  display: none;
+}
+#check:checked ~ .registration{
+  display: block;
+}
+#check:checked ~ .login{
+  display: none;
+}
+#check{
+  display: none;
+}
+.container .form{
+  padding: 2rem;
+}
+.form header{
+  font-size: 2rem;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+ .form input{
+   height: 60px;
+   width: 100%;
+   padding: 0 15px;
+   font-size: 17px;
+   margin-bottom: 1.3rem;
+   border: 1px solid #ddd;
+   border-radius: 6px;
+   outline: none;
+ }
+ .form input:focus{
+   box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+ }
+.form a{
+  font-size: 16px;
+  color: #009579;
+  text-decoration: none;
+}
+.form a:hover{
+  text-decoration: underline;
+}
+.form input.button{
+  color: #fff;
+  background: #009579;
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  margin-top: 1.7rem;
+  cursor: pointer;
+  transition: 0.4s;
+}
+.form input.button:hover{
+  background: #006653;
+}
+.signup{
+  font-size: 17px;
+  text-align: center;
+}
+.signup label{
+  color: #009579;
+  cursor: pointer;
+}
 
 
 </style>

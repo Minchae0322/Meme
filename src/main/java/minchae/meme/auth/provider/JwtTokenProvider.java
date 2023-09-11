@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import minchae.meme.entity.TokenInfo;
 import minchae.meme.entity.User;
+import minchae.meme.exception.IsExistedUser;
+import minchae.meme.exception.IsExpiredToken;
+import minchae.meme.exception.Unauthorized;
 import minchae.meme.repository.UserRepository;
 import minchae.meme.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +52,7 @@ public class JwtTokenProvider {
 
         long now = new Date().getTime();
         // Access Token 생성
-        Date accessTokenExpiresIn = new Date(now + 86400000);
+        Date accessTokenExpiresIn = new Date(now + 604800000);
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("auth", authorization)
@@ -96,7 +99,7 @@ public class JwtTokenProvider {
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("Invalid JWT Token", e);
         } catch (ExpiredJwtException e) {
-            log.info("Expired JWT Token", e);
+            throw new IsExpiredToken();
         } catch (UnsupportedJwtException e) {
             log.info("Unsupported JWT Token", e);
         } catch (IllegalArgumentException e) {

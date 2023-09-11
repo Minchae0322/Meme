@@ -79,6 +79,7 @@ public class PostController {
     }
 
 
+
     @PostMapping(value = "/board/user/writePost", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public void writePost(@RequestPart("post") PostCreate params, @RequestPart(value = "imageFile", required = false) List<MultipartFile> multipartFiles) throws IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

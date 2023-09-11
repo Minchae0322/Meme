@@ -71,39 +71,59 @@ class PostControllerTest {
     @Autowired
     private PostRepository postRepository;
 
+    private final static String ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzc3MiLCJhdXRoIjoiVVNFUiIsImV4cCI6MTY5NDQ5NjYxOX0.X9guvqyN5Bc5MT1BV37dgZKPueJAT5gEFh1-QvPwIOI";
+
     @BeforeEach
     public void before() {
        commentRepository.deleteAll();
        postRepository.deleteAll();
     }
 
-
+/************************** post 작성과 관련된 테스트 *******************************/
     @Test
+    @DisplayName("/board/user/postWrite 첨부파일을 포함한 글 작성 테스트")
     public void testWritePost() throws Exception {
-        // Define your test data
-        String accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzc3MiLCJhdXRoIjoiVVNFUiIsImV4cCI6MTY5NDM1NjU3Mn0.iCnyxBqVXaPvnXR9MzZQz3od337XqhGgFMzQeavWPlQ";
+        // given
         PostCreate postCreate = new PostCreate();
         postCreate.setTitle("Test Title");
         postCreate.setContent("Test Content");
+        postCreate.setPostType("ALL");
 
-        // Create a mock MultipartFile for the image file
+        // when
         MockMultipartFile imageFile = new MockMultipartFile(
                 "imageFile", "test-image.jpg", "image/jpeg", "image data".getBytes()
         );
         String json = new ObjectMapper().writeValueAsString(postCreate);
-
+        MockMultipartFile notice = new MockMultipartFile("post", "post", "application/json", json.getBytes(StandardCharsets.UTF_8));
         // Perform the POST request
-        mockMvc.perform(
-                        multipart("/board/user/writePost")
-                                .param("post", json)
-                                .header("Authorization", accessToken)
+        mockMvc.perform(multipart("/board/user/writePost")
+                                .file(notice)
+                                .file(imageFile)
+                                .header("Authorization", ACCESS_TOKEN)
+                ).andExpect(status().isOk());
 
-                                .contentType(MediaType.APPLICATION_JSON)
-                                //.param("post", json)
+        assertEquals(1, postRepository.count());
+    }
 
-                )
-                .andExpect(status().isOk());
+    @Test
+    @DisplayName("/board/user/postWrite 첨푸파일을 포함하지 않는 글 작성테스트")
+    public void testWritePostNoFile() throws Exception {
+        // given
+        PostCreate postCreate = new PostCreate();
+        postCreate.setTitle("Test Title");
+        postCreate.setContent("Test Content");
+        postCreate.setPostType("ALL");
 
+        String json = new ObjectMapper().writeValueAsString(postCreate);
+        MockMultipartFile notice = new MockMultipartFile("post", "post", "application/json", json.getBytes(StandardCharsets.UTF_8));
+
+        // when
+        mockMvc.perform(multipart("/board/user/writePost")
+                        .file(notice)
+                        .header("Authorization", ACCESS_TOKEN)
+                ).andExpect(status().isOk());
+
+        assertEquals(1, postRepository.count());
     }
 
     @Test

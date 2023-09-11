@@ -30,7 +30,7 @@ public class AuthController {
     }
 
 
-    @PostMapping("/auth/login")
+  /*  @PostMapping("/auth/login")
     public TokenInfo login(String username, String password) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
 
@@ -43,7 +43,7 @@ public class AuthController {
         TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
 
         return tokenInfo;
-    }
+    }*/
 
 
 

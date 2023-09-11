@@ -1,21 +1,44 @@
 
   <template>
-    <div class="container">
-      <el-header>
-        <label>최신 MEME</label>
-        <div>
-          <nav>
-            <RouterLink to="/home">Home</RouterLink>
-            <RouterLink to="/write">글 작성</RouterLink>
-            <RouterLink to="/posts">글 목록</RouterLink>
-          </nav>
-        </div>
+    <div class="main">
+
+
+    <header>
+
+
+    <div class="nav_bar">
+      <div class="nav_logo">
+        <i></i>
+        <a href = ""> MEME </a>
+      </div>
+
+      <ul class="nav">
+        <nav>
+        <RouterLink to="/home">Home</RouterLink>
+        <RouterLink to="/write">글 작성</RouterLink>
+        <RouterLink to="/posts">글 목록</RouterLink>
+        </nav>
+      </ul>
+
+      <div class="nav_link">
+
         <div class="logout-button">
-          <el-button id="logout" @click="handleLogout">{{ isLogin }}</el-button>
+          <el-button :id="isLogin === '로그인' ? 'logout-large' : 'logout'" @click="handleLogout">{{ isLogin }}</el-button>
+          <el-button id="signup" @click="goSignup" v-if="isLogin === '로그인'">회원가입</el-button>
         </div>
-      </el-header>
+      </div>
+
+
+    </div>
+    </header>
+
+
+    <main>
       <child-component @login-success="onLoginSuccess"></child-component>
       <RouterView />
+    </main>
+
+
     </div>
   </template>
 
@@ -74,6 +97,14 @@ function handleLogout() {
 
 }
 
+
+function goSignup() {
+
+  router.push('/signup'); // 로그인 상태가 아니면 클릭하면 /login으로 이동
+
+
+}
+
 checkLogin();
 
 </script>
@@ -81,55 +112,49 @@ checkLogin();
 
 
 <style>
-* {
-  background-color: white; /* 배경색을 흰색으로 설정 */
+.main {
+  display: flow;
 }
-
-a {
-  color: rgba(232, 63, 63, 0.45);
-}
-
-label {
-  color: #05203b;
-}
-
-.logout-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-}
-
-
-.container {
+.nav_bar {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  width: 80vw;
-  justify-content: flex-end;
+  height: 5vw;
+
+  padding: 6px 12px;
+  width: 85vw;
 }
 
-nav {
-  width: 100%;
-  text-align: right;
-  z-index: 100;
+header {
+  margin: 0;
+
 }
 
-el-header {
-  width: 100vw;
-  text-align: center;
-  padding: 10px 0;
+
+body {
+  background: white;
+  margin: 0;
 }
 
-main {
-  max-width: 100vw;
+.nav {
   display: flex;
-  justify-content: flex-end;
-  margin-right: 10px;
+  justify-content: left;
+  font-size: 20px;
+  padding-left: 100px;
+  width: 50%;
 }
 
-.router {
-  max-width: 100vw;
-  margin: 0 auto;
-  padding: 20px;
+.nav_logo {
+  font-size: 30px;
 }
+
+.nav_link {
+  display: flex;
+}
+
+.nav_link  {
+  width: 35%;
+  font-size: 12px;
+}
+
 </style>
