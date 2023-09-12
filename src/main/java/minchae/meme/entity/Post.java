@@ -16,6 +16,8 @@ import minchae.meme.entity.enumClass.PostType;
 import minchae.meme.request.PostEdit;
 import org.hibernate.Session;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -60,7 +62,8 @@ public class Post {
     private PostFunction postFunction;
 
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SUBSELECT)
     private final List<UpDown> upDowns = new ArrayList<>();
 
 
@@ -85,7 +88,6 @@ public class Post {
 
 
     public int getRecommendation() {
-
         int up = 0;
         for (UpDown upDown : upDowns) {
             if (upDown.getType().equals("UP")) {

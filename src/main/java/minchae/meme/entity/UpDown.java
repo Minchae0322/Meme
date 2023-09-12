@@ -17,7 +17,7 @@ public class UpDown {
     @ManyToOne(cascade = CascadeType.MERGE)
     private Post post;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     private User user;
 
     @Column

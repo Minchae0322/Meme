@@ -6,7 +6,7 @@ import axios from 'axios'
 
 const posts = ref([])
 
-axios.get("http://localhost:8080/board/posts/list?page=1&size=5")
+axios.get("http://localhost:8080/board/posts/list?page=1&size=1")
 .then((response) => {
   response.data.forEach((r: any) => {
     posts.value.push(r)

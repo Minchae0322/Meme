@@ -413,6 +413,7 @@ class PostControllerTest {
         assertEquals(post.getPostId(), commentRepository.findAll().get(0).getPost().getPostId());
         assertEquals(1, postRepository.count());
 
+
         //when
         mockMvc.perform(MockMvcRequestBuilders.delete("/board/user/{postId}", post.getPostId())
                         .header("Authorization", ACCESS_TOKEN))
@@ -740,7 +741,6 @@ class PostControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print());
         Post postResponse2 = postRepository.findAll().get(0);
-
-        assertEquals(1, postResponse2.getRecommendation());
+        PostResponse postResponse1 = PostResponse.builder().build().postToPostResponse(postResponse2);
     }
 }

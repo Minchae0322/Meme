@@ -52,3 +52,8 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzc3MiLCJhdXRoIjoiVVNFUiIsImV4cCI6
 
 GET http://localhost:8080/board/posts/103/image
 Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzc3MiLCJhdXRoIjoiVVNFUiIsImV4cCI6MTY5NDMyOTE1NX0.PNo7YRAejdSR7KFTJFErXdVfbtpKCgNaJhf_NKUVVp8
+
+###
+
+GET http://localhost:8080/board/posts/218
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzc3MiLCJhdXRoIjoiVVNFUiIsImV4cCI6MTY5NTExOTE0Mn0.LcTzX27_J0o00YxNIR-oJlqjUm3izXAwfkHPqcx6uwI
