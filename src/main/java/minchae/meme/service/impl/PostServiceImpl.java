@@ -16,6 +16,7 @@ import minchae.meme.response.PostResponse;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.service.FileService;
 import minchae.meme.service.PostService;
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +29,8 @@ public class PostServiceImpl implements PostService {
     private final CommentRepository commentRepository;
     private final UpDownRepository updownRepository;
     private final FileService fileService;
+
+    private final SessionFactory sessionFactory;
 
 
     @Override

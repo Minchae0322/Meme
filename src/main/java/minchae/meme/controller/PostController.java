@@ -1,6 +1,7 @@
 package minchae.meme.controller;
 
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import minchae.meme.auth.provider.JwtTokenProvider;
 import minchae.meme.entity.Post;
@@ -23,6 +24,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.file.attribute.UserPrincipal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,9 +84,10 @@ public class PostController {
 
 
 
+
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN','MANAGER')")
     @PostMapping(value = "/board/user/writePost", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public void writePost(@RequestPart("post") PostCreate params, @RequestPart(value = "imageFile", required = false) List<MultipartFile> multipartFiles) throws IOException {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public void writePost(Authentication authentication, @RequestPart("post") PostCreate params, @RequestPart(value = "imageFile", required = false) List<MultipartFile> multipartFiles) throws IOException {
         User user = (User) authentication.getPrincipal();
         params.setUser(user);
         Post post = postService.write(params);
@@ -92,6 +97,7 @@ public class PostController {
     }
 
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER') || (hasPermission(#postId,'POST','DELETE') && hasAuthority('USER'))")
     @DeleteMapping("/board/user/{postId}")
     public Long deletePost(@PathVariable("postId") Long postId) {
         postService.delete(postId);
@@ -125,8 +131,8 @@ public class PostController {
     }
 
     @PostMapping("/board/user/{postId}/up")
-    public int upRecommendation(@PathVariable("postId") Long postId, @AuthenticationPrincipal User user) {
+    public int upRecommendation(@PathVariable("postId") Long postId, Authentication authentication) {
         Post post = postRepository.findById(postId).orElseThrow();
-        return postService.upRecommendation(post, user);
+        return postService.upRecommendation(post, (User) authentication.getPrincipal());
     }
 }

@@ -14,7 +14,7 @@ public class UpDown {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.REFRESH)
+    @ManyToOne(cascade = CascadeType.MERGE)
     private Post post;
 
     @ManyToOne

@@ -37,5 +37,6 @@ public interface PostService {
 
     int upBad(Post post, User user);
 
+
 }
 

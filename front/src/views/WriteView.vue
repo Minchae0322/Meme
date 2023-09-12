@@ -148,7 +148,7 @@ const upload = function (image) {
         ></el-input>
       </div>
 
-      <el-button type="primary" @click="writePost">글 작성 완료</el-button>
+      <el-button type="primary" @click="write">글 작성 완료</el-button>
     </div>
   </div>
 </template>

@@ -49,7 +49,7 @@ public class JwtTokenProvider {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
-
+        authentication.getName();
         long now = new Date().getTime();
         // Access Token 생성
         Date accessTokenExpiresIn = new Date(now + 604800000);

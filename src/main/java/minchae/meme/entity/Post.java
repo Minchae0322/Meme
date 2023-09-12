@@ -14,6 +14,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import minchae.meme.entity.enumClass.PostType;
 import minchae.meme.request.PostEdit;
+import org.hibernate.Session;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
@@ -27,7 +28,6 @@ import java.util.List;
 @DiscriminatorColumn(name = "POST-TYPE")
 @NoArgsConstructor
 @SuperBuilder
-@Transactional
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,7 +60,7 @@ public class Post {
     private PostFunction postFunction;
 
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private final List<UpDown> upDowns = new ArrayList<>();
 
 
@@ -83,8 +83,9 @@ public class Post {
         //todo 이미지 파일이랑 url 수정도 같이
     }
 
-    @Transactional
+
     public int getRecommendation() {
+
         int up = 0;
         for (UpDown upDown : upDowns) {
             if (upDown.getType().equals("UP")) {

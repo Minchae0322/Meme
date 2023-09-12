@@ -18,16 +18,15 @@ public class Comment {
     @GeneratedValue
     private Long commentId;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JsonBackReference
-    //@JoinColumn(name = "postId")
     private Post post;
 
     @Lob
     @Column
     @NotBlank
     private String comment;
-    @ManyToOne()
+    @ManyToOne(cascade = CascadeType.MERGE)
     @NotNull
     private User user;
 
