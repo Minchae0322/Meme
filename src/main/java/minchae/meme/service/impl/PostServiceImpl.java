@@ -93,11 +93,11 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void setHotPost(Long postId) {
-       Post post = postRepository.findById(postId)
-               .orElseThrow(PostNotFound::new);
-       PostFunction postFunction = post.getPostFunction();
-       postFunction.setHot(true);
-       post.setPostFunction(postFunction);
+        Post post = postRepository.findById(postId)
+                .orElseThrow(PostNotFound::new);
+        PostFunction postFunction = post.getPostFunction();
+        postFunction.setHot(true);
+        post.setPostFunction(postFunction);
     }
 
     @Override

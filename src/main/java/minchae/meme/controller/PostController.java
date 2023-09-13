@@ -1,41 +1,30 @@
 package minchae.meme.controller;
 
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import minchae.meme.auth.provider.JwtTokenProvider;
 import minchae.meme.entity.Post;
-import minchae.meme.entity.UploadFile;
 import minchae.meme.entity.User;
 import minchae.meme.repository.UserRepository;
 import minchae.meme.request.Page;
 import minchae.meme.request.PostCreate;
 import minchae.meme.request.PostEdit;
-import minchae.meme.response.FileResponse;
 import minchae.meme.response.PostResponse;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.service.FileService;
 import minchae.meme.service.impl.PostServiceImpl;
-import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.file.attribute.UserPrincipal;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

@@ -11,7 +11,6 @@ import minchae.meme.repository.PostRepository;
 import minchae.meme.request.Page;
 import minchae.meme.request.PostEdit;
 import minchae.meme.response.PostResponse;
-import minchae.meme.service.impl.PostServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
