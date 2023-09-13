@@ -46,6 +46,7 @@ public class PostServiceImpl implements PostService {
                 .content(postCreate.getContent())
                 .author(postCreate.getUser())
                 .postFunction(postFunction)
+                .youtubeUrl(postCreate.getYoutubeUrl())
                 .postType(PostType.valueOf(postCreate.getPostType()))
                 .build();
         postRepository.save(post);

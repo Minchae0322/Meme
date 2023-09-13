@@ -224,6 +224,29 @@ class PostControllerTest {
         assertEquals(0, posted.getComments().size());
     }
 
+    @Test
+    @DisplayName("게시물은 로그인된 사용자만 작성할 수 있다")
+    void authWritePost() throws Exception{
+        PostCreate postCreate = new PostCreate();
+        postCreate.setTitle("Test Title");
+        postCreate.setContent("Test Content");
+        postCreate.setPostType("ALL");
+
+        // when
+        MockMultipartFile imageFile = new MockMultipartFile(
+                "imageFile", "test-image.jpg", "image/jpeg", "image data".getBytes()
+        );
+        String json = new ObjectMapper().writeValueAsString(postCreate);
+        MockMultipartFile notice = new MockMultipartFile("post", "post", "application/json", json.getBytes(StandardCharsets.UTF_8));
+        // Perform the POST request
+        mockMvc.perform(multipart("/board/user/writePost")
+                .file(notice)
+                .file(imageFile)
+
+        ).andExpect(status().is4xxClientError());
+    }
+
+
     /**************************************** 글 조회 관련 테스트 ****************************************************/
     @Test
     @DisplayName("게시물1개 조회")
@@ -279,6 +302,63 @@ class PostControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.postFunction.hot").value(true))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.recommendation").value(1))
                 .andDo(print());
+    }
+
+    @Test
+    @DisplayName("게시물 리스트 받아오기")
+    void getPostListWherePage() throws Exception{
+        //given
+        User user = User.builder()
+                .username("wjdalsco")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password(passwordEncoder.encode("다다다자"))
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user);
+
+        PostFunction postFunction = PostFunction.builder()
+                .isHot(false)
+                .build();
+
+        List<Post> posts = IntStream.range(0, 10)
+                .mapToObj(i -> Post.builder()
+                        .title("제목" + " " + i)
+                        .content("내용" + " " + i)
+                        .author(user)
+                        .postFunction(postFunction)
+                        .build())
+                .collect(Collectors.toList());
+        postRepository.saveAll(posts);
+        assertEquals(postRepository.count(), 10);
+
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.get("/board/posts/list?page=1&size=5"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(5))
+                .andDo(print());
+
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/board/posts/list?page=1&size=10"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(10))
+                .andDo(print());
+
+    }
+
+
+    @Test
+    @DisplayName("게시물 받아오기 - postNotFound 404 에러 출력")
+    void postNotFound() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.get("/board/posts/{postId}", 393L))
+                .andExpect(status().isNotFound())
+                .andDo(print());
+
+        assertThrows(PostNotFound.class,() -> {
+            postService.get(1L);
+        });
+
+
     }
 
 
@@ -459,27 +539,84 @@ class PostControllerTest {
 
     }
 
+/****************************** 글 수정 관련 테스트 **************************************/
     @Test
     @DisplayName("글 수정")
     //todo controller에 메소드 만들기
     public void updatePost() throws Exception {
         //given
+        PostFunction postFunction = PostFunction.builder()
+                .isHot(false)
+                .build();
+
+        Post post = Post.builder()
+                .title("첫게시물입니다")
+                .content("ㅇㅇㅇㅇㅇㅇ")
+                .author(testUser)
+                .postType(PostType.ALL)
+                .postFunction(postFunction)
+                .build();
+        postRepository.save(post);
+
+
+        PostEdit postEdit = PostEdit.builder()
+                .title("글 내용을 변경하겠습니다")
+                .content("글 내용을 변경합니다")
+                .user(testUser)
+                .build();
+        ObjectMapper objectMapper = new ObjectMapper();
+        java.lang.String json = objectMapper.writeValueAsString(postEdit);
+
+        //when
+        Post postResponse = postRepository.findAll().get(0);
+        mockMvc.perform(MockMvcRequestBuilders.patch("/board/user/{postId}", postResponse.getPostId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+                        .header("Authorization", ACCESS_TOKEN))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("글 내용을 변경하겠습니다"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content").value("글 내용을 변경합니다"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.postId").value(postResponse.getPostId()))
+                .andDo(print());
+
+        Assertions.assertEquals(postRepository.count(), 1);
+    }
+
+    @Test
+    @DisplayName("글 수정은 작성자만 할 수 있다.")
+    public void updatePostOnlyWriter(@Value("${jwt.secret}") String secretKey) throws Exception {
+        //given
+        PostFunction postFunction = PostFunction.builder()
+                .isHot(false)
+                .build();
+
+        Post post = Post.builder()
+                .title("첫게시물입니다")
+                .content("ㅇㅇㅇㅇㅇㅇ")
+                .author(testUser)
+                .postType(PostType.ALL)
+                .postFunction(postFunction)
+                .build();
+        postRepository.save(post);
+
         User user = User.builder()
-                .username("jmcabc")
-                .email("jmcabc@naver.com")
-                .password(passwordEncoder.encode("wjdals12"))
+                .username("wjdalsco")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password("passwordEncoder.encode(signupForm.getPassword()")
                 .enable(true)
-                .authorizations(Authorization.USER)
+                .authorizations(Authorization.ADMIN)
                 .build();
         userRepository.save(user);
-
-        PostCreate postCreate = PostCreate.builder()
-                .title("글 작성중입니다")
-                .content("글 내용은 비밀입니다")
-                .user(user)
-                .build();
-        postService.write(postCreate);
-
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        long now = new Date().getTime();
+        // Access Token 생성
+        Date accessTokenExpiresIn = new Date(now + 604800000);
+        ACCESS_TOKEN = Jwts.builder()
+                .setSubject(user.getUsername())
+                .claim("auth", user.getAuthorizations())
+                .setExpiration(accessTokenExpiresIn)
+                .signWith(Keys.hmacShaKeyFor(keyBytes), SignatureAlgorithm.HS256)
+                .compact();
 
         PostEdit postEdit = PostEdit.builder()
                 .title("글 내용을 변경하겠습니다")
@@ -493,128 +630,39 @@ class PostControllerTest {
         Post postResponse = postRepository.findAll().get(0);
         mockMvc.perform(MockMvcRequestBuilders.patch("/board/user/{postId}", postResponse.getPostId())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("글 내용을 변경하겠습니다"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.content").value("글 내용을 변경합니다"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.postId").value(postResponse.getPostId()))
+                        .content(json)
+                        .header("Authorization", ACCESS_TOKEN))
+                .andExpect(status().is4xxClientError())
                 .andDo(print());
 
         Assertions.assertEquals(postRepository.count(), 1);
     }
 
-    @Test
-    @DisplayName("게시물 리스트 받아오기")
-    void getPostListWherePage() throws Exception{
-        //given
-        User user = User.builder()
-                .username("wjdalsco")
-                .email("jcmcmdmw@nakejqkqlw.com")
-                .password(passwordEncoder.encode("다다다자"))
-                .enable(true)
-                .authorizations(Authorization.USER)
-                .build();
-        userRepository.save(user);
 
-        PostFunction postFunction = PostFunction.builder()
-                .isHot(false)
-                .build();
-
-        List<Post> posts = IntStream.range(0, 10)
-                .mapToObj(i -> Post.builder()
-                        .title("제목" + " " + i)
-                        .content("내용" + " " + i)
-                        .author(user)
-                        .postFunction(postFunction)
-                        .build())
-                .collect(Collectors.toList());
-        postRepository.saveAll(posts);
-        assertEquals(postRepository.count(), 10);
-
-        //when
-        mockMvc.perform(MockMvcRequestBuilders.get("/board/posts/list?page=1&size=5"))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(5))
-                .andDo(print());
-
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/board/posts/list?page=1&size=10"))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(10))
-                .andDo(print());
-
-    }
 
 
     @Test
-    @DisplayName("게시물 받아오기 - postNotFound 404 에러 출력")
-    void postNotFound() throws Exception{
-        mockMvc.perform(MockMvcRequestBuilders.get("/board/posts/{postId}", 393L))
-                .andExpect(status().isNotFound())
-                .andDo(print());
-
-        assertThrows(PostNotFound.class,() -> {
-            postService.get(1L);
-        });
-
-
-    }
-
-    @Test
-    @DisplayName("게시물은 로그인된 사용자만 작성할 수 있다")
-    void authWritePost() throws Exception{
-       //todo
-    }
-
-
-    @Test
-    @DisplayName("게시물 작성 작성자 포함")
-    void writePostWithUser() throws Exception{
+    @DisplayName("admin 핫 게시물을 설정해준다.")
+    void selectHotPost(@Value("${jwt.secret}") String secretKey) throws Exception{
         User user = User.builder()
                 .username("wjdalsco")
                 .email("jcmcmdmw@nakejqkqlw.com")
                 .password("passwordEncoder.encode(signupForm.getPassword()")
                 .enable(true)
-                .authorizations(Authorization.USER)
+                .authorizations(Authorization.ADMIN)
                 .build();
         userRepository.save(user);
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        long now = new Date().getTime();
+        // Access Token 생성
+        Date accessTokenExpiresIn = new Date(now + 604800000);
+        ACCESS_TOKEN = Jwts.builder()
+                .setSubject(user.getUsername())
+                .claim("auth", user.getAuthorizations())
+                .setExpiration(accessTokenExpiresIn)
+                .signWith(Keys.hmacShaKeyFor(keyBytes), SignatureAlgorithm.HS256)
+                .compact();
 
-        PostCreate postCreate = PostCreate.builder()
-                .title("글 작성중입니다")
-                .content("글 내용은 비밀입니다")
-                .user(user)
-                .build();
-
-
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        System.out.println(">>>>>>>>>>>" + " " + objectMapper.writeValueAsString(postCreate));
-
-
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/board/user/writePost")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(postCreate)))
-                .andExpect(status().isOk())
-                .andDo(print());
-
-
-
-    }
-
-
-    @Test
-    @DisplayName("admin 핫 게시물을 설정해준다.")
-    @WithMockUser(authorities = "ADMIN")
-    void selectHotPost() throws Exception{
-        User user = User.builder()
-                .username("jmcabc@naver.com")
-                .email("jcmcmdmw@nakejqkqlw.com")
-                .password(passwordEncoder.encode("wjdals12"))
-                .enable(true)
-                .authorizations(Authorization.USER)
-                .build();
-        userRepository.save(user);
         PostFunction postFunction = PostFunction
                 .builder()
                 .isHot(false)
@@ -629,11 +677,12 @@ class PostControllerTest {
 
         postRepository.save(post);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/admin/setHot/{postId}", post.getPostId()))
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/setHot/{postId}", post.getPostId())
+                        .header("Authorization", ACCESS_TOKEN))
                 .andExpect(status().isOk())
                 .andDo(print());
 
-        assertEquals(1, postRepository.getHotList(new Page(1, 10)).size());
+        assertEquals(1, postRepository.getHotList(new Page(1, 5)).size());
     }
 
 

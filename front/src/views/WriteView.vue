@@ -1,5 +1,5 @@
 <script setup lang = "js">
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import axios from 'axios'
 import router from "@/router";
 
@@ -7,30 +7,11 @@ import router from "@/router";
 const title = ref("")
 const content = ref("")
 let images = new Image()
+let youtubeUrl = ref("");
+let videoId = ref("");
 
-
-const youtubeUrl = /(http:|https:)?(\/\/)?(www\.)?(youtube.com|youtu.be)\/(watch|embed)?(\?v=|\/)?(\S+)?/g
 const frm = new FormData();
 
-/*const write = function () {
-  const file = document.querySelector("#image").files[0]
-  images.src = URL.createObjectURL(file)
-  console.log(images)
-  axios.post("http://localhost:8080/board/user/writePost",{
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-   // title: title.value,
-    //content: content.value,
-    imageFile: images
-
-  })
-      .then(() => {
-        router.replace({
-          name: "home"
-        })
-
-      })}*/
 const checkLogin = function() {
   if (!localStorage.getItem("accessToken")) {
     router.replace({name: "login"})
@@ -44,7 +25,7 @@ const write = function () {
   const file = document.querySelector("#image").files[0]
   let params = JSON.stringify({ title: title.value, content: content.value });
 
-  frm.append("post", new Blob([JSON.stringify({ title: title.value, content: content.value, postType: "ALL" })], {type: "application/json"}));
+  frm.append("post", new Blob([JSON.stringify({ title: title.value, content: content.value, postType: "ALL", youtubeUrl:youtubeUrl.value })], {type: "application/json"}));
   frm.append("imageFile", file);
 
   console.log(images)
@@ -97,7 +78,23 @@ const upload = function (image) {
 };
 
 
+// ...
 
+
+
+const extractVideoId = () => {
+  const matches = youtubeUrl.match(/youtu\.be\/([^"&?/ ]{11})/);
+  if (matches && matches.length > 1) {
+    videoId.value = matches[1];
+  } else {
+    videoId.value = ""; // URL에서 VIDEO_ID를 찾을 수 없으면 비우기
+  }
+};
+
+// youtubeUrl이 변경될 때마다 VIDEO_ID 추출
+watch(youtubeUrl, extractVideoId);
+
+// ...
 
 
 
@@ -146,6 +143,11 @@ const upload = function (image) {
             rows="10"
             placeholder="내용을 입력하세요"
         ></el-input>
+      </div>
+
+      <div class="input-container">
+        <label class="input-label">YouTube URL</label>
+        <el-input v-model="youtubeUrl" placeholder="YouTube 동영상 URL을 입력하세요"></el-input>
       </div>
 
       <el-button type="primary" @click="write">글 작성 완료</el-button>

@@ -36,10 +36,10 @@ public class PostResponse {
 
     private List<Comment> comments;
 
-
+    private String youtubeUrl;
 
     @Builder
-    public PostResponse(Long postId, String title, String content, String author, int recommendation, int bad, int views, PostFunction postFunction, List<Comment> comments) {
+    public PostResponse(Long postId, String title, String content, String author, int recommendation, int bad, int views, PostFunction postFunction, List<Comment> comments, String youtubeUrl) {
         this.postId = postId;
         this.title = title;
         this.content = content;
@@ -49,7 +49,11 @@ public class PostResponse {
         this.views = views;
         this.postFunction = postFunction;
         this.comments = comments;
+        this.youtubeUrl = youtubeUrl;
     }
+
+
+
 
 
 
@@ -64,6 +68,7 @@ public class PostResponse {
         this.views = post.getViews();
         this.postFunction = post.getPostFunction();
         this.comments = post.getComments();
+        this.youtubeUrl = post.getYoutubeUrl();
         return this;
     }
 

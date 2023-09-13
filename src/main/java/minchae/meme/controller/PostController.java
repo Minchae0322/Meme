@@ -103,7 +103,7 @@ public class PostController {
         postService.delete(postId);
         return postId;
     }
-
+    @PreAuthorize("hasPermission(#postId,'POST','UPDATE') && hasAuthority('USER')")
     @PatchMapping("/board/user/{postId}")
     public PostResponse updatePost(@PathVariable("postId") Long postId, @RequestBody PostEdit postEdit) {
          return postService.update(postId, postEdit);
@@ -115,21 +115,25 @@ public class PostController {
         return postService.getListWherePage(page);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     @PostMapping("/admin/setHot/{postId}")
     public void setHotPost(@PathVariable("postId") Long postId) {
         postService.setHotPost(postId);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     @PostMapping("/admin/unsetHot/{postId}")
     public void unsetHotPost(@PathVariable Long postId) {
         postService.unsetHotPost(postId);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     @GetMapping("/board/hotList")
     public List<PostResponse> unsetHotPost(Page page) {
         return postService.getHotListWherePage(page);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER', 'USER')")
     @PostMapping("/board/user/{postId}/up")
     public int upRecommendation(@PathVariable("postId") Long postId, Authentication authentication) {
         Post post = postRepository.findById(postId).orElseThrow();
