@@ -3,6 +3,7 @@ package minchae.meme.entity;
 import minchae.meme.repository.CommentRepository;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.service.CommentService;
+import minchae.meme.service.impl.PostServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

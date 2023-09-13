@@ -33,7 +33,7 @@ class CommentServiceTest {
     private CommentService commentService;
 
     @Autowired
-    private PostServiceImpl postService;
+    private PostService postService;
 
     @BeforeEach
     public void before() {

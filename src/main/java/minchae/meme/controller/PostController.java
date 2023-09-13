@@ -116,16 +116,20 @@ public class PostController {
         postService.unsetHotPost(postId);
     }
 
-    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
-    @GetMapping("/board/hotList")
-    public List<PostResponse> unsetHotPost(Page page) {
+    @GetMapping("/board/posts/hotList")
+    public List<PostResponse> getHotPostList(Page page) {
         return postService.getHotListWherePage(page);
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER', 'USER')")
     @PostMapping("/board/user/{postId}/up")
     public int upRecommendation(@PathVariable("postId") Long postId, Authentication authentication) {
-        Post post = postRepository.findById(postId).orElseThrow();
-        return postService.upRecommendation(post, (User) authentication.getPrincipal());
+        return postService.upRecommendation(postId, (User) authentication.getPrincipal());
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER', 'USER')")
+    @PostMapping("/board/user/{postId}/bad")
+    public int upBad(@PathVariable("postId") Long postId, Authentication authentication) {
+        return postService.upBad(postId, (User) authentication.getPrincipal());
     }
 }

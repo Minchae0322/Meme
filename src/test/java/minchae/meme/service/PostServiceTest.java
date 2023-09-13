@@ -47,7 +47,7 @@ class PostServiceTest {
     private UserRepository userRepository;
 
     @Autowired
-    private PostServiceImpl postService;
+    private PostService postService;
 
     @Autowired
     private CommentRepository commentRepository;
@@ -452,14 +452,14 @@ class PostServiceTest {
 
         postRepository.save(post);
 
-        assertEquals(1, postService.upRecommendation(post, user));
+        assertEquals(1, postService.upRecommendation(post.getPostId(), user));
         assertEquals(1, updownRepository.count());
 
 
         Post upPost = postRepository.findById(post.getPostId()).orElseThrow();
 
 
-        assertEquals(2, postService.upRecommendation(upPost, user2));
+        assertEquals(2, postService.upRecommendation(upPost.getPostId(), user2));
         assertEquals(2, updownRepository.count());
     }
 
@@ -487,11 +487,11 @@ class PostServiceTest {
 
         postRepository.save(post);
 
-        assertEquals(1, postService.upRecommendation(post, user));
+        assertEquals(1, postService.upRecommendation(post.getPostId(), user));
         assertEquals(1, updownRepository.count());
 
 
-        assertThrows(IsRecommended.class, () -> postService.upRecommendation(post, user));
+        assertThrows(IsRecommended.class, () -> postService.upRecommendation(post.getPostId(), user));
 
     }
 

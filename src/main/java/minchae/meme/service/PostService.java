@@ -33,9 +33,9 @@ public interface PostService {
 
     List<PostResponse> getHotListWherePage(Page page);
 
-    int upRecommendation(Post post, User user);
+    int upRecommendation(Long postId, User user);
 
-    int upBad(Post post, User user);
+    int upBad(Long postId, User user);
 
 
 }

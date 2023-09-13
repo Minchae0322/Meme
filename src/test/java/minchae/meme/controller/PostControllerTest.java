@@ -86,6 +86,7 @@ class PostControllerTest {
        commentRepository.deleteAll();
        postRepository.deleteAll();
        userRepository.deleteAll();
+       upDownRepository.deleteAll();
        testUser = User.builder()
                 .username("jmcabc")
                 .email("jmcabc@naver.com")
@@ -286,7 +287,7 @@ class PostControllerTest {
 
 
         postService.setHotPost(postResponse.getPostId());
-        postService.upRecommendation(postResponse, testUser);
+        postService.upRecommendation(postResponse.getPostId(), testUser);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/board/posts/{postId}", postResponse.getPostId()))
                 .andExpect(status().isOk())
@@ -681,16 +682,25 @@ class PostControllerTest {
 
     @Test
     @DisplayName("admin 핫 게시물을 해제")
-    @WithMockUser(authorities = "ADMIN")
-    void cancelHotPost() throws Exception{
+    void cancelHotPost(@Value("${jwt.secret}") String secretKey) throws Exception{
         User user = User.builder()
-                .username("jmcabc@naver.com")
+                .username("wjdalsco")
                 .email("jcmcmdmw@nakejqkqlw.com")
-                .password(passwordEncoder.encode("wjdals12"))
+                .password("passwordEncoder.encode(signupForm.getPassword()")
                 .enable(true)
-                .authorizations(Authorization.USER)
+                .authorizations(Authorization.ADMIN)
                 .build();
         userRepository.save(user);
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        long now = new Date().getTime();
+        // Access Token 생성
+        Date accessTokenExpiresIn = new Date(now + 604800000);
+        ACCESS_TOKEN = Jwts.builder()
+                .setSubject(user.getUsername())
+                .claim("auth", user.getAuthorizations())
+                .setExpiration(accessTokenExpiresIn)
+                .signWith(Keys.hmacShaKeyFor(keyBytes), SignatureAlgorithm.HS256)
+                .compact();
 
         PostFunction postFunction = PostFunction
                 .builder()
@@ -705,13 +715,15 @@ class PostControllerTest {
 
         postRepository.save(post);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/admin/setHot/{postId}", post.getPostId()))
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/setHot/{postId}", post.getPostId())
+                        .header("Authorization", ACCESS_TOKEN))
                 .andExpect(status().isOk())
                 .andDo(print());
 
         assertEquals(1, postRepository.getHotList(new Page(1, 10)).size());
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/admin/unsetHot/{postId}", post.getPostId()))
+        mockMvc.perform(MockMvcRequestBuilders.post("/admin/unsetHot/{postId}", post.getPostId())
+                        .header("Authorization", ACCESS_TOKEN))
                 .andExpect(status().isOk())
                 .andDo(print());
 
@@ -721,16 +733,9 @@ class PostControllerTest {
 
 
     @Test
-    @DisplayName("admin 모든 타입의 핫 게시물을 가져오기")
+    @DisplayName("모든 타입의 핫 게시물을 가져오기")
     void getHotPost() throws Exception{
-        User user = User.builder()
-                .username("jmcabc@naver.com")
-                .email("jcmcmdmw@nakejqkqlw.com")
-                .password(passwordEncoder.encode("wjdals12"))
-                .enable(true)
-                .authorizations(Authorization.USER)
-                .build();
-        userRepository.save(user);
+
 
         PostFunction postFunction = PostFunction
                 .builder()
@@ -739,7 +744,7 @@ class PostControllerTest {
 
         List<Post> posts = IntStream.range(0, 20).mapToObj(i -> Post.builder()
                         .title("핫 게시물")
-                        .author(user)
+                        .author(testUser)
                         .postFunction(postFunction)
                         .content("핫 게시물 내용입니다.")
                         .build()).
@@ -749,7 +754,7 @@ class PostControllerTest {
 
         IntStream.range(0, 10).forEach(i -> postService.setHotPost(posts.get(i).getPostId()));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/hotList?page=1&size=10"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/board/posts/hotList?page=1&size=10"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(10))
                 .andDo(print());
     }
@@ -781,8 +786,31 @@ class PostControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/board/user/{postId}/up", postResponse.getPostId())
                         .header("Authorization", ACCESS_TOKEN))
                 .andExpect(status().isOk())
+
                 .andDo(print());
-        Post postResponse2 = postRepository.findAll().get(0);
-        PostResponse postResponse1 = PostResponse.builder().build().postToPostResponse(postResponse2);
+    }
+
+
+    @Test
+    @DisplayName("같은 user 가 recommendation 두번 을 눌렀을 때 throw isRecommended")
+    public void upRecommendationSameUser() throws Exception {
+
+        PostCreate postCreate = PostCreate.builder()
+                .title("글 작성중입니다")
+                .content("글 내용은 비밀입니다")
+                .user(testUser)
+                .postType("ALL")
+                .build();
+        postService.write(postCreate);
+        Post postResponse = postRepository.findAll().get(0);
+
+        postService.upBad(postResponse.getPostId(), testUser);
+
+
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/board/user/{postId}/up", postResponse.getPostId())
+                        .header("Authorization", ACCESS_TOKEN))
+                .andExpect(status().is4xxClientError())
+                .andDo(print());
     }
 }

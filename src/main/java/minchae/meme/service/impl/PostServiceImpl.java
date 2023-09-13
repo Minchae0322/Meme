@@ -130,11 +130,13 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public int upRecommendation(Post post, User user) {
+    public int upRecommendation(Long postId, User user) {
         if (user == null) {
             throw new Unauthorized();
         }
-        if (updownRepository.findByPostIdAndUserId(post.getPostId(), user.getId()).size() >= 1) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(PostNotFound::new);
+        if (!updownRepository.findByPostIdAndUserId(post.getPostId(), user.getId()).isEmpty()) {
             throw new IsRecommended();
         }
         updownRepository.save(UpDown.builder()
@@ -143,13 +145,18 @@ public class PostServiceImpl implements PostService {
                 .type("UP")
                 .build());
         //Transactional 이라 데이터 베이스에 저장하기전 값 + 1
-        return post.getRecommendation() + 1;
+        return post.getRecommendation();
     }
 
     @Override
     @Transactional
-    public int upBad(Post post, User user) {
-        if (updownRepository.findByPostIdAndUserId(post.getPostId(), user.getId()).size() >= 1) {
+    public int upBad(Long postId, User user) {
+        if (user == null) {
+            throw new Unauthorized();
+        }
+        Post post = postRepository.findById(postId)
+                .orElseThrow(PostNotFound::new);
+        if (!updownRepository.findByPostIdAndUserId(post.getPostId(), user.getId()).isEmpty()) {
             throw new IsRecommended();
         }
         updownRepository.save(UpDown.builder()
@@ -157,7 +164,7 @@ public class PostServiceImpl implements PostService {
                 .post(post)
                 .type("DOWN")
                 .build());
-        return post.getBad() + 1;
+        return post.getBad();
     }
 
 }
