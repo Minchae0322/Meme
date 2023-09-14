@@ -2,9 +2,7 @@
 import axios from "axios";
 import { ref, onMounted, onUpdated} from "vue";
 
-
 import { useRouter } from "vue-router";
-
 
 const router = useRouter()
 const isAlphaNumeric = function(password) {
@@ -17,6 +15,37 @@ let username = ref("")
 let password = ref("")
 let isLogin = ref(false)
 axios.defaults.withCredentials = true; // withCredentials 전역 설정
+
+onMounted( () => {
+  checkLogin()
+});
+
+const checkLogin =  function () {
+  const accessToken = localStorage.getItem("accessToken");
+  if (accessToken) {
+    try {
+      axios.get("http://localhost:8080/auth/isValidToken", {
+        headers: {
+          'Authorization': accessToken
+        }
+      }).then(response => {
+        if (response.status === 200) {
+          router.replace({name: "home"})
+        }
+      });
+    } catch (error) {
+      console.error("에러 발생:", error);
+    }
+  }
+};
+
+
+
+const goSignup = function () {
+  router.replace({name: "signup"})
+};
+
+
 
 const write = function () {
 
@@ -62,7 +91,7 @@ const write = function () {
     </form>
     <div class="signup">
         <span class="signup">Don't have an account?
-         <label for="check">Signup</label>
+         <label for="check" @click="goSignup">Signup</label>
         </span>
     </div>
   </div>

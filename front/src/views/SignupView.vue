@@ -11,7 +11,7 @@
     </form>
     <div class="signup">
         <span class="signup">Already have an account?
-         <label for="check">Login</label>
+         <label for="check" @click="goLogin">Login</label>
         </span>
     </div>
   </div>
@@ -62,6 +62,10 @@ const write = function () {
   }
 
 }
+
+const goLogin = function () {
+  router.replace({name: "login"})
+};
 
 </script>
 

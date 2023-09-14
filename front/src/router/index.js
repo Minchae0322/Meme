@@ -4,7 +4,7 @@ import WriteView from '../views/WriteView.vue';
 import PostListView from '../views/PostListView.vue';
 import login from "../views/login.vue";
 import read from "../views/readView.vue";
-import Signup from "../views/SignupView.vue";
+import signup from "../views/SignupView.vue";
 import app from "../App.vue";
 
 const router = createRouter({
@@ -22,8 +22,8 @@ const router = createRouter({
     },
     {
       path: '/signup', // 회원가입 페이지 경로
-      name: 'Signup',
-      component: Signup, // 회원가입 컴포넌트
+      name: 'signup',
+      component: signup, // 회원가입 컴포넌트
     },
 
     {

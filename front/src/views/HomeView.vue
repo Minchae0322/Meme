@@ -7,7 +7,6 @@ import router from "@/router/index.js";
 import {useRouter} from "vue-router";
 
 const posts = ref([]);
-
 router.afterEach(async (to, from) => {
   {
     console.log(to.name)

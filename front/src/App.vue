@@ -117,15 +117,16 @@ checkLogin();
 <style>
 
 
+
 .nav_bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 7vw;
+  height: 7%;
   margin-left: 100px;
   padding: 6px 20px;
   margin-top: 20px;
-  width: 90vw;
+
 }
 
 header {
@@ -138,6 +139,7 @@ body {
   background: white;
   margin: 0 auto;
   display: flow;
+  width: 90vw;
 }
 
 .nav {

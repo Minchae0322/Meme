@@ -6,6 +6,7 @@ import minchae.meme.entity.TokenInfo;
 import minchae.meme.entity.User;
 import minchae.meme.request.SignupForm;
 import minchae.meme.service.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -22,6 +23,11 @@ public class AuthController {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+
+    @GetMapping("/auth/isValidToken")
+    public void isValidToken() {
+
+    }
 
 
     @PostMapping("/auth/signup")

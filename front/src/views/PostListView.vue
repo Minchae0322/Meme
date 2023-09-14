@@ -52,7 +52,7 @@ const loadPage = async (pageNumber) => {
   if (pageNumber <= 0) return;
   const route = useRoute();
   try {
-    const response = await axios.get(`http://localhost:8080/board/posts/list?page=${pageNumber}&size=5`);
+    const response = await axios.get(`http://localhost:8080/board/posts/list?page=${pageNumber}&size=10`);
     posts.value = response.data;
     page.value = pageNumber;
     route.query.page = pageNumber;
@@ -75,32 +75,56 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.page{
+/* Your existing styles */
+
+.page {
   text-align: center;
-  width: 40%;
+  width: 100%; /* Use full width for mobile devices */
+  margin-top: 20px;
 }
 
 .pagination {
   list-style: none;
-  display: inline-block;
+  display: flex; /* Use flexbox for better alignment */
+  justify-content: center; /* Center the pagination controls */
   padding: 0;
-  margin-top: 20px;
+  margin: 0;
 }
 
 .pagination li {
-  display: inline;
-  text-align: center;
+  margin: 0 5px; /* Add some space between pagination items */
 }
 
-.pagination a{
-  float: left;
+.pagination a {
   display: block;
   font-size: 14px;
   text-decoration: none;
   padding: 5px 12px;
   color: #222222;
   line-height: 1.5;
+  border: 1px solid #ccc; /* Add a border for better visibility */
+  border-radius: 4px; /* Round the corners */
+  transition: background-color 0.3s; /* Add a smooth hover effect */
 }
 
-/* Your CSS styles for the component */
+.pagination a:hover {
+  background-color: #f0f0f0; /* Change background color on hover */
+}
+
+/* Media query for mobile devices */
+@media screen and (max-width: 480px) {
+  .pagination {
+    flex-direction: column; /* Stack pagination items vertically */
+    align-items: center; /* Center items vertically */
+  }
+
+  .pagination li {
+    margin: 5px 0; /* Add space above and below each item */
+  }
+
+  .pagination a {
+    display: inline-block; /* Remove block display for inline layout */
+    width: auto; /* Let items expand to fit content */
+  }
+}
 </style>

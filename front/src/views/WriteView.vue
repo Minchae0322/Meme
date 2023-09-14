@@ -1,8 +1,9 @@
 <script setup lang = "js">
-import {ref, watch} from "vue";
+import {onMounted, ref, watch} from "vue";
 import axios from 'axios'
-import router from "@/router";
+import { useRouter } from "vue-router";
 
+const router = useRouter()
 
 const title = ref("")
 const content = ref("")
@@ -12,15 +13,32 @@ let videoId = ref("");
 
 const frm = new FormData();
 
-const checkLogin = function() {
-  if (!localStorage.getItem("accessToken")) {
+onMounted( () => {
+  checkLogin()
+});
+
+const checkLogin = function () {
+  const accessToken = localStorage.getItem("accessToken");
+  if (accessToken) {
+    try {
+      axios.get("http://localhost:8080/auth/isValidToken", {
+        headers: {
+          'Authorization': accessToken
+        }
+      }).then(response => {
+
+        if (response.status !== 200) {
+          router.replace({name: "login"})
+        }
+      });
+    } catch (error) {
+      console.error("에러 발생:", error);
+    }
+  } else {
     router.replace({name: "login"})
   }
-  console.log("실행")
-  return 0
-}
+};
 
-checkLogin();
 const write = function () {
   const file = document.querySelector("#image").files[0];
   let params = JSON.stringify({ title: title.value, content: content.value });
