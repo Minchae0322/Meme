@@ -1,56 +1,69 @@
 <template>
   <div>
-    <!-- youtubeUrl이 있으면 iframe으로 비디오를 표시하고, 그렇지 않으면 이미지 표시 -->
-    <div>
-      <iframe width="560" height="315" :src="posts.youtubeUrl" frameborder="0" allowfullscreen></iframe>
+    <h1>{{ post.title }}</h1>
+
+    <!-- Display YouTube video if available -->
+    <div v-if="post && post.youtubeUrl">
+      <iframe width="560" height="315" :src="embedUrl" frameborder="0" allowfullscreen></iframe>
     </div>
+
+    <!-- Display content -->
     <div>
-      <img :src="imageSrc" alt="포스트 이미지" />
+      <p>{{ post.content }}</p>
     </div>
   </div>
 </template>
 
-<script>
+<script setup lang="js">
 import axios from 'axios';
-import {ref} from "vue";
+import { ref, onMounted, computed } from "vue";
+import {defineProps} from "vue"
 
-const posts = ref("")
-export default {
-  data() {
-    return {
-      imageSrc: null,
-    };
-  },
-  mounted() {
-    this.loadImage();
-  },
-  methods: {
-    loadImage() {
-      const postId = 229; // 실제 포스트 ID로 대체하세요
-      axios
-          .get(`http://localhost:8080/board/posts/${postId}`, { responseType: 'arraybuffer' })
-          .then((response) => {
-            posts.value.push(response.data)
-            // HTTP 응답이 이미지인 경우 이미지 표시
-            const contentType = response.headers['content-type'];
-            console.log(posts.value)
-            if (contentType.startsWith('image/')) {
-              const imageBase64 = btoa(
-                  new Uint8Array(response.data).reduce((data, byte) => data + String.fromCharCode(byte), '')
-              );
-              this.imageSrc = `data:${contentType};base64,${imageBase64}`;
-            }
-            // HTTP 응답이 비디오인 경우 youtubeUrl 표시
-            else if (contentType.startsWith('video/')) {
+const post = ref({});
+const imageSrc = ref(''); // Set a default image source or placeholder
+const props = defineProps({
+  postId: {
+    type: Number,
+    required:true,
+  }
+})
 
-            }
-          })
-          .catch((error) => {
-            console.error('이미지 불러오기 오류:', error);
-          });
-    },
-  },
-};
+onMounted(() => {
+
+}
+)
+const loadImage = function () {
+  axios
+      .get(`http://localhost:8080/board/posts/${props.postId}`)
+      .then((response) => {
+        // Assuming the response contains the post object with youtubeUrl
+        post.value = response.data;
+      })
+      .catch((error) => {
+        console.error('이미지 불러오기 오류:', error);
+      });
+}
+
+onMounted(() => {
+  loadImage();
+});
+
+// Compute the YouTube embed URL based on the extracted video ID
+const embedUrl = computed(() => {
+  if (post.value && post.value.youtubeUrl) {
+    // Extract the video ID from the YouTube URL
+    const videoId = extractVideoId(post.value.youtubeUrl);
+    // Construct the embed URL
+    return `https://www.youtube.com/embed/${videoId}`;
+  }
+  return '';
+});
+
+// Function to extract the video ID from a YouTube URL
+function extractVideoId(url) {
+  const match = url.match(/[?&]v=([^&]+)/);
+  return match && match[1] ? match[1] : '';
+}
 </script>
 
 <style scoped>

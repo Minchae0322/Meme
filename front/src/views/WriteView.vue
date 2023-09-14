@@ -22,22 +22,28 @@ const checkLogin = function() {
 
 checkLogin();
 const write = function () {
-  const file = document.querySelector("#image").files[0]
+  const file = document.querySelector("#image").files[0];
   let params = JSON.stringify({ title: title.value, content: content.value });
 
-  frm.append("post", new Blob([JSON.stringify({ title: title.value, content: content.value, postType: "ALL", youtubeUrl:youtubeUrl.value })], {type: "application/json"}));
+  frm.append("post", new Blob([JSON.stringify({ title: title.value, content: content.value, postType: "ALL", youtubeUrl: youtubeUrl.value })], { type: "application/json" }));
   frm.append("imageFile", file);
 
-  console.log(images)
+  axios
+      .post("http://localhost:8080/board/user/writePost", frm, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': localStorage.getItem("accessToken")
+        },
+      })
+      .then((response) => {
+        // Handle the successful write action here
+        console.log("글 작성 완료", response);
 
-  axios.post("http://localhost:8080/board/user/writePost", frm, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-      'Authorization': localStorage.getItem("accessToken")
-    },
-
-  })
-  console.log(localStorage.getItem("accessToken"))
+        // Redirect to /posts route
+        router.replace({ name: 'postList' });
+      })
+      .catch((error) => {
+        console.error('글 작성 오류:', error);});
 }
 
 

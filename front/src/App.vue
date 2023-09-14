@@ -145,6 +145,7 @@ body {
   margin-left: 100px;
   font-size: 20px;
   width: 60%;
+  list-style: none;
 }
 
 .nav li{
