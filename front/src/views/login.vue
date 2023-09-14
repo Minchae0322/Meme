@@ -48,7 +48,6 @@ const goSignup = function () {
 
 
 const write = function () {
-
     axios.post("http://localhost:8080/auth/login", {
           username: username.value,
           password: password.value

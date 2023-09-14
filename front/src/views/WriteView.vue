@@ -11,7 +11,7 @@ let images = new Image()
 let youtubeUrl = ref("");
 let videoId = ref("");
 
-const frm = new FormData();
+
 
 onMounted( () => {
   checkLogin()
@@ -39,6 +39,7 @@ const checkLogin = function () {
   }
 };
 
+const frm = new FormData();
 const write = function () {
   const file = document.querySelector("#image").files[0];
   let params = JSON.stringify({ title: title.value, content: content.value });

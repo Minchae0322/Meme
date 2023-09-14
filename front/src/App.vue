@@ -59,7 +59,10 @@ const router = useRouter()
 
 const isLogin = ref("로그아웃");
 const loginRouter = ref('/logout');
-
+onMounted(() =>
+{
+  checkLogin()
+})
 function checkLogin(){
   if (!localStorage.getItem("accessToken")) {
     console.log(localStorage.getItem("accessToken"))
@@ -105,10 +108,8 @@ function goSignup() {
 
   router.push('/signup'); // 로그인 상태가 아니면 클릭하면 /login으로 이동
 
-
 }
 
-checkLogin();
 
 </script>
 
