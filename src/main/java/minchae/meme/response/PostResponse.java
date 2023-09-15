@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.FieldError;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @NoArgsConstructor
@@ -34,6 +36,8 @@ public class PostResponse {
     private int bad;
     private int views;
 
+    private LocalDateTime createdTime;
+
     private PostFunction postFunction;
 
     private List<Comment> comments;
@@ -41,7 +45,7 @@ public class PostResponse {
     private String youtubeUrl;
 
     @Builder
-    public PostResponse(Long postId, String title, String content, String author, int recommendation, int bad, int views, PostFunction postFunction, List<Comment> comments, String youtubeUrl) {
+    public PostResponse(Long postId, String title, String content, String author, int recommendation, int bad, int views, LocalDateTime createdTime, PostFunction postFunction, List<Comment> comments, String youtubeUrl) {
         this.postId = postId;
         this.title = title;
         this.content = content;
@@ -49,15 +53,11 @@ public class PostResponse {
         this.recommendation = recommendation;
         this.bad = bad;
         this.views = views;
+        this.createdTime = createdTime;
         this.postFunction = postFunction;
         this.comments = comments;
         this.youtubeUrl = youtubeUrl;
     }
-
-
-
-
-
 
     @Transactional
     public PostResponse postToPostResponse(Post post) {
@@ -71,6 +71,7 @@ public class PostResponse {
         this.postFunction = post.getPostFunction();
         this.comments = post.getComments();
         this.youtubeUrl = post.getYoutubeUrl();
+        this.createdTime = post.getCreatedTime();
         return this;
     }
 

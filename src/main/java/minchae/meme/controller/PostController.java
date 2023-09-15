@@ -83,7 +83,6 @@ public class PostController {
         if (multipartFiles != null) {
             fileService.saveFiles(multipartFiles, post);
         }
-        postService.setHotPost(post.getPostId());
     }
 
 

@@ -55,9 +55,11 @@ public class PostServiceImpl implements PostService {
 
 
     @Override
+    @Transactional
     public PostResponse get(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFound::new);
+        post.upView();
         return PostResponse.builder().build().postToPostResponse(post);
     }
 

@@ -1,9 +1,39 @@
 <template>
-  <div>
-    <h1>{{ post.title }}</h1>
 
+  <div>
+  <div class="titleContainer">
+    <h1 class="title">{{ post.title }}</h1>
+
+    <div class="authorContainer">
+      <div class="authorTitle">작성자 : </div>
+      <div class="author">{{post.author}}</div>
+    </div>
+
+
+
+    <div class="postInfo">
+
+
+      <!-- Display createTime as a localized date and time -->
+      <div class="createdTime" v-if="post.createdTime">
+        {{ formatCreateTime }}
+      </div>
+
+      <div class="viewContainer">
+        <font-awesome-icon icon="fa-solid fa-eye" />
+        <div class="viewTitle"> 조회수</div>
+        <div class="view">{{post.views}}</div>
+
+
+      </div>
+
+
+
+    </div>
+  </div>
+    <div class="contentContainer">
     <!-- Display YouTube video if available -->
-    <div v-if="post && post.youtubeUrl">
+    <div class="youtubeContainer" v-if="post && post.youtubeUrl">
       <iframe width="560" height="315" :src="embedUrl" frameborder="0" allowfullscreen></iframe>
     </div>
 
@@ -12,6 +42,7 @@
       <p v-html="formattedContent"></p>
 
     </div>
+    </div>
   </div>
 </template>
 
@@ -19,6 +50,7 @@
 import axios from 'axios';
 import { ref, onMounted, computed } from "vue";
 import {defineProps} from "vue"
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 const post = ref({});
 const imageSrc = ref(''); // Set a default image source or placeholder
@@ -77,7 +109,19 @@ function extractVideoId(url) {
 }
 
 const formattedContent = computed(() => {
-  return this.post.value.content.replace(/\n/g, '<br>');
+  if (post.value && post.value.content) {
+    return post.value.content.replace(/\n/g, '<br>');
+  }
+  return '';
+});
+
+// Format createTime as a localized date and time
+const formatCreateTime = computed(() => {
+  if (post.value && post.value.createdTime) {
+    const createTime = new Date(post.value.createdTime);
+    return createTime.toLocaleString(); // Adjust to your preferred date and time format
+  }
+  return '';
 });
 </script>
 
@@ -85,10 +129,70 @@ const formattedContent = computed(() => {
 h1 {
   color: #222222;
 }
-
+.title {
+  margin: 10px 0px;
+}
 p {
   color: #222222;
   font-size: 20px;
+}
+
+.createdTime {
+  color: #333333;
+  font-size: 15px;
+  margin: 10px 0px;
+}
+.postInfo {
+  display: flex; /* Use flexbox to arrange child elements horizontally */
+  align-items: center; /* Center align child elements vertically */
+}
+
+.viewContainer {
+  display: flex;
+  color: #333333;
+  font-size: 15px;
+  align-items: center;
+  margin-left: 20px;
+
+
+}
+
+
+.authorContainer {
+  display: flex;
+  color: #333333;
+  font-size: 15px;
+  align-items: center;
+  margin-left: auto;
+  margin-right: 50px
+
+}
+.content {
+  margin: 30px 10px;
+  padding: 10px;
+}
+.view {
+  margin: 0 10px;
+
+}
+
+.viewTitle {
+  margin-left: 5px;
+}
+
+.youtubeContainer {
+  margin: 30px 10px;
+  padding: 10px;
+}
+
+.titleContainer {
+  margin: 20px 10px;
+  padding: 10px;
+}
+
+.author {
+  color: #157e7e;
+  margin: 0 10px;
 }
 /* 필요한 경우 이미지 뷰어를 스타일링할 CSS를 추가하세요 */
 </style>

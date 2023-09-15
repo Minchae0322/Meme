@@ -89,6 +89,7 @@ onMounted(() => {
 .author {
   width: 15%;
   color: #2c3e50;
+  margin-left: auto;
 }
 .page {
   text-align: center;
