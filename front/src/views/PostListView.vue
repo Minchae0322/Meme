@@ -76,7 +76,20 @@ onMounted(() => {
 
 <style scoped>
 /* Your existing styles */
+.post-info {
+  display: flex;
+  margin: 30px 10px;
+}
 
+.title {
+  width: 70%;
+  margin: 0 50px;
+  padding-left: 100px;
+}
+.author {
+  width: 15%;
+  color: #2c3e50;
+}
 .page {
   text-align: center;
   width: 100%; /* Use full width for mobile devices */
@@ -105,6 +118,10 @@ onMounted(() => {
   border: 1px solid #ccc; /* Add a border for better visibility */
   border-radius: 4px; /* Round the corners */
   transition: background-color 0.3s; /* Add a smooth hover effect */
+}
+
+li {
+  list-style: none;
 }
 
 .pagination a:hover {

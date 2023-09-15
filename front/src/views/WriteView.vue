@@ -165,7 +165,7 @@ watch(youtubeUrl, extractVideoId);
         <el-input
             v-model="content"
             type="textarea"
-            rows="10"
+            rows="5"
             placeholder="내용을 입력하세요"
         ></el-input>
       </div>
@@ -181,6 +181,7 @@ watch(youtubeUrl, extractVideoId);
 </template>
 
 <style scoped>
+
 .container {
   margin: 20px;
   width: 90vw;

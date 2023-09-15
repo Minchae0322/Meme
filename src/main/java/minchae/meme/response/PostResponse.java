@@ -1,5 +1,6 @@
 package minchae.meme.response;
 
+import jakarta.persistence.Lob;
 import jakarta.transaction.Transactional;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,6 +26,7 @@ public class PostResponse {
 
     private String title;
 
+    @Lob
     private String content;
 
     private String author;

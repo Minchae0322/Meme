@@ -83,6 +83,7 @@ public class PostController {
         if (multipartFiles != null) {
             fileService.saveFiles(multipartFiles, post);
         }
+        postService.setHotPost(post.getPostId());
     }
 
 
@@ -102,6 +103,7 @@ public class PostController {
     @GetMapping("/board/posts/list")
     public List<PostResponse> getPostListWherePage(@PageableDefault Page page) {
         return postService.getListWherePage(page);
+
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
@@ -117,7 +119,7 @@ public class PostController {
     }
 
     @GetMapping("/board/posts/hotList")
-    public List<PostResponse> getHotPostList(Page page) {
+    public List<PostResponse> getHotPostList(@PageableDefault Page page) {
         return postService.getHotListWherePage(page);
     }
 

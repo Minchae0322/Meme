@@ -40,9 +40,9 @@ public class Post {
     @NotBlank
     private String title;
 
-    @Column
     @Lob
     @NotBlank
+    @Column(length = 1000)
     private String content;
 
     @Column

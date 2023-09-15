@@ -1,53 +1,147 @@
-<script setup lang="ts">
-
-
-import {onMounted, ref} from "vue";
-import axios from 'axios'
-import router from "@/router/index.js";
-import {useRouter} from "vue-router";
-
-const posts = ref([]);
-router.afterEach(async (to, from) => {
-  {
-    console.log(to.name)
-    console.log(from.name)
-    if(to.name == 'home' && from.name == 'login') {
-      console.log("beforeEach")
-      // redirect the user to the login page
-      location.reload()
-
-
-    }
-
-
-  }
-})
-
-axios.get("http://localhost:8080/home").then((response) => {
-  posts.value.push(response.data)
-})
-
-
-</script>
-
-
 <template>
-<body>
+  <div class="post-list">
+    <ul>
+      <li v-for="post in posts" :key="post.postId" class="post-item">
+        <div class="post-info">
+          <router-link class="title" :to="{ name: 'read', params: { postId: post.postId } }">{{ post.title }}</router-link>
+          <div class="author">{{ post.author }}</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Pagination Controls -->
+  <div class="page">
+    <ul class="pagination model">
+      <li><a href="#" class="first" @click="loadPage(1)">처음 페이지</a></li>
+      <li><a href="#" class="arrow left">이전</a></li>
+      <li><a href="#" class="active num" @click="loadPage(1)">1</a> </li>
+      <li><a href="#" class="num" @click="loadPage(2)">2</a> </li>
+      <li><a href="#" class="num" @click="loadPage(3)">3</a> </li>
+      <li><a href="#" class="num" @click="loadPage(4)">4</a> </li>
+      <li><a href="#" class="num" @click="loadPage(5)">5</a> </li>
+      <li><a href="#" class="arrow right">다음</a></li>
+      <li><a href="#" class="last" @click="loadPage(pageRange.length)">끝 페이지</a></li>
 
 
-</body>
-
+    </ul>
+  </div>
 </template>
 
+<script setup lang="ts">
+import axios from 'axios';
+import { ref, onMounted, computed } from 'vue';
+import { useRoute } from 'vue-router';
+
+const posts = ref([]);
+const page = ref(1); // Initial page number
+const pageSize = 10; // Number of items per page
+
+const totalPosts = ref(0);
+
+const pageRange = computed(() => {
+  const totalPages = Math.ceil(totalPosts.value / pageSize);
+  const range = [];
+  for (let i = 1; i <= totalPages; i++) {
+    range.push(i);
+  }
+  return range;
+});
+
+const loadPage = async (pageNumber) => {
+  if (pageNumber <= 0) return;
+  const route = useRoute();
+  try {
+    const response = await axios.get(`http://localhost:8080/board/posts/hotList?page=${pageNumber}&size=10`);
+    posts.value = response.data;
+    page.value = pageNumber;
+    route.query.page = pageNumber;
+
+  } catch (error) {
+    console.error('Error loading page:', error);
+  }
+};
+
+// Load the initial page when the component is mounted
+onMounted(() => {
+  // Check if the initial page number is provided in the route query
+  const route = useRoute();
+  const initialPage = parseInt(route.query.page);
+  if (!isNaN(initialPage) && initialPage > 0) {
+    loadPage(initialPage);
+  } else {
+    loadPage(1); // Load the first page by default
+  }
+});
+</script>
 
 <style scoped>
-li {
-  margin-bottom: 1rem;
-}
-body {
-  background: white;
-  margin: 0 auto;
-  display: flow;
+.post-info {
+  display: flex;
+  margin: 30px 10px;
 }
 
+.title {
+  width: 70%;
+  margin: 0 50px;
+  padding-left: 100px;
+}
+.author {
+  width: 15%;
+  color: #2c3e50;
+}
+.page {
+  text-align: center;
+  width: 100%; /* Use full width for mobile devices */
+  margin-top: 20px;
+}
+
+.pagination {
+  list-style: none;
+  display: flex; /* Use flexbox for better alignment */
+  justify-content: center; /* Center the pagination controls */
+  padding: 0;
+  margin: 0;
+}
+
+.pagination li {
+  margin: 0 5px; /* Add some space between pagination items */
+}
+
+.pagination a {
+  display: block;
+  font-size: 14px;
+  text-decoration: none;
+  padding: 5px 12px;
+  color: #222222;
+  line-height: 1.5;
+  border: 1px solid #ccc; /* Add a border for better visibility */
+  border-radius: 4px; /* Round the corners */
+  transition: background-color 0.3s; /* Add a smooth hover effect */
+}
+
+li {
+  list-style: none;
+}
+
+.pagination a:hover {
+  background-color: #f0f0f0; /* Change background color on hover */
+}
+
+/* Media query for mobile devices */
+@media screen and (max-width: 480px) {
+  .pagination {
+    flex-direction: column; /* Stack pagination items vertically */
+    align-items: center; /* Center items vertically */
+  }
+
+  .pagination li {
+    margin: 5px 0; /* Add space above and below each item */
+  }
+
+  .pagination a {
+    display: inline-block; /* Remove block display for inline layout */
+    width: auto; /* Let items expand to fit content */
+  }
+}
 </style>

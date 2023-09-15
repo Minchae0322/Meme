@@ -8,8 +8,9 @@
     </div>
 
     <!-- Display content -->
-    <div>
-      <p>{{ post.content }}</p>
+    <div class="content">
+      <p v-html="formattedContent"></p>
+
     </div>
   </div>
 </template>
@@ -32,6 +33,9 @@ onMounted(() => {
 
 }
 )
+
+
+
 const loadImage = function () {
   axios
       .get(`http://localhost:8080/board/posts/${props.postId}`)
@@ -43,6 +47,7 @@ const loadImage = function () {
         console.error('이미지 불러오기 오류:', error);
       });
 }
+
 
 onMounted(() => {
   loadImage();
@@ -62,10 +67,28 @@ const embedUrl = computed(() => {
 // Function to extract the video ID from a YouTube URL
 function extractVideoId(url) {
   const match = url.match(/[?&]v=([^&]+)/);
-  return match && match[1] ? match[1] : '';
+  if (match && match[1]) {
+    return match[1];
+  } else {
+    // If no match is found with the regular expression, try to check for /shorts/ in the URL
+    const shortsMatch = url.match(/\/shorts\/([^/]+)/);
+    return shortsMatch && shortsMatch[1] ? shortsMatch[1] : '';
+  }
 }
+
+const formattedContent = computed(() => {
+  return this.post.value.content.replace(/\n/g, '<br>');
+});
 </script>
 
 <style scoped>
+h1 {
+  color: #222222;
+}
+
+p {
+  color: #222222;
+  font-size: 20px;
+}
 /* 필요한 경우 이미지 뷰어를 스타일링할 CSS를 추가하세요 */
 </style>
