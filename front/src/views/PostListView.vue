@@ -8,25 +8,26 @@
         </div>
       </li>
     </ul>
-    </div>
+  </div>
 
-    <!-- Pagination Controls -->
-    <div class="page">
-      <ul class="pagination model">
-        <li><a href="#" class="first" @click="loadPage(1)">처음 페이지</a></li>
-        <li><a href="#" class="arrow left"></a> </li>
-        <li><a href="#" class="active num" @click="loadPage(1)">1</a> </li>
-        <li><a href="#" class="num" @click="loadPage(2)">2</a> </li>
-        <li><a href="#" class="num" @click="loadPage(3)">3</a> </li>
-        <li><a href="#" class="num" @click="loadPage(4)">4</a> </li>
-        <li><a href="#" class="num" @click="loadPage(5)">5</a> </li>
-        <li><a href="#" class="arrow right"></a> </li>
-        <li><a href="#" class="last" @click="loadPage(pageRange.length)">끝 페이지</a></li>
+  <!-- Pagination Controls -->
+  <div class="page">
+    <ul class="pagination model">
+      <li><a href="#" class="first" @click="loadPage(1)">처음 페이지</a></li>
+      <li><a href="#" class="arrow left">이전</a></li>
+      <li><a href="#" class="active num" @click="loadPage(1)">1</a> </li>
+      <li><a href="#" class="num" @click="loadPage(2)">2</a> </li>
+      <li><a href="#" class="num" @click="loadPage(3)">3</a> </li>
+      <li><a href="#" class="num" @click="loadPage(4)">4</a> </li>
+      <li><a href="#" class="num" @click="loadPage(5)">5</a> </li>
+      <li><a href="#" class="arrow right">다음</a></li>
+      <li><a href="#" class="last" @click="loadPage(pageRange.length)">끝 페이지</a></li>
 
 
-      </ul>
+    </ul>
   </div>
 </template>
+
 
 <script setup lang="ts">
 import axios from 'axios';

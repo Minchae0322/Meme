@@ -115,59 +115,68 @@ function goSignup() {
 
 
 
-<style>
+  <style>
+  .nav_bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 7%;
+    margin-left: 100px;
+    padding: 6px 20px;
+    margin-top: 20px;
+  }
 
+  header {
+    margin: 0;
+  }
 
+  body {
+    background: white;
+    margin: 0 auto;
+    display: flow;
+    min-width: 90vw;
+    width: 90vw;
+  }
 
-.nav_bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 7%;
-  margin-left: 100px;
-  padding: 6px 20px;
-  margin-top: 20px;
+  @media screen and (max-width: 90vw) {
+    /* Add a media query for screens with a maximum width of 768px */
+    body {
+      min-width: 90vw; /* Set a minimum width for the body */
+    }
+  }
 
+  .nav {
+    display: flex;
+    margin-left: 100px;
+    font-size: 20px;
+    width: 60%;
+    list-style: none;
+  }
+
+  .nav li {
+    margin: 9px 20px;
+    background: white;
+    padding: 10px;
+  }
+
+  .nav_logo {
+    font-size: 30px;
+  }
+
+  .nav_link {
+    display: flex;
+  }
+
+  .nav_link {
+    width: 20%;
+    font-size: 12px;
+  }
+
+* {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 500;
 }
 
-header {
-  margin: 0;
-}
 
 
-
-body {
-  background: white;
-  margin: 0 auto;
-  display: flow;
-  width: 90vw;
-}
-
-.nav {
-  display: flex;
-  margin-left: 100px;
-  font-size: 20px;
-  width: 60%;
-  list-style: none;
-}
-
-.nav li{
-  margin: 9px 20px;
-  background: white;
-  padding: 10px;
-}
-
-.nav_logo {
-  font-size: 30px;
-}
-
-.nav_link {
-  display: flex;
-}
-
-.nav_link  {
-  width: 20%;
-  font-size: 12px;
-}
-
-</style>
+  </style>
