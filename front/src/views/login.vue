@@ -84,9 +84,9 @@ const write = function () {
     <header>Login</header>
     <form action="#">
       <input id = "inputUsername" v-model="username" type="text" placeholder="Enter your email">
-      <input type="password" v-model="password" placeholder="Enter your password">
+      <input type="password" @keyup.enter="write" v-model="password" placeholder="Enter your password">
       <a href="#">Forgot password?</a>
-      <input type="button"  @click = "write" class="button" value="Login">
+      <input type="button" @click = "write" class="button" value="Login">
     </form>
     <div class="signup">
         <span class="signup">Don't have an account?

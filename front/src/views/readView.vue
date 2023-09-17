@@ -51,6 +51,7 @@
 
     </div>
   </div>
+    <hr/>
     <div class="contentContainer">
     <!-- Display YouTube video if available -->
     <div class="youtubeContainer" v-if="post && post.youtubeUrl">
@@ -99,12 +100,12 @@ onMounted(() => {
 )
 
 const upRecommendation = function () {
-  axios.post(`/board/user/${props.postId}/up`,{}, {
+  axios.get(`http://localhost:8080/board/user/${props.postId}/up`, {
     headers: {
       'Authorization': localStorage.getItem("accessToken")
     }
   }).then(response => {
-
+    post.value.recommendation = response.data
   }).catch(error => {
     alert("추천을 할 수 없습니다.")
   })
@@ -238,7 +239,7 @@ p {
 }
 .content {
 
-  margin: 30px 10px;
+  margin: 10px 10px;
   padding: 10px;
 }
 
@@ -282,11 +283,15 @@ p {
   display: flex;
   align-items: center;
   color: rgba(0, 0, 0, 0.61);
-  padding: 10px 10px;
+  padding: 12px 20px;
+  font-size: 17px;
+  margin-bottom: 50px;
+  border: 2px solid rgba(7, 7, 7, 0.37);
+  border-radius: 5px;
 }
 
 .upCount {
-  margin-left: 20px;
+  margin-left: 10px;
 }
 .recommendation {
   margin: 0 5px;
@@ -337,6 +342,8 @@ p {
 .upContainer {
   display: flex;
   align-items: center;
+  margin: 30px;
+
 }
 .youtubeContainer {
   margin: 30px 10px;

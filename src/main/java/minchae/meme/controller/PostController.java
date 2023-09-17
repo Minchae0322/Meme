@@ -124,7 +124,7 @@ public class PostController {
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER', 'USER')")
-    @PostMapping("/board/user/{postId}/up")
+    @GetMapping("/board/user/{postId}/up")
     public int upRecommendation(@PathVariable("postId") Long postId, Authentication authentication) {
         return postService.upRecommendation(postId, (User) authentication.getPrincipal());
     }
