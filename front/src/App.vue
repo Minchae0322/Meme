@@ -35,7 +35,7 @@
 
     </div>
     </header>
-
+    <hr/>
 
     <main>
       <child-component @login-success="onLoginSuccess"></child-component>
@@ -128,6 +128,10 @@ function goSignup() {
 
   header {
     margin: 0;
+  }
+
+  hr {
+    margin-top: 10px;
   }
 
   body {

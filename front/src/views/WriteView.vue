@@ -1,3 +1,58 @@
+<template>
+  <div class="container">
+    <h3 class="header">글 작성</h3>
+
+    <div class="file-upload">
+      <input class="upload-name" value="파일선택" disabled="disabled">
+      <label for="ex_filename">업로드</label>
+      <input
+          type="file"
+          id="image"
+          name="image"
+          accept="image/*"
+          @change="uploadImage"
+      />
+    </div>
+
+    <div class="image-preview">
+      <div class="image-container">
+        <img
+            :src="imageUrl"
+            alt="Uploaded Image"
+            class="uploaded-image"
+            v-if="imageUrl"
+        />
+      </div>
+    </div>
+
+    <div class="youtubeUrlContainer">
+      <label class="input-label">YouTube URL</label>
+      <el-input v-model="youtubeUrl" placeholder="YouTube 동영상 URL을 입력하세요"></el-input>
+    </div>
+
+    <div class="form-container">
+      <div class="titleContainer">
+        <label class="input-label">제목</label>
+        <el-input class = "title" v-model="title" placeholder="제목을 입력하세요"></el-input>
+      </div>
+
+      <div class="input-container">
+        <label class="input-label">내용</label>
+        <el-input
+            v-model="content"
+            type="textarea"
+            rows="20"
+            placeholder="내용을 입력하세요"
+        ></el-input>
+      </div>
+
+
+
+      <el-button type="primary" @click="write">글 작성 완료</el-button>
+    </div>
+  </div>
+</template>
+
 <script setup lang = "js">
 import {onMounted, ref, watch} from "vue";
 import axios from 'axios'
@@ -126,90 +181,24 @@ watch(youtubeUrl, extractVideoId);
 
 </script>
 
-<template>
-  <div class="container">
-    <header class="header">글 작성</header>
 
-    <div class="file-upload">
-      <label for="image" class="file-upload-label">
-        📸 Upload Image
-      </label>
-      <input
-          type="file"
-          id="image"
-          name="image"
-          accept="image/*"
-          @change="uploadImage"
-      />
-    </div>
-
-    <div class="image-preview">
-      <div class="image-container">
-        <img
-            :src="imageUrl"
-            alt="Uploaded Image"
-            class="uploaded-image"
-            v-if="imageUrl"
-        />
-      </div>
-    </div>
-
-    <div class="form-container">
-      <div class="input-container">
-        <label class="input-label">제목</label>
-        <el-input v-model="title" placeholder="제목을 입력하세요"></el-input>
-      </div>
-
-      <div class="input-container">
-        <label class="input-label">내용</label>
-        <el-input
-            v-model="content"
-            type="textarea"
-            rows="5"
-            placeholder="내용을 입력하세요"
-        ></el-input>
-      </div>
-
-      <div class="input-container">
-        <label class="input-label">YouTube URL</label>
-        <el-input v-model="youtubeUrl" placeholder="YouTube 동영상 URL을 입력하세요"></el-input>
-      </div>
-
-      <el-button type="primary" @click="write">글 작성 완료</el-button>
-    </div>
-  </div>
-</template>
 
 <style scoped>
 
 .container {
-  margin: 20px;
+  margin: 40px;
   width: 90vw;
-  text-align: center;
 }
 
-.header {
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #333; /* Change the header text color */
-}
 
 .file-upload {
   margin-bottom: 20px;
 }
 
-.file-upload-label {
-  background-color: #4caf50;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-}
+h3 {
+  color: #222222;
+  margin: 20px 10px;
 
-.file-upload-label:hover {
-  background-color: #45a049;
 }
 
 .image-preview {
@@ -231,26 +220,57 @@ watch(youtubeUrl, extractVideoId);
   margin-bottom: 20px;
 }
 
-.input-label {
-  font-size: 18px;
-  font-weight: bold;
-  color: #333; /* Change the label text color */
+
+
+
+
+.file-upload label {
+  display: inline-block;
+  padding: .5em .75em;
+  color: #999;
+  font-size: inherit;
+  line-height: normal;
+  vertical-align: middle;
+  background-color: #fdfdfd;
+  cursor: pointer;
+  border: 1px solid #ebebeb;
+  border-bottom-color: #e2e2e2;
+  border-radius: .25em;
+}
+/* named upload */
+.file-upload .upload-name {
+  display: inline-block;
+  padding: .5em .75em;  /* label의 패딩값과 일치 */
+  font-size: inherit;
+  font-family: inherit;
+  line-height: normal;
+  vertical-align: middle;
+  background-color: #f5f5f5;
+  border: 1px solid #ebebeb;
+  border-bottom-color: #e2e2e2;
+  border-radius: .25em;
+  -webkit-appearance: none; /* 네이티브 외형 감추기 */
+  -moz-appearance: none;
+  appearance: none;
+}
+.file-upload el-input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip:rect(0,0,0,0);
+  border: 0;
+}
+.titleContainer {
+ color: #181818;
+  width:70%;
 }
 
-.el-input {
-  width: 100%;
-  max-width: 500px; /* Limit input width for better readability */
-  font-size: 16px;
+.youtubeUrlContainer {
+  color: #181818;
+  width: 30%;
 }
 
-.el-button {
-  margin-top: 20px;
-  background-color: #4caf50;
-  color: white;
-  font-weight: bold;
-}
-
-.el-button:hover {
-  background-color: #45a049;
-}
 </style>

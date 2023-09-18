@@ -35,7 +35,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
 
-    @Column
+    @Column(length = 100)
     @Lob
     @NotBlank
     private String title;

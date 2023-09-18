@@ -3,9 +3,42 @@
     <ul>
       <li v-for="post in posts" :key="post.postId" class="post-item">
         <div class="post-info">
-          <router-link class="title" :to="{ name: 'read', params: { postId: post.postId } }">{{ post.title }}</router-link>
-          <div class="author">{{ post.author }}</div>
-        </div>
+          <router-link class="titleContainer" :to="{ name: 'read', params: { postId: post.postId } }">
+            <div class="title">{{ truncateTitle(post.title) }}</div>
+            <div class="commentContainer">
+              <font-awesome-icon class="commentIcon" icon="fa-regular fa-comment" />
+              <div class="comment">{{ post.comments.length }}</div>
+
+
+            </div>
+          </router-link>
+          <div class = "infoContainer">
+            <div class="authorContainer">
+              <div class="authorTitle">작성자 : </div>
+              <div class="author">{{post.author}}</div>
+            </div>
+            <div class="viewAndUp">
+
+
+
+            <div class="viewContainer">
+              <font-awesome-icon class="viewIcon" icon="fa-solid fa-eye" />
+              <div class="view">{{post.views}}</div>
+
+
+            </div>
+
+
+            <div class="recommendationContainer">
+              <font-awesome-icon class="recommendationIcon" icon="fa-regular fa-thumbs-up" />
+              <div class="recommendation">{{post.recommendation}}</div>
+
+
+            </div>
+            </div>
+          </div>
+          </div>
+
       </li>
     </ul>
   </div>
@@ -33,6 +66,7 @@
 import axios from 'axios';
 import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 const posts = ref([]);
 const page = ref(1); // Initial page number
@@ -48,6 +82,20 @@ const pageRange = computed(() => {
   }
   return range;
 });
+
+const commentSize = ref("")
+
+
+const truncateTitle = (title) => {
+  if (title.length > 30) {
+    return title.slice(0, 37) + '...';
+  }
+  return title;
+};
+const getCommentSize = function (post) {
+  commentSize.value = post.value.comments.length
+  return commentSize
+};
 
 const loadPage = async (pageNumber) => {
   if (pageNumber <= 0) return;
@@ -82,15 +130,41 @@ onMounted(() => {
   margin: 30px 10px;
 }
 
+
+.titleContainer {
+  width: 80%;
+}
+
+.commentContainer {
+  display: flex;
+  color: #333333;
+  font-size: 11px;
+  align-items: center;
+  margin-left: 5px;
+
+}
+
+.comment {
+  margin: 0 5px;
+
+}
+
+.commentIcon {
+  margin-left: 1px;
+}
 .title {
-  width: 70%;
-  margin: 0 50px;
-  padding-left: 100px;
+  margin: 0 20px;
+  padding-left: 50px;
+  white-space: nowrap; /* Prevent line breaks */
+  overflow: hidden; /* Hide overflowing text */
+  text-overflow: ellipsis; /* Display ellipsis for overflowed text */
 }
 .author {
+
   width: 15%;
-  color: #2c3e50;
-  margin-left: auto;
+  margin-left: 5px;
+  font-size: 15px;
+  color: #157e7e;
 }
 .page {
   text-align: center;
@@ -106,8 +180,47 @@ onMounted(() => {
   margin: 0;
 }
 
+.viewContainer {
+  display: flex;
+  color: rgba(51, 51, 51, 0.58);
+  font-size: 12px;
+  align-items: center;
+  margin-left: 5px;
+
+
+}
+
+.recommendationContainer {
+  display: flex;
+  color: rgba(51, 51, 51, 0.58);
+  font-size: 12px;
+  align-items: center;
+  margin-left: 10px
+
+
+}
+
+.recommendation {
+  margin-left: 5px;
+}
+.view {
+  margin: 0 5px;
+
+}
+
 .pagination li {
   margin: 0 5px; /* Add some space between pagination items */
+}
+
+
+.authorContainer {
+  display: flex;
+  color: #333333;
+  margin-bottom: 10px;
+  font-size: 12px;
+  align-items: center;
+  margin-left: auto;
+
 }
 
 .pagination a {
@@ -128,6 +241,20 @@ li {
 
 .pagination a:hover {
   background-color: #f0f0f0; /* Change background color on hover */
+}
+
+.titleContainer {
+  display: flex;
+}
+
+.infoContainer {
+  display: flow;
+  margin-left: 10px;
+}
+
+.viewAndUp {
+  display: flex;
+  font-size: 10px;
 }
 
 /* Media query for mobile devices */
