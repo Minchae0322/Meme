@@ -12,5 +12,7 @@ public interface UserService {
 
     void changeNickName(Long userId, String nickName);
 
+    boolean isExistEmail(String email);
+
 
 }

@@ -57,3 +57,24 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzc3MiLCJhdXRoIjoiVVNFUiIsImV4cCI6
 
 GET http://localhost:8080/board/posts/218
 Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzc3MiLCJhdXRoIjoiVVNFUiIsImV4cCI6MTY5NTExOTE0Mn0.LcTzX27_J0o00YxNIR-oJlqjUm3izXAwfkHPqcx6uwI
+
+
+###
+
+POST http://localhost:8080/auth/sendMail
+Content-Type:application/json
+
+{
+  "email": "jmcabc0322@gamil.com"
+
+}
+
+###
+POST http://localhost:8080/auth/mailVerify
+Content-Type:application/json
+
+{
+  "email": "jmcabc0322@gamil.com",
+  "verificationCode" : "735554"
+
+}

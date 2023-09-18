@@ -79,4 +79,14 @@ public class ExceptionController {
                 .message(e.getMessage())
                 .build();
     }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IsExistEmail.class)
+    public ErrorResponse isWrongIdAndPassword(IsExistEmail e) {
+        return ErrorResponse.builder()
+                .code("400")
+                .message(e.getMessage())
+                .build();
+    }
 }

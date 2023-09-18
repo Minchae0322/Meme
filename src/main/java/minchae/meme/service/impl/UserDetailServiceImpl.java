@@ -64,4 +64,9 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
                 .orElseThrow(IsNotExistUser::new);
         user.setNickName(nickName);
     }
+
+    @Override
+    public boolean isExistEmail(String email) {
+        return userRepository.findByEmail(email).isPresent();
+    }
 }

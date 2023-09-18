@@ -4,7 +4,10 @@ import lombok.RequiredArgsConstructor;
 import minchae.meme.auth.provider.JwtTokenProvider;
 import minchae.meme.entity.TokenInfo;
 import minchae.meme.entity.User;
+import minchae.meme.exception.IsExistEmail;
+import minchae.meme.request.EmailRequest;
 import minchae.meme.request.SignupForm;
+import minchae.meme.service.MailService;
 import minchae.meme.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,6 +24,8 @@ public class AuthController {
 
     private final UserService userService;
 
+    private final MailService mailService;
+
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
@@ -29,6 +34,20 @@ public class AuthController {
 
     }
 
+    @PostMapping("/auth/sendMail")
+    public void sendMail(@RequestBody() EmailRequest request) {
+        if (userService.isExistEmail(request.getEmail())) {
+            throw new IsExistEmail();
+        }
+        mailService.sendMail(request.getEmail());
+    }
+
+    @PostMapping("/auth/mailVerify")
+    public void verifyMail(@RequestBody() EmailRequest request) {
+        if (!mailService.isVerifyEmailAndCode(request)) {
+            throw new IllegalArgumentException();
+        }
+    }
 
     @PostMapping("/auth/signup")
     public void signup(@RequestBody SignupForm signupForm) {

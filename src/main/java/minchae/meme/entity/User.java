@@ -11,6 +11,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import minchae.meme.auth.CustomAuthorityDeserializer;
 import minchae.meme.entity.enumClass.Authorization;
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,12 +33,14 @@ public class User implements UserDetails {
     private Long id;
 
     @NotBlank
+    @UniqueElements
     private String username;
 
     @NotBlank
     private String password;
 
     @NotBlank
+    @UniqueElements
     @Email
     private String email;
 

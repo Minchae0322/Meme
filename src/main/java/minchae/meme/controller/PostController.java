@@ -120,6 +120,7 @@ public class PostController {
 
     @GetMapping("/board/posts/hotList")
     public List<PostResponse> getHotPostList(@PageableDefault Page page) {
+
         return postService.getHotListWherePage(page);
     }
 
