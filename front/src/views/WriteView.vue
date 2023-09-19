@@ -2,28 +2,22 @@
   <div class="container">
     <h3 class="header">글 작성</h3>
 
-    <div class="file-upload">
-      <input class="upload-name" value="파일선택" disabled="disabled">
-      <label for="ex_filename">업로드</label>
-      <input
-          type="file"
-          id="image"
-          name="image"
-          accept="image/*"
-          @change="uploadImage"
-      />
-    </div>
-
-    <div class="image-preview">
-      <div class="image-container">
-        <img
-            :src="imageUrl"
-            alt="Uploaded Image"
-            class="uploaded-image"
-            v-if="imageUrl"
-        />
-      </div>
-    </div>
+    <el-upload
+        v-model:file-list="fileList"
+        multiple
+        :auto-upload="false"
+        class="upload-demo"
+        :on-remove="handleRemove"
+        :limit="3"
+        list-type="picture"
+    >
+      <el-button type="primary">Click to upload</el-button>
+      <template #tip>
+        <div class="el-upload__tip">
+          jpg/png files with a size less than 500kb
+        </div>
+      </template>
+    </el-upload>
 
     <div class="youtubeUrlContainer">
       <label class="input-label">YouTube URL</label>
@@ -94,13 +88,37 @@ const checkLogin = function () {
   }
 };
 
+
+const fileList = ref([]);
+const handleChange = (file, fileList) => {
+  // 파일 업로드 시 fileList에 추가
+  fileList.push(file);
+};
+const handleRemove = (file, fileList) => {
+  // 파일 삭제 시 fileList에서 해당 파일 제거
+  const index = fileList.indexOf(file);
+  if (index !== -1) {
+    fileList.splice(index, 1);
+  }
+  console.log("Previewing file:", fileList);
+};
+
+const handlePreview = (file) => {
+  console.log(file);
+};
 const frm = new FormData();
 const write = function () {
-  const file = document.querySelector("#image").files[0];
+  // const file = fileList.value[0];
+
+  // 새로운 코드: fileList.value를 사용하여 파일 가져오기
+  const files = fileList.value.map((item) => item.raw);
+  console.log(files)
   let params = JSON.stringify({ title: title.value, content: content.value });
 
   frm.append("post", new Blob([JSON.stringify({ title: title.value, content: content.value, postType: "ALL", youtubeUrl: youtubeUrl.value })], { type: "application/json" }));
-  frm.append("imageFile", file);
+  files.forEach((file) => {
+    frm.append("imageFile", file);
+  });
 
   axios
       .post("http://localhost:8080/board/user/writePost", frm, {
@@ -121,41 +139,6 @@ const write = function () {
 }
 
 
-const submit = document.getElementById("submitButton");
-//Submit 버튼 클릭시 이미지 보여주기
-
-function showImage() {
-  const newImage = document.getElementById('image-show').lastElementChild;
-
-  //이미지는 화면에 나타나고
-  newImage.style.visibility = "visible";
-
-  //이미지 업로드 버튼은 숨겨진다
-  document.getElementById('image-upload').style.visibility = 'hidden';
-
-  document.getElementById('fileName').textContent = null;     //기존 파일 이름 지우기
-}
-
-const upload = function (image) {
-
-  const file = document.querySelector("#image").files[0]
-
-  const newImage = document.createElement("img");
-  newImage.setAttribute("class", 'img');
-
-  //이미지 source 가져오기
-  newImage.src = URL.createObjectURL(file);
-
-  newImage.style.width = "70%";
-  newImage.style.height = "70%";
-  newImage.style.visibility = "hidden";   //버튼을 누르기 전까지는 이미지를 숨긴다
-  newImage.style.objectFit = "contain";
-
-  //이미지를 image-show div에 추가
-  const container = document.getElementById('image-show');
-  container.appendChild(newImage);
-
-};
 
 
 // ...

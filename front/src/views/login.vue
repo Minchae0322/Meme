@@ -83,8 +83,8 @@ const write = function () {
   <div class="login form">
     <header>Login</header>
     <form action="#">
-      <input id = "inputUsername" v-model="username" type="text" placeholder="Enter your email">
-      <input type="password" @keyup.enter="write" v-model="password" placeholder="Enter your password">
+      <input id = "inputUsername" v-model="username" type="text" placeholder="아이디를 입력해주세요">
+      <input type="password" @keyup.enter="write" v-model="password" placeholder="비밀번호를 입력해주세요">
       <a href="#">Forgot password?</a>
       <input type="button" @click = "write" class="button" value="Login">
     </form>

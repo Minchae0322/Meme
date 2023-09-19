@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -25,7 +26,7 @@ public class MailAuthentication {
 
     private String verificationCode;
 
-    private Date createdTime;
+    private Date createdTime = new Date();
 
     @Builder
     public MailAuthentication(Long id, String email, String verificationCode) {

@@ -33,15 +33,15 @@ public class User implements UserDetails {
     private Long id;
 
     @NotBlank
-    @UniqueElements
+    @Column(unique = true)
     private String username;
 
     @NotBlank
     private String password;
 
     @NotBlank
-    @UniqueElements
     @Email
+    @Column(unique = true)
     private String email;
 
     private String nickName;
