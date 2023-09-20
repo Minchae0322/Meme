@@ -61,8 +61,8 @@
 
     <!-- Display content -->
     <div class="content">
-      <div v-for="(imageData, index) in images" :key="index" class="imageContainer">
-        <img :src="getImageSrc(imageData)" alt="Image" />
+      <div v-for="(imageData, index) in images" :key="index" class="imageContainer" >
+        <img :src="getImageSrc(imageData)" alt="Image" style="max-width: 100%; max-height: 250px;" />
       </div>
       <p v-html="formattedContent"></p>
 
@@ -295,6 +295,7 @@ p {
 }
 .imageContainer {
   margin-bottom: 20px;
+
 }
 .viewContainer {
   display: flex;
