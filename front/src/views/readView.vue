@@ -12,8 +12,6 @@
 
 
     <div class="postInfo">
-
-
       <!-- Display createTime as a localized date and time -->
       <div class="createdTime" v-if="post.createdTime">
         {{ formatCreateTime }}
@@ -51,6 +49,9 @@
 
     </div>
   </div>
+
+
+
     <hr/>
     <div class="contentContainer">
     <!-- Display YouTube video if available -->
@@ -60,6 +61,9 @@
 
     <!-- Display content -->
     <div class="content">
+      <div >
+        <img :src="imageSrc" alt="Image" />
+      </div>
       <p v-html="formattedContent"></p>
 
     </div>
@@ -69,7 +73,7 @@
     <div class="upContainer">
       <a class="up" @click = "upRecommendation">
       <font-awesome-icon  icon="fa-regular fa-thumbs-up" />
-      <div class="upCount">{{post.recommendation}}       </div>
+      <div class="upCount">{{post.recommendation}}</div>
       </a>
     </div>
   </div>
@@ -84,7 +88,7 @@ import { useRouter } from "vue-router";
 
 const router = useRouter()
 const post = ref({});
-const imageSrc = ref(''); // Set a default image source or placeholder
+const imageSrc = ref(""); // Set a default image source or placeholder
 const props = defineProps({
   postId: {
     type: Number,
@@ -98,6 +102,48 @@ onMounted(() => {
 
 }
 )
+
+/*const getImageSrc =  function (imageData) {
+  console.log(imageData[2])
+  const imagesData = btoa(new Uint8Array(imageData[2]).reduce(
+      (data, byte) => data + String.fromCharCode(byte),''
+  ))
+  // Create a data URL for the image data
+  return `data:image/jpeg;base64,${imagesData}`;
+}*/
+/*const fetchImages = function () {
+  axios
+      .get(`http://localhost:8080/board/posts/${props.postId}/image`, {
+
+      })
+      .then((response) => {
+        images.value = response.data;
+        console.log(images.value[0])
+      })
+      .catch((error) => {
+        console.error('Error fetching images:', error);
+      });
+}*/
+const fetchImage = function () {
+  axios
+      .get(`http://localhost:8080/board/posts/${props.postId}/image`, {
+        responseType: 'arraybuffer',
+      })
+      .then((response) => {
+        const imageData = btoa(
+            new Uint8Array(response.data).reduce(
+                (data, byte) => data + String.fromCharCode(byte),
+                ''
+            )
+        );
+        // Assuming you have a data property called 'imageSrc'
+        imageSrc.value = `data:image/jpeg;base64,${imageData}`;
+      })
+      .catch((error) => {
+        console.error('이미지 불러오기 오류:', error);
+      });
+};
+
 
 const upRecommendation = function () {
   axios.get(`http://localhost:8080/board/user/${props.postId}/up`, {
@@ -138,6 +184,7 @@ const loadPost = function () {
         // Assuming the response contains the post object with youtubeUrl
         post.value = response.data;
         commentSize.value = post.value.comments.length
+        fetchImage()
       })
       .catch((error) => {
         console.error('이미지 불러오기 오류:', error);
@@ -242,7 +289,9 @@ p {
   margin: 10px 10px;
   padding: 10px;
 }
-
+.imageContainer {
+  margin-bottom: 20px;
+}
 .viewContainer {
   display: flex;
   color: #333333;
@@ -257,6 +306,8 @@ p {
   margin: 0 5px;
 
 }
+
+
 
 
 .viewTitle {

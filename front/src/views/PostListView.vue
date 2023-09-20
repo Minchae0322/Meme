@@ -133,6 +133,7 @@ onMounted(() => {
 
 .titleContainer {
   width: 80%;
+  align-items: center;
 }
 
 .commentContainer {
@@ -140,7 +141,6 @@ onMounted(() => {
   color: #333333;
   font-size: 11px;
   align-items: center;
-  margin-left: 5px;
 
 }
 
@@ -150,11 +150,13 @@ onMounted(() => {
 }
 
 .commentIcon {
-  margin-left: 1px;
+  margin-left: 0;
 }
 .title {
   margin: 0 20px;
   padding-left: 50px;
+  font-size: 20px;
+
   white-space: nowrap; /* Prevent line breaks */
   overflow: hidden; /* Hide overflowing text */
   text-overflow: ellipsis; /* Display ellipsis for overflowed text */

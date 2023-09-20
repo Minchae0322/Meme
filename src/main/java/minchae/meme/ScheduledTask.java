@@ -15,9 +15,11 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class ScheduledTask {
 
-    private final EntityManager entityManager;
+
+    @Autowired
     private MailRepository mailRepository; // 해당 레포지토리에는 Entity를 조작하는 메서드가 있어야 합니다.
 
+    @Transactional
     @Scheduled(fixedRate = 5 * 60 * 1000) // 24시간마다 실행
     public void deleteOldData() {
         Date currentTime = new Date();
