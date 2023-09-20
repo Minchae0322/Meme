@@ -131,16 +131,22 @@ const fetchImage = function () {
       .get(`http://localhost:8080/board/posts/${props.postId}/image`, {
       })
       .then((response) => {
-
-        images.value = response.data
+        console.log(response.data.imageData)
+        images.value = response.data.imageData
         // Assuming you have a data property called 'imageSrc'
         imageSrc.value = `data:image/jpeg;base64,${images.value.imageData[2]}`;
-        console.log(imageSrc.value)
+        //console.log(imageSrc.value)
       })
       .catch((error) => {
-        console.error('이미지 불러오기 오류:', error);
+       // console.error('이미지 불러오기 오류:', error);
       });
 };
+
+const getImageSrc = function (imageData) {
+  //console.log(imageData)
+  // Create a data URL for the image data
+  return `data:image/jpeg;base64,${imageData}`;
+}
 
 
 const upRecommendation = function () {
