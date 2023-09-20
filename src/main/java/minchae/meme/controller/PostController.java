@@ -9,6 +9,7 @@ import minchae.meme.repository.UserRepository;
 import minchae.meme.request.Page;
 import minchae.meme.request.PostCreate;
 import minchae.meme.request.PostEdit;
+import minchae.meme.response.ImageResponse;
 import minchae.meme.response.PostResponse;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.service.FileService;
@@ -26,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -48,7 +50,7 @@ public class PostController {
         return postService.get(postId);
     }
 
-    @GetMapping("/board/posts/{postId}/image")
+    /*@GetMapping("/board/posts/{postId}/image")
     public ResponseEntity<byte[]> getPostImage(@PathVariable("postId") Long postId) throws IOException {
         List<? extends MultipartFile> imageFiles = fileService.getFiles(postId).getMultipartFileList();
 
@@ -70,6 +72,26 @@ public class PostController {
         headers.setContentLength(combinedImageData.length);
 
         return new ResponseEntity<>(combinedImageData, headers, HttpStatus.OK);
+    }*/
+
+    @GetMapping("/board/posts/{postId}/image")
+    public ImageResponse getPostImage(@PathVariable("postId") Long postId) throws IOException {
+        List<? extends MultipartFile> imageFiles = fileService.getFiles(postId).getMultipartFileList();
+
+
+        List<byte[]> imageBaosData = new ArrayList<>();
+        for (MultipartFile imageFile : imageFiles) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            // 각 이미지 파일의 바이트 데이터를 합칩니다.
+            byte[] imageData = imageFile.getBytes();
+            baos.write(imageData);
+
+            imageBaosData.add(baos.toByteArray());
+        }
+
+        return ImageResponse.builder()
+                .imageData(imageBaosData)
+                .build();
     }
 
 

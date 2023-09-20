@@ -61,8 +61,8 @@
 
     <!-- Display content -->
     <div class="content">
-      <div >
-        <img :src="imageSrc" alt="Image" />
+      <div v-for="(imageData, index) in images" :key="index" class="imageContainer">
+        <img :src="getImageSrc(imageData)" alt="Image" />
       </div>
       <p v-html="formattedContent"></p>
 
@@ -124,20 +124,18 @@ onMounted(() => {
         console.error('Error fetching images:', error);
       });
 }*/
+
+const images = ref([])
 const fetchImage = function () {
   axios
       .get(`http://localhost:8080/board/posts/${props.postId}/image`, {
-        responseType: 'arraybuffer',
       })
       .then((response) => {
-        const imageData = btoa(
-            new Uint8Array(response.data).reduce(
-                (data, byte) => data + String.fromCharCode(byte),
-                ''
-            )
-        );
+
+        images.value = response.data
         // Assuming you have a data property called 'imageSrc'
-        imageSrc.value = `data:image/jpeg;base64,${imageData}`;
+        imageSrc.value = `data:image/jpeg;base64,${images.value.imageData[2]}`;
+        console.log(imageSrc.value)
       })
       .catch((error) => {
         console.error('이미지 불러오기 오류:', error);
