@@ -11,13 +11,11 @@ import minchae.meme.entity.User;
 @Setter
 @NoArgsConstructor
 public class CommentCreate {
-    private Post post;
     private String comment;
     private User user;
 
     @Builder
-    public CommentCreate(Post post, String comment, User user) {
-        this.post = post;
+    public CommentCreate(String comment, User user) {
         this.comment = comment;
         this.user = user;
     }

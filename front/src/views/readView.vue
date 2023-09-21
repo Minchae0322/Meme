@@ -47,6 +47,8 @@
         <a  @click = "deletePost">삭제</a>
       </div>
 
+
+
     </div>
   </div>
 
@@ -56,13 +58,13 @@
     <div class="contentContainer">
     <!-- Display YouTube video if available -->
     <div class="youtubeContainer" v-if="post && post.youtubeUrl">
-      <iframe width="560" height="315" :src="embedUrl" frameborder="0" allowfullscreen></iframe>
+      <iframe width="720" height="405" :src="embedUrl" frameborder="0" allowfullscreen></iframe>
     </div>
 
     <!-- Display content -->
     <div class="content">
       <div v-for="(imageData, index) in images" :key="index" class="imageContainer" >
-        <img :src="getImageSrc(imageData)" alt="Image" style="max-width: 100%; max-height: 250px;" />
+        <img :src="getImageSrc(imageData)" alt="Image" width="1375" height="720" />
       </div>
       <p v-html="formattedContent"></p>
 
@@ -76,6 +78,21 @@
       <div class="upCount">{{post.recommendation}}</div>
       </a>
     </div>
+
+<!--     Comment Input Field
+    <div class="commentInputContainer">
+      <el-input class="writeComment" v-model="commentText" type="textarea" placeholder="댓글을 입력하세요"
+      rows="5"/>
+      <el-button @click="submitComment">댓글 작성</el-button>
+    </div>
+
+     List of Comments
+    <div class="commentListContainer">
+      <div v-for="(comment, index) in post.comments" :key="index" class="commentItem">
+        <div class="commentAuthor">{{ comment.author }}</div>
+        <div class="commentText">{{ comment.text }}</div>
+      </div>
+    </div>-->
   </div>
 </template>
 
@@ -95,36 +112,13 @@ const props = defineProps({
     required:true,
   }
 })
-
-const commentSize = ref("")
+const commentText = ref(""); // Data property to store the comment text
+const commentSize = ref("");
 
 onMounted(() => {
 
 }
 )
-
-/*const getImageSrc =  function (imageData) {
-  console.log(imageData[2])
-  const imagesData = btoa(new Uint8Array(imageData[2]).reduce(
-      (data, byte) => data + String.fromCharCode(byte),''
-  ))
-  // Create a data URL for the image data
-  return `data:image/jpeg;base64,${imagesData}`;
-}*/
-/*const fetchImages = function () {
-  axios
-      .get(`http://localhost:8080/board/posts/${props.postId}/image`, {
-
-      })
-      .then((response) => {
-        images.value = response.data;
-        console.log(images.value[0])
-      })
-      .catch((error) => {
-        console.error('Error fetching images:', error);
-      });
-}*/
-
 const images = ref([])
 const fetchImage = function () {
   axios
@@ -141,7 +135,20 @@ const fetchImage = function () {
        // console.error('이미지 불러오기 오류:', error);
       });
 };
+const submitComment = function () {
+  if (commentText.value.trim() === "") {
+    alert("공백일 수 없습니다.")
+    return null;
+  }
 
+  axios.post(`http://localhost:8080/board/user/${props.postId}/comments`, {
+        comment: commentText.value
+      }, {
+        headers: {
+          'Authorization': localStorage.getItem("accessToken")
+        }
+      })
+};
 const getImageSrc = function (imageData) {
   //console.log(imageData)
   // Create a data URL for the image data
@@ -242,7 +249,14 @@ const formatCreateTime = computed(() => {
 
 
 <style scoped>
+.commentInputContainer {
+  display: flex;
+  margin: 30px 0;
+}
 
+.commentText {
+  font-size: 14px;
+}
 
 h1 {
   color: #222222;
@@ -341,7 +355,7 @@ p {
   color: rgba(0, 0, 0, 0.61);
   padding: 12px 20px;
   font-size: 17px;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
   border: 2px solid rgba(7, 7, 7, 0.37);
   border-radius: 5px;
 }
@@ -404,6 +418,7 @@ p {
 .youtubeContainer {
   margin: 30px 10px;
   padding: 10px;
+
 }
 
 
@@ -416,6 +431,11 @@ p {
 .author {
   color: #157e7e;
   margin: 0 10px;
+}
+
+
+.writeComment {
+  width: 80%;
 }
 /* 필요한 경우 이미지 뷰어를 스타일링할 CSS를 추가하세요 */
 </style>

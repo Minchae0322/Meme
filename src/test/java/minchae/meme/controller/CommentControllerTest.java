@@ -166,13 +166,13 @@ class CommentControllerTest {
         postRepository.save(post);
 
         CommentCreate comment = CommentCreate.builder()
-                .post(post)
+
                 .comment("댓글입니다")
                 .user(user)
                 .build();
 
         CommentCreate comment2 = CommentCreate.builder()
-                .post(post)
+
                 .comment("댓글입니다2")
                 .user(user)
                 .build();

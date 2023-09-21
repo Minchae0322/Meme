@@ -14,7 +14,7 @@ public interface CommentService {
 
     void delete(Long postId, Long commentId);
 
-    void write(Post post, CommentCreate commentCreate);
+    void write(Long postId, CommentCreate commentCreate);
 
     CommentResponse update(Long commentId, CommentEdit commentEdit);
 
@@ -24,5 +24,4 @@ public interface CommentService {
 
     CommentResponse upBad(Long commentId);*/
 
-    void writeCommentList(List<CommentCreate> commentCreateList);
 }

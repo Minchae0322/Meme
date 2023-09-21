@@ -5,7 +5,9 @@ import minchae.meme.entity.Comment;
 import minchae.meme.entity.Post;
 import minchae.meme.entity.User;
 import minchae.meme.entity.enumClass.Authorization;
+import minchae.meme.repository.MailRepository;
 import minchae.meme.repository.UserRepository;
+import minchae.meme.request.EmailRequest;
 import minchae.meme.request.Login;
 import minchae.meme.request.SignupForm;
 import minchae.meme.service.UserService;
@@ -44,6 +46,9 @@ class AuthControllerTest {
     private UserRepository userRepository;
 
     @Autowired
+    private MailRepository mailRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     private ObjectMapper objectMapper = new ObjectMapper();
@@ -54,6 +59,7 @@ class AuthControllerTest {
     @BeforeEach
     public void before() {
         userRepository.deleteAll();
+        mailRepository.deleteAll();
     }
 
     @Test
@@ -73,6 +79,23 @@ class AuthControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
         assertEquals(1, userRepository.count());
+    }
+
+
+    @Test
+    @DisplayName("이메일 발송")
+    public void sendMail() throws Exception {
+        EmailRequest emailRequest = EmailRequest.builder()
+                .email("jmcabc1216@gmail.com")
+                .build();
+
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/sendMail")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(emailRequest)))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        assertEquals(1, mailRepository.count());
     }
 
 

@@ -98,6 +98,7 @@ const write = function () {
     }).then((response) => {
     }).catch(error => {
       alert("인증번호가 다릅니다, 다시 확인해주세요")
+      return null;
     });
 
     axios.post("http://localhost:8080/auth/signup", {

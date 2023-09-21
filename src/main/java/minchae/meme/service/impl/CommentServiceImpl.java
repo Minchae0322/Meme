@@ -53,7 +53,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public void write(Post post, CommentCreate commentCreate) {
+    public void write(Long postId, CommentCreate commentCreate) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("이미 삭제된 글입니다"));
+
         CommentFunction commentFunction = CommentFunction.builder().build();
         Comment comment = Comment.builder()
                 .post(post)
@@ -100,11 +103,5 @@ public class CommentServiceImpl implements CommentService {
         return CommentResponse.builder().build().commentToCommentResponse(comment);
     }*/
 
-    @Override
-    @Transactional
-    public void writeCommentList(List<CommentCreate> commentCreateList) {
-        for (CommentCreate commentCreate : commentCreateList) {
-            write(commentCreate.getPost(), commentCreate);
-        }
-    }
+
 }

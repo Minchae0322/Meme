@@ -2,6 +2,7 @@ package minchae.meme.controller;
 
 import lombok.RequiredArgsConstructor;
 import minchae.meme.entity.Post;
+import minchae.meme.entity.User;
 import minchae.meme.repository.CommentRepository;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.request.CommentCreate;
@@ -9,6 +10,7 @@ import minchae.meme.request.CommentEdit;
 import minchae.meme.request.CommentVo;
 import minchae.meme.response.CommentResponse;
 import minchae.meme.service.CommentService;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,11 +35,11 @@ public class CommentController {
         return commentService.getComment(commentId);
     }
 
-    @PostMapping("/board/posts/{postId}/comments")
-    public void writeComment(@PathVariable Long postId, @RequestBody CommentCreate commentCreate) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("이미 삭제된 글입니다"));
-        commentService.write(post, commentCreate);
+    @PostMapping("/board/user/{postId}/comments")
+    public void writeComment(Authentication authentication, @PathVariable Long postId, @RequestBody CommentCreate commentCreate) {
+        User user = (User) authentication.getPrincipal();
+        commentCreate.setUser(user);
+        commentService.write(postId, commentCreate);
     }
 
     /*@PostMapping("/board/posts/{commentId}/up")
@@ -51,8 +53,8 @@ public class CommentController {
     }*/
 
 
-    @PatchMapping("/board/posts/{postId}/comments/{commentId}")
-    public CommentResponse writeComment(@PathVariable Long postId, @PathVariable Long commentId, @RequestBody CommentEdit commentEdit) {
+    @PatchMapping("/board/posts/comments/{commentId}")
+    public CommentResponse updateComment(@PathVariable Long commentId, @RequestBody CommentEdit commentEdit) {
         return commentService.update(commentId, commentEdit);
     }
 
@@ -61,11 +63,6 @@ public class CommentController {
         commentService.delete(postId, commentId);
     }
 
-
-    @PostMapping("/board/posts/{postId}/commentList")
-    public void writeCommentList(@PathVariable Long postId, @RequestBody CommentVo commentVo) {
-        commentService.writeCommentList(commentVo.getCommentCreateList());
-    }
 
     @DeleteMapping("/board/posts/{postId}/commentList")
     public void deleteCommentList(@PathVariable Long postId) {

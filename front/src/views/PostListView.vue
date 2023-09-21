@@ -132,8 +132,9 @@ onMounted(() => {
 
 
 .titleContainer {
-  width: 80%;
+  width: 75%;
   align-items: center;
+  padding-left: 150px;
 }
 
 .commentContainer {
@@ -185,7 +186,7 @@ onMounted(() => {
 .viewContainer {
   display: flex;
   color: rgba(51, 51, 51, 0.58);
-  font-size: 12px;
+  font-size: 14px;
   align-items: center;
   margin-left: 5px;
 
@@ -195,7 +196,7 @@ onMounted(() => {
 .recommendationContainer {
   display: flex;
   color: rgba(51, 51, 51, 0.58);
-  font-size: 12px;
+  font-size: 14px;
   align-items: center;
   margin-left: 10px
 

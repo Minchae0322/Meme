@@ -23,6 +23,7 @@ public class ScheduledTask {
     @Scheduled(fixedRate = 5 * 60 * 1000) // 24시간마다 실행
     public void deleteOldData() {
         Date currentTime = new Date();
-        mailRepository.deleteByCreatedTimeBefore(currentTime);
+        Date fiveMinuitBefore = new Date(currentTime.getTime() - 5 * 1000);
+        mailRepository.deleteByCreatedTimeBefore(fiveMinuitBefore);
     }
 }

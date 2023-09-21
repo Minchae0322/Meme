@@ -14,12 +14,8 @@ import minchae.meme.response.PostResponse;
 import minchae.meme.repository.PostRepository;
 import minchae.meme.service.FileService;
 import minchae.meme.service.impl.PostServiceImpl;
-import org.hibernate.annotations.Fetch;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -50,32 +46,9 @@ public class PostController {
         return postService.get(postId);
     }
 
-    /*@GetMapping("/board/posts/{postId}/image")
-    public ResponseEntity<byte[]> getPostImage(@PathVariable("postId") Long postId) throws IOException {
-        List<? extends MultipartFile> imageFiles = fileService.getFiles(postId).getMultipartFileList();
-
-        if (imageFiles.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        for (MultipartFile imageFile : imageFiles) {
-            // 각 이미지 파일의 바이트 데이터를 합칩니다.
-            byte[] imageData = imageFile.getBytes();
-            baos.write(imageData);
-        }
-
-        byte[] combinedImageData = baos.toByteArray();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_JPEG); // 이미지인 경우에는 해당 MIME 타입을 설정합니다.
-        headers.setContentLength(combinedImageData.length);
-
-        return new ResponseEntity<>(combinedImageData, headers, HttpStatus.OK);
-    }*/
 
     @GetMapping("/board/posts/{postId}/image")
-    public ImageResponse getPostImage(@PathVariable("postId") Long postId) throws IOException {
+    public ImageResponse getPostImages(@PathVariable("postId") Long postId) throws IOException {
         List<? extends MultipartFile> imageFiles = fileService.getFiles(postId).getMultipartFileList();
 
 
@@ -93,8 +66,6 @@ public class PostController {
                 .imageData(imageBaosData)
                 .build();
     }
-
-
 
 
     @PreAuthorize("hasAnyAuthority('USER','ADMIN','MANAGER')")

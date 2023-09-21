@@ -21,18 +21,20 @@ import minchae.meme.request.PostEdit;
 import minchae.meme.response.PostResponse;
 import minchae.meme.service.CommentService;
 import minchae.meme.service.impl.PostServiceImpl;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
+
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -42,6 +44,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -88,7 +91,7 @@ class PostControllerTest {
        userRepository.deleteAll();
        upDownRepository.deleteAll();
        testUser = User.builder()
-                .username("jmcabc")
+                .username("jmcabddc")
                 .email("jmcabc@naver.com")
                 .password(passwordEncoder.encode("wjdals12"))
                 .enable(true)
@@ -783,7 +786,7 @@ class PostControllerTest {
 
 
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/board/user/{postId}/up", postResponse.getPostId())
+        mockMvc.perform(MockMvcRequestBuilders.get("/board/user/{postId}/up", postResponse.getPostId())
                         .header("Authorization", ACCESS_TOKEN))
                 .andExpect(status().isOk())
 

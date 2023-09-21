@@ -72,7 +72,6 @@ function checkLogin(){
   } else {
     isLogin.value = "로그아웃";
   }
-
   return 0
 }
 
