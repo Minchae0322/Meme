@@ -1,6 +1,7 @@
 package minchae.meme.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -10,7 +11,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import minchae.meme.request.CommentEdit;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
@@ -25,7 +25,7 @@ public class Comment {
     private Long commentId;
 
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JsonBackReference
+    @JsonIgnore
     private Post post;
 
     @Lob
@@ -34,6 +34,7 @@ public class Comment {
     private String comment;
     @ManyToOne(cascade = CascadeType.MERGE)
     @NotNull
+    @JsonBackReference
     private User user;
 
     @Column

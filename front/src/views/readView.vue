@@ -1,5 +1,5 @@
 <template>
-
+  <head><title>MEME 게시판</title></head>
   <div>
   <div class="titleContainer">
     <h1 class="title">{{ post.title }}</h1>
@@ -64,7 +64,7 @@
     <!-- Display content -->
     <div class="content">
       <div v-for="(imageData, index) in images" :key="index" class="imageContainer" >
-        <img :src="getImageSrc(imageData)" alt="Image" width="1375" height="720" />
+        <img :src="getImageSrc(imageData)" alt="Image" />
       </div>
       <p v-html="formattedContent"></p>
 
@@ -79,20 +79,23 @@
       </a>
     </div>
 
-<!--     Comment Input Field
     <div class="commentInputContainer">
       <el-input class="writeComment" v-model="commentText" type="textarea" placeholder="댓글을 입력하세요"
       rows="5"/>
       <el-button @click="submitComment">댓글 작성</el-button>
     </div>
 
-     List of Comments
     <div class="commentListContainer">
-      <div v-for="(comment, index) in post.comments" :key="index" class="commentItem">
+      <div v-for="(comment, index) in comments" :key="index" class="commentItem">
+
+        <div class="commentInfo">
         <div class="commentAuthor">{{ comment.author }}</div>
-        <div class="commentText">{{ comment.text }}</div>
+        <div class="commentCreatedTime">{{new Date(comment.createdTime).toLocaleString()}}</div>
+        </div>
+        <div class="commentText">{{ comment.comment }}</div>
+        <hr width="80%"/>
       </div>
-    </div>-->
+    </div>
   </div>
 </template>
 
@@ -136,8 +139,8 @@ const fetchImage = function () {
       });
 };
 const submitComment = function () {
-  if (commentText.value.trim() === "") {
-    alert("공백일 수 없습니다.")
+  if (commentText.value.trim() === "" || commentText.value.length > 90) {
+    alert("공백이거나 90자 이상 적을 수 없습니다.")
     return null;
   }
 
@@ -203,8 +206,23 @@ const loadPost = function () {
 }
 
 
+const comments = ref([]);
+const loadComment = function () {
+  axios
+      .get(`http://localhost:8080/board/posts/${props.postId}/comments`)
+      .then((response) => {
+        // Assuming the response contains the post object with youtubeUrl
+        comments.value = response.data;
+      })
+      .catch((error) => {
+        console.error('댓글 불러오기 오류:', error);
+      });
+}
+
+
 onMounted(() => {
   loadPost();
+  loadComment();
 });
 
 // Compute the YouTube embed URL based on the extracted video ID
@@ -245,6 +263,7 @@ const formatCreateTime = computed(() => {
   }
   return '';
 });
+
 </script>
 
 
@@ -276,6 +295,18 @@ p {
   font-weight: 500;
 }
 
+.commentInfo {
+  display: flex;
+  color: #222222;
+  font-size: 16px;
+  align-items: center;
+  margin: 20px 0px;
+
+}
+
+.commentInfo div {
+  margin: 10px 10px;
+}
 
 
 .createdTime {
@@ -285,11 +316,12 @@ p {
 }
 .postInfo {
   display: flex; /* Use flexbox to arrange child elements horizontally */
-  align-items: center; /* Center align child elements vertically */
-
+  align-content: center; /* Center align child elements vertically */
 
 }
-
+.commentInfo hr {
+  margin: 20px;
+}
 
 
 
@@ -302,6 +334,16 @@ p {
   margin-right: 50px
 
 }
+
+.commentText {
+  color: #222222;
+  margin: 10px 10px;
+  font-size: 20px;
+}
+
+
+
+
 .content {
 
   margin: 10px 10px;
@@ -421,7 +463,9 @@ p {
 
 }
 
-
+.commentListContainer {
+  margin: 30px 0;
+}
 
 .titleContainer {
   margin: 10px 10px;
@@ -433,6 +477,9 @@ p {
   margin: 0 10px;
 }
 
+.commentAuthor {
+  color: #157e7e;
+}
 
 .writeComment {
   width: 80%;

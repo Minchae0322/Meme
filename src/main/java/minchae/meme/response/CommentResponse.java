@@ -7,7 +7,8 @@ import lombok.Setter;
 import minchae.meme.entity.Comment;
 import minchae.meme.entity.CommentFunction;
 import minchae.meme.entity.Post;
-import minchae.meme.entity.User;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -16,27 +17,28 @@ public class CommentResponse {
 
 
     private Long commentId;
-    private Post post;
     private String comment;
     private String author;
+
+    private LocalDateTime createdTime;
 
     private CommentFunction commentFunction;
 
 
     @Builder
-    public CommentResponse(Long commentId, Post post, String comment, String author, CommentFunction commentFunction) {
+    public CommentResponse(Long commentId, String comment, String author, LocalDateTime createdTime, CommentFunction commentFunction) {
         this.commentId = commentId;
-        this.post = post;
         this.comment = comment;
         this.author = author;
+        this.createdTime = createdTime;
         this.commentFunction = commentFunction;
     }
 
     public CommentResponse commentToCommentResponse(Comment comment) {
         this.commentId = comment.getCommentId();
-        this.post = comment.getPost();
         this.comment = comment.getComment();
         this.author = comment.getUser().getNickName();
+        this.createdTime = comment.getCreatedTime();
         this.commentFunction = comment.getCommentFunction();
         return this;
     }

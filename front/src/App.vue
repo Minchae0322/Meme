@@ -1,5 +1,6 @@
 
   <template>
+    <head><title>MEME 게시판</title></head>
     <body>
     <header>
 

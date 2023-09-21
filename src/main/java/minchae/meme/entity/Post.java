@@ -1,6 +1,7 @@
 package minchae.meme.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -69,7 +70,7 @@ public class Post {
 
     private String youtubeUrl;
 
-    @JsonManagedReference
+    @JsonIgnore
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private final List<Comment> comments = new ArrayList<>();
 
