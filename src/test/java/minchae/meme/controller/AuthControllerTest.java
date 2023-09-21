@@ -98,6 +98,22 @@ class AuthControllerTest {
         assertEquals(1, mailRepository.count());
     }
 
+    @Test
+    @DisplayName("이메일 발송 후 인증번호")
+    public void verifyCode() throws Exception {
+        EmailRequest emailRequest = EmailRequest.builder()
+                .email("jmcabc1216@gmail.com")
+                .build();
+
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/sendMail")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(emailRequest)))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        assertEquals(1, mailRepository.count());
+    }
+
 
     @Test
     @DisplayName("user 로 로그인")
