@@ -2,21 +2,13 @@ package minchae.meme.controller;
 
 import lombok.RequiredArgsConstructor;
 import minchae.meme.auth.provider.JwtTokenProvider;
-import minchae.meme.entity.TokenInfo;
-import minchae.meme.entity.User;
 import minchae.meme.exception.IsExistEmail;
-import minchae.meme.request.EmailRequest;
 import minchae.meme.request.SignupForm;
-import minchae.meme.service.MailService;
+import minchae.meme.request.VerificationRequest;
+import minchae.meme.service.AuthService;
 import minchae.meme.service.UserService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,7 +16,7 @@ public class AuthController {
 
     private final UserService userService;
 
-    private final MailService mailService;
+    private final AuthService authService;
 
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -35,16 +27,16 @@ public class AuthController {
     }
 
     @PostMapping("/auth/sendMail")
-    public void sendMail(@RequestBody() EmailRequest request) {
-        if (userService.isExistEmail(request.getEmail())) {
+    public void sendMail(@RequestBody() VerificationRequest request) {
+        if (userService.isExistEmail(request.getSubject())) {
             throw new IsExistEmail();
         }
-        mailService.sendMail(request.getEmail());
+        authService.sendVerificationCode(request.getSubject());
     }
 
     @PostMapping("/auth/mailVerify")
-    public void verifyMail(@RequestBody() EmailRequest request) {
-        if (!mailService.isVerifyEmailAndCode(request)) {
+    public void verifyMail(@RequestBody() VerificationRequest request) {
+        if (!authService.isVerified(request)) {
             throw new IllegalArgumentException();
         }
     }
@@ -53,23 +45,6 @@ public class AuthController {
     public void signup(@RequestBody SignupForm signupForm) {
         userService.signup(signupForm);
     }
-
-
-  /*  @PostMapping("/auth/login")
-    public TokenInfo login(String username, String password) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
-
-        // 2. 실제 검증 (사용자 비밀번호 체크)이 이루어지는 부분
-        // authenticate 매서드가 실행될 때 CustomUserDetailsService 에서 만든 loadUserByUsername 메서드가 실행
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-
-        // 3. 인증 정보를 기반으로 JWT 토큰 생성
-
-        TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
-
-        return tokenInfo;
-    }*/
-
 
 
     @PostMapping("/admin/changeAuth")

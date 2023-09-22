@@ -6,14 +6,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class EmailRequest {
-    private String email;
+public class VerificationRequest {
+    private String subject;
 
     private String verificationCode;
 
     @Builder
-    public EmailRequest(String email, String verificationCode) {
-        this.email = email;
+    public VerificationRequest(String subject, String verificationCode) {
+        this.subject = subject;
         this.verificationCode = verificationCode;
     }
 }

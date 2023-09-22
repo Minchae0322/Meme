@@ -75,7 +75,9 @@ let passwordCheckEmpty = ref(false);
 let emailEmpty = ref(false);
 let phoneNumEmpty = ref(false);
 let validCodeEmpty = ref(false);
-const write = function () {
+
+
+const write = async function () {
   usernameEmpty.value = username.value === "";
   passwordEmpty.value = password.value === "";
   passwordCheckEmpty.value = passwordCheck.value === "";
@@ -90,28 +92,27 @@ const write = function () {
       phoneNum.value !== "" &&
       password.value === passwordCheck.value
   ) {
-    axios.post("http://localhost:8080/auth/mailVerify", {
-      email: email.value,
-      verificationCode: verificationCode.value
-    }, {
-      headers: {}
-    }).then((response) => {
-    }).catch(error => {
-      alert("인증번호가 다릅니다, 다시 확인해주세요")
-      return null;
-    });
 
-    axios.post("http://localhost:8080/auth/signup", {
-      username: username.value,
-      password: password.value,
-      email: email.value,
-    }, {
-      headers: {}
-    }).then((response) => {
+    axios.post("http://localhost:8080/auth/mailVerify", {
+      subject: email.value,
+      verificationCode: verificationCode.value
+    }).then(response => {
       if (response.status === 200) {
-        router.replace("/login");
-      } else {
+        axios.post("http://localhost:8080/auth/signup", {
+          username: username.value,
+          password: password.value,
+          email: email.value,
+        }, {
+          headers: {}
+        }).then((response) => {
+          if (response.status === 200) {
+            router.replace("/login");
+          } else {
+          }
+        });
       }
+    }).catch(error => {
+      alert("인증번호를 확인해주세요.")
     });
   } else {
   }
@@ -171,7 +172,7 @@ const sendVerificationCode = function () {
   if (isValidEmail.value) {
     // 이메일 유효성이 확인되면 코드를 보냅니다.
     axios.post("http://localhost:8080/auth/sendMail", {
-      email: email.value,
+      subject: email.value,
     }, {
       headers: {}
     }).then((response) => {

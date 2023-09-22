@@ -376,14 +376,12 @@ class CommentControllerTest {
 
         List<CommentCreate> comments = IntStream.range(0, 30)
                 .mapToObj(i -> CommentCreate.builder()
-                        .post(post)
                         .user(user)
                         .comment("댓글" + " " + i)
                         .build()).collect(Collectors.toList());
 
         List<CommentCreate> comments2 = IntStream.range(0, 30)
                 .mapToObj(i -> CommentCreate.builder()
-                        .post(post2)
                         .user(user)
                         .comment("댓글" + " " + i)
                         .build()).collect(Collectors.toList());

@@ -1,15 +1,15 @@
 package minchae.meme.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import minchae.meme.entity.Comment;
-import minchae.meme.entity.Post;
+import minchae.meme.auth.VerificationProvider;
 import minchae.meme.entity.User;
+import minchae.meme.entity.VerificationToken;
 import minchae.meme.entity.enumClass.Authorization;
-import minchae.meme.repository.MailRepository;
+import minchae.meme.repository.VerificationTokenRepository;
 import minchae.meme.repository.UserRepository;
-import minchae.meme.request.EmailRequest;
 import minchae.meme.request.Login;
 import minchae.meme.request.SignupForm;
+import minchae.meme.request.VerificationRequest;
 import minchae.meme.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,10 +23,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -46,7 +42,10 @@ class AuthControllerTest {
     private UserRepository userRepository;
 
     @Autowired
-    private MailRepository mailRepository;
+    private VerificationProvider verificationProvider;
+
+    @Autowired
+    private VerificationTokenRepository verificationTokenRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -59,7 +58,7 @@ class AuthControllerTest {
     @BeforeEach
     public void before() {
         userRepository.deleteAll();
-        mailRepository.deleteAll();
+        verificationTokenRepository.deleteAll();
     }
 
     @Test
@@ -85,33 +84,34 @@ class AuthControllerTest {
     @Test
     @DisplayName("이메일 발송")
     public void sendMail() throws Exception {
-        EmailRequest emailRequest = EmailRequest.builder()
-                .email("jmcabc1216@gmail.com")
+        VerificationRequest emailRequest = VerificationRequest.builder()
+                .subject("jmcabc1216@gmail.com")
                 .build();
-
+        VerificationToken verificationToken = verificationProvider.sendVerificationCode(emailRequest.getSubject());
 
         mockMvc.perform(MockMvcRequestBuilders.post("/auth/sendMail")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(emailRequest)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
-        assertEquals(1, mailRepository.count());
+        assertEquals(1, verificationTokenRepository.count());
     }
 
     @Test
     @DisplayName("이메일 발송 후 인증번호")
     public void verifyCode() throws Exception {
-        EmailRequest emailRequest = EmailRequest.builder()
-                .email("jmcabc1216@gmail.com")
+        VerificationToken verificationToken = verificationProvider.sendVerificationCode("jmcabc12167@gmail.com");
+        verificationTokenRepository.save(verificationToken);
+        VerificationRequest emailRequest = VerificationRequest.builder()
+                .subject("jmcabc12167@gmail.com")
+                .verificationCode(verificationToken.getVerificationCode())
                 .build();
-
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/auth/sendMail")
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/mailVerify")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(emailRequest)))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
-        assertEquals(1, mailRepository.count());
+        assertEquals(1, verificationTokenRepository.count());
     }
 
 
