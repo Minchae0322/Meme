@@ -311,6 +311,58 @@ class CommentControllerTest {
 
     }
 
+
+    @Test
+    @DisplayName("댓글 작성 후 삭제는 본인과 관리자만 할 수 있다.")
+    void deleteOnlyWriter() throws Exception{
+        //given
+        User user = User.builder()
+                .username("wjdalsco")
+                .email("jcmcmdmw@nakejqkqlw.com")
+                .password("passwordEncoder.encode(signupForm.getPassword()")
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(user);
+
+
+        PostFunction postFunction = PostFunction.builder()
+                .isHot(false)
+                .build();
+
+        Post post = Post.builder()
+                .title("댓글이 있는 글입니다")
+                .content("메롱")
+                .author(testUser)
+                .postFunction(postFunction)
+                .build();
+        postRepository.save(post);
+
+        CommentFunction commentFunction = CommentFunction.builder().build();
+        Comment comment = Comment.builder()
+                .post(post)
+                .comment("댓글입니다")
+                .user(user)
+                .commentFunction(commentFunction)
+                .build();
+
+        commentRepository.save(comment);
+
+        assertEquals(1, commentRepository.count());
+
+        //when - 댓글이 삭제되었을 때 post 에 있는 comments 안에서도 삭제되어야 한다.
+        mockMvc.perform(MockMvcRequestBuilders.delete("/board/{postId}/{commentId}/delete",post.getPostId(), comment.getCommentId())
+                        .header("Authorization", ACCESS_TOKEN))
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError())
+                .andDo(print());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/board/posts/{postId}", post.getPostId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.comments.size()").value(1))
+                .andDo(print());
+
+    }
+
     @Test
     @DisplayName("댓글 1개 조회")
     void getComment() throws Exception{
