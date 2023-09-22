@@ -1,29 +1,39 @@
 package minchae.meme.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import jakarta.transaction.Transactional;
+import minchae.meme.auth.provider.JwtTokenProvider;
 import minchae.meme.entity.*;
 import minchae.meme.entity.enumClass.Authorization;
 import minchae.meme.exception.CommentNotFound;
 import minchae.meme.repository.CommentRepository;
 import minchae.meme.repository.PostRepository;
+import minchae.meme.repository.UpDownRepository;
 import minchae.meme.repository.UserRepository;
 import minchae.meme.request.CommentCreate;
 import minchae.meme.request.CommentEdit;
 import minchae.meme.request.CommentVo;
 import minchae.meme.service.CommentService;
 import minchae.meme.service.PostService;
+import minchae.meme.service.impl.PostServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -39,26 +49,59 @@ class CommentControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
+    private PostServiceImpl postService;
+    @Autowired
     private CommentRepository commentRepository;
-
     @Autowired
     private CommentService commentService;
 
+
+
     @Autowired
-    private PostService postService;
+    private UserRepository userRepository;
+
+    @Autowired
+    private UpDownRepository upDownRepository;
 
     @Autowired
     private PostRepository postRepository;
 
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
+    private static String ACCESS_TOKEN;
+
+    private User testUser;
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
-    public void before() {
+    public void before(@Value("${jwt.secret}") String secretKey) {
         commentRepository.deleteAll();
         postRepository.deleteAll();
+        userRepository.deleteAll();
+        upDownRepository.deleteAll();
+        testUser = User.builder()
+                .username("jmcabddc")
+                .email("jmcabc5555@naver.com")
+                .password(passwordEncoder.encode("wjdals12"))
+                .enable(true)
+                .authorizations(Authorization.USER)
+                .build();
+        userRepository.save(testUser);
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        long now = new Date().getTime();
+        // Access Token 생성
+        Date accessTokenExpiresIn = new Date(now + 604800000);
+        ACCESS_TOKEN = Jwts.builder()
+                .setSubject(testUser.getUsername())
+                .claim("auth", testUser.getAuthorizations())
+                .setExpiration(accessTokenExpiresIn)
+                .signWith(Keys.hmacShaKeyFor(keyBytes), SignatureAlgorithm.HS256)
+                .compact();
     }
 
 
@@ -66,14 +109,6 @@ class CommentControllerTest {
     @Test
     @DisplayName("댓글 불러오기 where postId")
     public void getCommentListWherePostId() throws Exception {
-        User user = User.builder()
-                .username("wjdalsco")
-                .email("jcmcmdmw@nakejqkqlw.com")
-                .password("passwordEncoder.encode(signupForm.getPassword()")
-                .enable(true)
-                .authorizations(Authorization.USER)
-                .build();
-        userRepository.save(user);
 
         PostFunction postFunction = PostFunction.builder()
                 .isHot(false)
@@ -82,7 +117,7 @@ class CommentControllerTest {
         Post post = Post.builder()
                 .title("글 작성중입니다")
                 .content("글 내용은 비밀입니다")
-                .author(user)
+                .author(testUser)
                 .postFunction(postFunction)
                 .build();
 
@@ -92,6 +127,7 @@ class CommentControllerTest {
         List<Comment> comments = IntStream.range(0, 30)
                 .mapToObj(i -> Comment.builder()
                         .post(post)
+                        .user(testUser)
                         .commentFunction(commentFunction)
                         .comment("댓글" + " " + i)
                         .build()).collect(Collectors.toList());
@@ -108,14 +144,7 @@ class CommentControllerTest {
     @Test
     @DisplayName("댓글 작성하기")
     public void writeComment() throws Exception {
-        User user = User.builder()
-                .username("wjdalsco")
-                .email("jcmcmdmw@nakejqkqlw.com")
-                .password("passwordEncoder.encode(signupForm.getPassword()")
-                .enable(true)
-                .authorizations(Authorization.USER)
-                .build();
-        userRepository.save(user);
+
 
         PostFunction postFunction = PostFunction.builder()
                 .isHot(false)
@@ -123,19 +152,20 @@ class CommentControllerTest {
         Post postCreate = Post.builder()
                 .title("댓글이 있는 글입니다")
                 .content("댓글을 입력하세요")
-                .author(user)
+                .author(testUser)
                 .postFunction(postFunction)
                 .build();
         postRepository.save(postCreate);
 
         CommentCreate commentCreate = CommentCreate.builder()
                 .comment("댓글 1")
-                .user(user)
+                .user(testUser)
                 .build();
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/board/posts/{postId}/comments", postCreate.getPostId())
+        mockMvc.perform(MockMvcRequestBuilders.post("/board/user/{postId}/comments", postCreate.getPostId())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(commentCreate)))
+                        .content(objectMapper.writeValueAsString(commentCreate))
+                        .header("Authorization", ACCESS_TOKEN))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print());
 
@@ -144,49 +174,42 @@ class CommentControllerTest {
     }
 
     @Test
-    @DisplayName("댓글 작성 삽입이상 확인")
+    @DisplayName("댓글 작성 삽입이상 확인 - 댓글 작성 후 포스트를 불러오면 작성된 댓글도 같이 불러와진다.")
     void writeComment2() throws Exception {
-        User user = User.builder()
-                .username("wjdalsco")
-                .email("jcmcmdmw@nakejqkqlw.com")
-                .password("passwordEncoder.encode(signupForm.getPassword()")
-                .enable(true)
-                .authorizations(Authorization.USER)
-                .build();
-        userRepository.save(user);
+
         PostFunction postFunction = PostFunction.builder()
                 .isHot(false)
                 .build();
         Post post = Post.builder()
                 .title("댓글이 있는 글입니다")
                 .content("메롱")
-                .author(user)
+                .author(testUser)
                 .postFunction(postFunction)
                 .build();
         postRepository.save(post);
 
         CommentCreate comment = CommentCreate.builder()
-
                 .comment("댓글입니다")
-                .user(user)
+                .user(testUser)
                 .build();
 
         CommentCreate comment2 = CommentCreate.builder()
-
                 .comment("댓글입니다2")
-                .user(user)
+                .user(testUser)
                 .build();
 
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/board/posts/{postId}/comments", post.getPostId())
+        mockMvc.perform(MockMvcRequestBuilders.post("/board/user/{postId}/comments", post.getPostId())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(comment)))
+                        .content(objectMapper.writeValueAsString(comment))
+                .header("Authorization", ACCESS_TOKEN))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print());
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/board/posts/{postId}/comments", post.getPostId())
+        mockMvc.perform(MockMvcRequestBuilders.post("/board/user/{postId}/comments", post.getPostId())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(comment2)))
+                        .content(objectMapper.writeValueAsString(comment2))
+                        .header("Authorization", ACCESS_TOKEN))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print());
 
@@ -201,14 +224,7 @@ class CommentControllerTest {
     @DisplayName("댓글 작성 후 갱신이상 확인")
     void writeComment3() throws Exception{
 
-        User user = User.builder()
-                .username("wjdalsco")
-                .email("jcmcmdmw@nakejqkqlw.com")
-                .password("passwordEncoder.encode(signupForm.getPassword()")
-                .enable(true)
-                .authorizations(Authorization.USER)
-                .build();
-        userRepository.save(user);
+
         PostFunction postFunction = PostFunction.builder()
                 .isHot(false)
                 .build();
@@ -216,7 +232,7 @@ class CommentControllerTest {
         Post post = Post.builder()
                 .title("댓글이 있는 글입니다")
                 .content("메롱")
-                .author(user)
+                .author(testUser)
                 .postFunction(postFunction)
                 .build();
         postRepository.save(post);
@@ -226,7 +242,7 @@ class CommentControllerTest {
         Comment comment = Comment.builder()
                 .post(post)
                 .comment("댓글입니다")
-                .user(user)
+                .user(testUser)
                 .commentFunction(commentFunction)
                 .build();
 
@@ -236,12 +252,13 @@ class CommentControllerTest {
         CommentEdit commentEdit = CommentEdit.builder()
                 .post(post)
                 .comment("바뀐 댓글입니다")
-                .author(user)
+                .author(testUser)
                 .build();
 
-        mockMvc.perform(MockMvcRequestBuilders.patch("/board/posts/{postId}/comments/{commentId}", post.getPostId(), comment.getCommentId())
+        mockMvc.perform(MockMvcRequestBuilders.patch("/board/user/comments/{commentId}", comment.getCommentId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(commentEdit)))
+                .content(objectMapper.writeValueAsString(commentEdit))
+                        .header("Authorization", ACCESS_TOKEN))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.comment").value("바뀐 댓글입니다"))
                 .andDo(print());
@@ -256,14 +273,7 @@ class CommentControllerTest {
     @DisplayName("댓글 작성 후 삭제이상 확인")
     void writeComment4() throws Exception{
         //given
-        User user = User.builder()
-                .username("wjdalsco")
-                .email("jcmcmdmw@nakejqkqlw.com")
-                .password("passwordEncoder.encode(signupForm.getPassword()")
-                .enable(true)
-                .authorizations(Authorization.USER)
-                .build();
-        userRepository.save(user);
+
         PostFunction postFunction = PostFunction.builder()
                 .isHot(false)
                 .build();
@@ -271,7 +281,7 @@ class CommentControllerTest {
         Post post = Post.builder()
                 .title("댓글이 있는 글입니다")
                 .content("메롱")
-                .author(user)
+                .author(testUser)
                 .postFunction(postFunction)
                 .build();
         postRepository.save(post);
@@ -280,7 +290,7 @@ class CommentControllerTest {
         Comment comment = Comment.builder()
                 .post(post)
                 .comment("댓글입니다")
-                .user(user)
+                .user(testUser)
                 .commentFunction(commentFunction)
                 .build();
 
@@ -289,7 +299,8 @@ class CommentControllerTest {
         assertEquals(1, commentRepository.count());
 
         //when - 댓글이 삭제되었을 때 post 에 있는 comments 안에서도 삭제되어야 한다.
-        mockMvc.perform(MockMvcRequestBuilders.delete("/board/posts/{postId}/comments/{commentId}", post.getPostId(), comment.getCommentId()))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/board/{postId}/{commentId}/delete",post.getPostId(), comment.getCommentId())
+                        .header("Authorization", ACCESS_TOKEN))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print());
 
@@ -700,7 +711,7 @@ class CommentControllerTest {
 
     }
 
-    /*@Test
+    @Test
     @DisplayName("추천을 1회 올리기 갱신이상 확인")
     void checkUpdateCommentRecommendation() throws Exception {
 
@@ -831,9 +842,9 @@ class CommentControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.bad").value(1))
                 .andDo(print());
 
-    }*/
+    }
 
-   /* @Test
+    @Test
     @DisplayName("비추천을 1회 올리기 갱신이상 확인")
     void checkUpdateCommentBad() throws Exception{
         //given
@@ -877,7 +888,7 @@ class CommentControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.comments[1].bad").value(1))
                 .andDo(print());
-    }*/
+    }
 
     @Test
     @DisplayName("댓글 받아오기 - commentNotFound 404 에러 출력")

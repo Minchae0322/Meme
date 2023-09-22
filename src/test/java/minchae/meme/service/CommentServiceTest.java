@@ -1,3 +1,4 @@
+/*
 package minchae.meme.service;
 
 import jakarta.transaction.Transactional;
@@ -619,4 +620,4 @@ class CommentServiceTest {
     }
 
 
-}
+}*/

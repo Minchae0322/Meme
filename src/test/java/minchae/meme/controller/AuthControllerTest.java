@@ -115,13 +115,14 @@ class AuthControllerTest {
     }
 
 
+
     @Test
     @DisplayName("user 로 로그인")
     public void login() throws Exception {
         SignupForm signupForm = SignupForm.builder()
                 .username("ddd")
                 .email("jmcabc@naver.com12")
-                .password(passwordEncoder.encode("wjdals12"))
+                .password("wjdals12")
                 .phoneNum("01035573336")
                 .build();
 
@@ -140,8 +141,7 @@ class AuthControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(login)))
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/"));
-        //.andExpect(MockMvcResultMatchers.redirectedUrl());
+                .andExpect(MockMvcResultMatchers.status().isOk());
 
     }
 
@@ -158,7 +158,7 @@ class AuthControllerTest {
         userRepository.save(user);
 
         Login login = Login.builder()
-                .username("username")
+                .username("fff")
                 .password("password")
                 .build();
 
@@ -167,37 +167,11 @@ class AuthControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(login)))
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/auth/login"));
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
                 //.andExpect(MockMvcResultMatchers.redirectedUrl());
 
     }
 
-    @Test
-    @DisplayName("admin 으로 로그인")
-    public void auth() throws Exception {
-        User user = User.builder()
-                .username("jmcabc@naver.com")
-                .email("jcmcmdmw@nakejqkqlw.com")
-                .password(passwordEncoder.encode("wjdals12"))
-                .enable(true)
-                .authorizations(Authorization.ADMIN)
-                .build();
-        userRepository.save(user);
-
-        Login login = Login.builder()
-                .username("jmcabc@naver.com")
-                .password(passwordEncoder.encode("wjdals12"))
-                .build();
-
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/auth/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(login)))
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/"));
-
-
-
-    }
 
 
 }

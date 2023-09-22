@@ -10,6 +10,7 @@ import minchae.meme.request.CommentEdit;
 import minchae.meme.request.CommentVo;
 import minchae.meme.response.CommentResponse;
 import minchae.meme.service.CommentService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +35,7 @@ public class CommentController {
     public CommentResponse getComment(@PathVariable Long commentId) {
         return commentService.getComment(commentId);
     }
-
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN','MANAGER')")
     @PostMapping("/board/user/{postId}/comments")
     public void writeComment(Authentication authentication, @PathVariable Long postId, @RequestBody CommentCreate commentCreate) {
         User user = (User) authentication.getPrincipal();
@@ -52,14 +53,17 @@ public class CommentController {
         return commentService.upBad(commentId);
     }*/
 
-
-    @PatchMapping("/board/posts/comments/{commentId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER') || (hasPermission(#commentId,'COMMENT','UPDATE') && hasAuthority('USER'))")
+    @PatchMapping("/board/user/comments/{commentId}")
     public CommentResponse updateComment(@PathVariable Long commentId, @RequestBody CommentEdit commentEdit) {
         return commentService.update(commentId, commentEdit);
     }
 
-    @DeleteMapping("/board/posts/{postId}/comments/{commentId}")
-    public void getCommentList(@PathVariable Long postId, @PathVariable Long commentId) {
+
+
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER') || (hasPermission(#commentId,'COMMENT','DELETE') && hasAuthority('USER'))")
+    @DeleteMapping("/board/{postId}/{commentId}/delete")
+    public void deleteComment(@PathVariable Long postId, @PathVariable Long commentId) {
         commentService.delete(postId, commentId);
     }
 

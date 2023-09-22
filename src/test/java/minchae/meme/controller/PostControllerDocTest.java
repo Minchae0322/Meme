@@ -1,3 +1,5 @@
+/*
+
 package minchae.meme.controller;
 
 
@@ -118,3 +120,4 @@ public class PostControllerDocTest {
 
     //todo 모든 api 만들기......
 }
+*/

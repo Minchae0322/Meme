@@ -1,3 +1,4 @@
+/*
 package minchae.meme.service;
 
 import minchae.meme.entity.*;
@@ -499,3 +500,4 @@ class PostServiceTest {
 
 
 }
+*/

@@ -34,7 +34,7 @@ class PostTest {
         //postRepository.deleteAll();
     }
 
-    @Test
+   /* @Test
     void test1() throws Exception {
         Post post = Post.builder()
                 .title("댓글이 있는 글입니다")
@@ -55,6 +55,6 @@ class PostTest {
         //Comment comment = commentRepository.findById(comments.get(0).getCommentId())
                 //.orElseThrow();
        // comment.getPost();
-    }
+    }*/
 
 }

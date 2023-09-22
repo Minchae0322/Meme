@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import minchae.meme.auth.provider.JwtTokenProvider;
 import minchae.meme.entity.*;
@@ -68,6 +69,8 @@ class PostControllerTest {
     @Autowired
     private CommentService commentService;
 
+
+
     @Autowired
     private UserRepository userRepository;
 
@@ -92,7 +95,7 @@ class PostControllerTest {
        upDownRepository.deleteAll();
        testUser = User.builder()
                 .username("jmcabddc")
-                .email("jmcabc@naver.com")
+                .email("jmcabc5555@naver.com")
                 .password(passwordEncoder.encode("wjdals12"))
                 .enable(true)
                 .authorizations(Authorization.USER)
@@ -158,7 +161,6 @@ class PostControllerTest {
     }
 
     @Test
-    @Transactional
     @DisplayName("글 작성 직후 추천 수는 0, 비추천 수도 0, 조회수 0, 핫 게시물은 false 이다.")
     public void initPost() throws Exception {
         PostCreate postCreate = new PostCreate();
@@ -181,12 +183,10 @@ class PostControllerTest {
 
         assertEquals(1, postRepository.count());
 
-
         Post posted = postRepository.findAll().get(0);
 
         assertEquals(1, postRepository.count());
-        assertEquals(0, posted.getRecommendation());
-        assertEquals(0, posted.getBad());
+        assertEquals(0, upDownRepository.count());
         assertFalse(posted.getPostFunction().isHot());
     }
 

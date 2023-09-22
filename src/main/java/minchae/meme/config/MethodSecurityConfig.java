@@ -1,6 +1,7 @@
 package minchae.meme.config;
 
 import lombok.RequiredArgsConstructor;
+import minchae.meme.repository.CommentRepository;
 import minchae.meme.repository.PostRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,10 +16,12 @@ public class MethodSecurityConfig {
 
     private final PostRepository postRepository;
 
+    private final CommentRepository commentRepository;
+
     @Bean
     public MethodSecurityExpressionHandler methodSecurityExpressionHandler() {
         var handler = new DefaultMethodSecurityExpressionHandler();
-        handler.setPermissionEvaluator(new PostPermissionEvaluator(postRepository));
+        handler.setPermissionEvaluator(new CustomPermissionEvaluator(postRepository, commentRepository));
         return handler;
     }
 }
