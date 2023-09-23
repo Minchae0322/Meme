@@ -136,7 +136,9 @@ onMounted(() => {
 
 
 .titleContainer {
-  width: 80%;
+  width: 75%;
+  align-items: center;
+  padding-left: 150px;
 }
 
 .commentContainer {
@@ -144,7 +146,6 @@ onMounted(() => {
   color: #333333;
   font-size: 11px;
   align-items: center;
-  margin-left: 5px;
 
 }
 
@@ -154,11 +155,13 @@ onMounted(() => {
 }
 
 .commentIcon {
-  margin-left: 1px;
+  margin-left: 0;
 }
 .title {
   margin: 0 20px;
   padding-left: 50px;
+  font-size: 20px;
+
   white-space: nowrap; /* Prevent line breaks */
   overflow: hidden; /* Hide overflowing text */
   text-overflow: ellipsis; /* Display ellipsis for overflowed text */
@@ -187,7 +190,7 @@ onMounted(() => {
 .viewContainer {
   display: flex;
   color: rgba(51, 51, 51, 0.58);
-  font-size: 12px;
+  font-size: 14px;
   align-items: center;
   margin-left: 5px;
 
@@ -197,7 +200,7 @@ onMounted(() => {
 .recommendationContainer {
   display: flex;
   color: rgba(51, 51, 51, 0.58);
-  font-size: 12px;
+  font-size: 14px;
   align-items: center;
   margin-left: 10px
 

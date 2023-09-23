@@ -3,7 +3,7 @@ import axios from "axios";
 import { ref, onMounted, onUpdated} from "vue";
 
 import { useRouter } from "vue-router";
-
+import { isLogin } from "../App.vue"; // Import isLogin from App.vue
 const router = useRouter()
 const isAlphaNumeric = function(password) {
   // 정규 표현식을 사용하여 영문자와 숫자로만 이루어진지 확인
@@ -13,7 +13,6 @@ const isAlphaNumeric = function(password) {
 
 let username = ref("")
 let password = ref("")
-let isLogin = ref(false)
 axios.defaults.withCredentials = true; // withCredentials 전역 설정
 
 onMounted( () => {
@@ -62,9 +61,9 @@ const write = function () {
           localStorage.setItem('accessToken', accessToken);
         }
         console.log('access 토큰 :', accessToken);
-
-        router.replace("/home")
         isLogin.value = true;
+        router.replace("/home")
+
 
       }
     }).catch(function (error) {
@@ -85,7 +84,7 @@ const write = function () {
     <form action="#">
       <input id = "inputUsername" v-model="username" type="text" placeholder="아이디를 입력해주세요">
       <input type="password" @keyup.enter="write" v-model="password" placeholder="비밀번호를 입력해주세요">
-      <a href="#">Forgot password?</a>
+<!--      <a href="#">Forgot password?</a>-->
       <input type="button" @click = "write" class="button" value="Login">
     </form>
     <div class="signup">

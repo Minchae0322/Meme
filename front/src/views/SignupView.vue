@@ -7,7 +7,7 @@
         <div class="error-message" v-if="usernameEmpty">아이디를 입력하세요</div>
       </div>
       <div class="emailContainer">
-        <input type="text" v-model="email" :class="{ error: emailEmpty || !isValidEmail }" placeholder="이메일을 입력하세요">
+        <input type="email" v-model="email" :class="{ error: emailEmpty || !isValidEmail }" placeholder="이메일을 입력하세요">
         <div class="error-message" v-if="emailEmpty">이메일을 입력하세요</div>
         <div class="error-message" v-if="!isValidEmail">정확한 이메일을 입력하세요</div>
       </div>
@@ -22,7 +22,7 @@
       </div>
       <button type="button" class="sendButton" v-if="!isVerificationCodeSent" @click="sendVerificationCode">이메일로 인증번호를 발송합니다</button>
       <div>
-        <input type="text" v-model="phoneNum" :class="{ error: phoneNumEmpty }" placeholder="핸드폰 번호를 입력해주세요">
+        <input type="tel" v-model="phoneNum" :class="{ error: phoneNumEmpty }" placeholder="핸드폰 번호를 입력해주세요">
         <div class="error-message" v-if="phoneNumEmpty">핸드폰 번호를 입력해주세요</div>
       </div>
       <div>
@@ -84,6 +84,10 @@ const write = async function () {
   emailEmpty.value = email.value === "";
   phoneNumEmpty.value = phoneNum.value === "";
   validCodeEmpty.value = verificationCode.value === "";
+  if(password.value !== passwordCheck.value) {
+    alert("비밀번호를 확인해주세요")
+    return null;
+  }
   if (
       username.value !== "" &&
       password.value !== "" &&
@@ -145,6 +149,15 @@ const startTimer = () => {
   }, 1000); // 1초마다 타이머 업데이트
 };
 
+const endTimer = () => {
+  isTimerActive.value = false;
+
+  const timerInterval = setInterval(() => {
+    timerCount.value = 300;
+      clearInterval(timerInterval);
+  }, 100); // 1초마다 타이머 업데이트
+};
+
 // 시간을 00:00 형태로 포맷팅하는 함수
 const formatTime = (seconds) => {
   const minutes = Math.floor(seconds / 60);
@@ -170,19 +183,27 @@ const sendVerificationCode = function () {
   isValidEmail.value = emailPattern.test(email.value);
 
   if (isValidEmail.value) {
-    // 이메일 유효성이 확인되면 코드를 보냅니다.
-    axios.post("http://localhost:8080/auth/sendMail", {
+    axios.post("http://localhost:8080/auth/isExistEmail", {
       subject: email.value,
     }, {
       headers: {}
     }).then((response) => {
+      if (response.status === 200) {
+        isVerificationCodeSent.value = true;
+        axios.post("http://localhost:8080/auth/sendMail", {
+          subject: email.value,
+        }, {
+          headers: {}
+        }).then((response) => {
 
+        }).catch(error => {
+        });
+      }
+      startTimer();
     }).catch(error => {
       alert("이미 등록된 이메일 입니다.")
-      isVerificationCodeSent.value = false;
     });
-    startTimer();
-    isVerificationCodeSent.value = true;
+
   }
 }
 const goLogin = function () {

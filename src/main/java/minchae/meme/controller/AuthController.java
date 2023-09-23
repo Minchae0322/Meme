@@ -34,6 +34,13 @@ public class AuthController {
         authService.sendVerificationCode(request.getSubject());
     }
 
+    @PostMapping("/auth/isExistEmail")
+    public void isExistEmail(@RequestBody VerificationRequest request) {
+        if (userService.isExistEmail(request.getSubject())) {
+            throw new IsExistEmail();
+        }
+    }
+
     @PostMapping("/auth/mailVerify")
     public void verifyMail(@RequestBody() VerificationRequest request) {
         if (!authService.isVerified(request)) {

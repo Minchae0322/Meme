@@ -8,19 +8,19 @@
     <div class="nav_bar">
       <div class="nav_logo">
         <i></i>
-        <a href = ""> MEME </a>
+        <a href = "/home"> MEME </a>
       </div>
 
       <ul class="nav">
-        <li>
+        <div>
         <RouterLink to="/home">Home</RouterLink>
-        </li>
-        <li>
+        </div>
+        <div>
           <RouterLink to="/write">글 작성</RouterLink>
-        </li>
-        <li>
+        </div>
+        <div>
             <RouterLink to="/posts">글 목록</RouterLink>
-        </li>
+        </div>
 
 
       </ul>
@@ -58,7 +58,7 @@ import { onMounted , watch} from "vue";
 
 const router = useRouter()
 
-const isLogin = ref("로그아웃");
+export const isLogin = ref("로그아웃");
 const loginRouter = ref('/logout');
 onMounted(() =>
 {
@@ -87,8 +87,6 @@ const logout = function () {
       localStorage.removeItem("accessToken");
       console.log('access 토큰 :', "로그아웃");
     }
-
-
   })
 
 }
@@ -142,39 +140,24 @@ function goSignup() {
     width: 90vw;
   }
 
-  @media screen and (max-width: 90vw) {
-    /* Add a media query for screens with a maximum width of 768px */
-    body {
-      min-width: 90vw; /* Set a minimum width for the body */
-    }
-  }
-
   .nav {
     display: flex;
-    margin-left: 100px;
     font-size: 20px;
     width: 60%;
+    margin: 20px 0;
     list-style: none;
   }
 
-  .nav li {
+  .nav div {
     margin: 9px 20px;
     background: white;
-    padding: 10px;
   }
 
   .nav_logo {
     font-size: 30px;
   }
 
-  .nav_link {
-    display: flex;
-  }
 
-  .nav_link {
-    width: 20%;
-    font-size: 12px;
-  }
 
 * {
   font-family: 'Noto Sans KR', sans-serif;
