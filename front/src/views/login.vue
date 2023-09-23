@@ -3,7 +3,9 @@ import axios from "axios";
 import { ref, onMounted, onUpdated} from "vue";
 
 import { useRouter } from "vue-router";
-import { isLogin } from "../App.vue"; // Import isLogin from App.vue
+import { useStore } from 'vuex'; // Import useStore to access the store
+
+const store = useStore(); // Access the Vuex store
 const router = useRouter()
 const isAlphaNumeric = function(password) {
   // 정규 표현식을 사용하여 영문자와 숫자로만 이루어진지 확인
@@ -61,7 +63,7 @@ const write = function () {
           localStorage.setItem('accessToken', accessToken);
         }
         console.log('access 토큰 :', accessToken);
-        isLogin.value = true;
+        store.dispatch('setLoginStatus', '로그아웃'); // Dispatch the action to change isLogin
         router.replace("/home")
 
 

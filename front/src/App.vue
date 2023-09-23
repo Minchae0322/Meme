@@ -49,16 +49,16 @@
 
 
 <script setup lang="js">
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import axios from "axios";
 
 import { useRouter} from "vue-router";
 import { onMounted , watch} from "vue";
-
+import { useStore } from 'vuex'; // Import useStore to access the store
+const store = useStore(); // Access the Vuex store
 
 const router = useRouter()
-
-export const isLogin = ref("로그아웃");
+const isLogin = computed(() => store.state.isLogin);
 const loginRouter = ref('/logout');
 onMounted(() =>
 {
@@ -67,11 +67,11 @@ onMounted(() =>
 function checkLogin(){
   if (!localStorage.getItem("accessToken")) {
     console.log(localStorage.getItem("accessToken"))
-      isLogin.value = "로그인";
+    store.dispatch('setLoginStatus', '로그인'); // Dispatch the action to change isLogin
       loginRouter.value = "/login"
     console.log("로그인 필요")
   } else {
-    isLogin.value = "로그아웃";
+    store.dispatch('setLoginStatus', '로그아웃'); // Dispatch the action to change isLogin
   }
   return 0
 }
