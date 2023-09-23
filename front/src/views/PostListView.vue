@@ -4,6 +4,12 @@
       <li v-for="post in posts" :key="post.postId" class="post-item">
         <div class="post-info">
           <router-link class="titleContainer" :to="{ name: 'read', params: { postId: post.postId } }">
+            <div class="postTypeContainer">
+              <div>[&nbsp </div>
+              <div class="type">{{post.postType}}</div>
+              <div> &nbsp]</div>
+            </div>
+
             <div class="title">{{ truncateTitle(post.title) }}</div>
             <div class="commentContainer">
               <font-awesome-icon class="commentIcon" icon="fa-regular fa-comment" />
@@ -168,6 +174,12 @@ onMounted(() => {
   margin-left: 5px;
   font-size: 15px;
   color: #157e7e;
+}
+
+.postTypeContainer {
+  display: flex;
+  font-size: 15px;
+  color: brown;
 }
 .page {
   text-align: center;

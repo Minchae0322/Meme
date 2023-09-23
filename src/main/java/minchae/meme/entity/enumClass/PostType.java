@@ -2,10 +2,10 @@ package minchae.meme.entity.enumClass;
 
 public enum PostType {
 
-    LATEST("LATEST"), ALL("ALL");
+    최신, 자유;
 
-    private String string;
+     String string;
 
-    PostType(String s) {
+    PostType() {
     }
 }

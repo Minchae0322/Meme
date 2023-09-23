@@ -109,7 +109,7 @@ const write = function () {
   console.log(files)
   let params = JSON.stringify({ title: title.value, content: content.value });
 
-  frm.append("post", new Blob([JSON.stringify({ title: title.value, content: content.value, postType: "ALL", youtubeUrl: youtubeUrl.value })], { type: "application/json" }));
+  frm.append("post", new Blob([JSON.stringify({ title: title.value, content: content.value, postType: "자유", youtubeUrl: youtubeUrl.value })], { type: "application/json" }));
   files.forEach((file) => {
     frm.append("imageFile", file);
   });

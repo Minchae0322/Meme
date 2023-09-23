@@ -10,6 +10,7 @@ import minchae.meme.entity.Comment;
 import minchae.meme.entity.Post;
 import minchae.meme.entity.PostFunction;
 import minchae.meme.entity.User;
+import minchae.meme.entity.enumClass.PostType;
 import minchae.meme.store.FileHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.FieldError;
@@ -44,8 +45,10 @@ public class PostResponse {
 
     private String youtubeUrl;
 
+    private PostType postType;
+
     @Builder
-    public PostResponse(Long postId, String title, String content, String author, int recommendation, int bad, int views, LocalDateTime createdTime, PostFunction postFunction, List<Comment> comments, String youtubeUrl) {
+    public PostResponse(Long postId, String title, String content, String author, int recommendation, int bad, int views, LocalDateTime createdTime, PostFunction postFunction, List<Comment> comments, String youtubeUrl, PostType postType) {
         this.postId = postId;
         this.title = title;
         this.content = content;
@@ -57,6 +60,7 @@ public class PostResponse {
         this.postFunction = postFunction;
         this.comments = comments;
         this.youtubeUrl = youtubeUrl;
+        this.postType = postType;
     }
 
     @Transactional
@@ -72,6 +76,7 @@ public class PostResponse {
         this.comments = post.getComments();
         this.youtubeUrl = post.getYoutubeUrl();
         this.createdTime = post.getCreatedTime();
+        this.postType = post.getPostType();
         return this;
     }
 

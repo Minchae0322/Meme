@@ -312,7 +312,7 @@ h1 {
 }
 p {
   color: #222222;
-  font-size: 17px;
+  font-size: 18px;
   font-family: 'Noto Sans KR', sans-serif;
   font-weight: 500;
 }
@@ -362,8 +362,6 @@ p {
   margin: 10px 10px;
   font-size: 20px;
 }
-
-
 
 
 .content {

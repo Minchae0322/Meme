@@ -89,8 +89,8 @@ class PostControllerTest {
 
     @BeforeEach
     public void before(@Value("${jwt.secret}") String secretKey) {
-       commentRepository.deleteAll();
-       postRepository.deleteAll();
+      /* commentRepository.deleteAll();
+       postRepository.deleteAll();*/
        userRepository.deleteAll();
        upDownRepository.deleteAll();
        testUser = User.builder()
@@ -470,7 +470,7 @@ class PostControllerTest {
                 .title("첫게시물입니다")
                 .content("ㅇㅇㅇㅇㅇㅇ")
                 .author(testUser)
-                .postType(PostType.ALL)
+                .postType(PostType.자유)
                 .postFunction(postFunction)
                 .build();
         postRepository.save(post);
@@ -517,7 +517,7 @@ class PostControllerTest {
                 .title("첫게시물입니다")
                 .content("ㅇㅇㅇㅇㅇㅇ")
                 .author(testUser)
-                .postType(PostType.ALL)
+                .postType(PostType.자유)
                 .postFunction(postFunction)
                 .build();
         postRepository.save(post);
@@ -550,7 +550,7 @@ class PostControllerTest {
                 .title("첫게시물입니다")
                 .content("ㅇㅇㅇㅇㅇㅇ")
                 .author(testUser)
-                .postType(PostType.ALL)
+                .postType(PostType.자유)
                 .postFunction(postFunction)
                 .build();
         postRepository.save(post);
@@ -591,7 +591,7 @@ class PostControllerTest {
                 .title("첫게시물입니다")
                 .content("ㅇㅇㅇㅇㅇㅇ")
                 .author(testUser)
-                .postType(PostType.ALL)
+                .postType(PostType.자유)
                 .postFunction(postFunction)
                 .build();
         postRepository.save(post);
