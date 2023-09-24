@@ -6,8 +6,18 @@
 
 
     <div class="form-container">
+
       <div class="titleContainer">
+        <el-select class="selectBox" v-model="postType" placeholder="Select">
+          <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+          />
+        </el-select>
         <el-input class="title" v-model="title" placeholder="제목을 입력하세요" style="height: 50px"></el-input>
+
       </div>
       <div class="fileContainer">
       <el-upload
@@ -58,7 +68,17 @@ let images = new Image()
 let youtubeUrl = ref("");
 let videoId = ref("");
 const showWarning = ref(false); // Initialize the warning state
-
+const options = [
+  {
+    value: '자유',
+    label: '자유',
+  },
+  {
+    value: '최신',
+    label: '최신',
+    disabled: true,
+  }
+]
 
 onMounted( () => {
   checkLogin()
@@ -86,7 +106,7 @@ const checkLogin = function () {
   }
 };
 
-
+const postType = ref("자유"); // Initialize with a default value
 const fileList = ref([]);
 const handleRemove = (file, fileList) => {
   // 파일 삭제 시 fileList에서 해당 파일 제거
@@ -109,7 +129,7 @@ const write = function () {
   console.log(files)
   let params = JSON.stringify({ title: title.value, content: content.value });
 
-  frm.append("post", new Blob([JSON.stringify({ title: title.value, content: content.value, postType: "자유", youtubeUrl: youtubeUrl.value })], { type: "application/json" }));
+  frm.append("post", new Blob([JSON.stringify({ title: title.value, content: content.value, postType: postType.value, youtubeUrl: youtubeUrl.value })], { type: "application/json" }));
   files.forEach((file) => {
     frm.append("imageFile", file);
   });
@@ -186,9 +206,11 @@ h3 {
 
 
 .titleContainer {
+  display: flex;
  color: #181818;
   width:70%;
-  margin-top: 20px;
+  align-items: center;
+  margin-top: 15px;
 }
 
 .youtubeUrlContainer {
@@ -209,7 +231,11 @@ hr {
 .youtubeTitle {
   margin: 10px 0;
 }
-
+.selectBox {
+  margin-right: 10px;
+  font-size: 15px;
+  width: 10%;
+}
 .warning-text {
   color: red;
   margin-top: 10px;

@@ -155,24 +155,37 @@ const checkLogin =  function () {
   return false
 };
 const submitComment = function () {
-  if(!checkLogin()) {
-    alert("로그인 후 댓글을 작성 할 수 있습니다.")
-    return null;
-  }
   if (commentText.value.trim() === "" || commentText.value.length > 90) {
     alert("공백이거나 90자 이상 적을 수 없습니다.");
-    return null;
+
+  } else {
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      axios.get("http://localhost:8080/auth/isValidToken", {
+        headers: {
+          'Authorization': accessToken
+        }
+      }).then(response => {
+        if (response.status === 200) {
+          axios.post(`http://localhost:8080/board/user/${props.postId}/comments`, {
+            comment: commentText.value
+          }, {
+            headers: {
+              'Authorization': localStorage.getItem("accessToken")
+            }
+          }).then(response => {
+            router.go(0)
+          });
+        }
+
+      }).catch(error => {
+
+      });
+    }
   }
 
-  axios.post(`http://localhost:8080/board/user/${props.postId}/comments`, {
-    comment: commentText.value
-  }, {
-    headers: {
-      'Authorization': localStorage.getItem("accessToken")
-    }
-  }).then(response => {
-    router.go(0)
-  });
+
+
 };
 const getImageSrc = function (imageData) {
   //console.log(imageData)
