@@ -91,9 +91,14 @@
         <div class="commentInfo">
         <div class="commentAuthor">{{ comment.author }}</div>
         <div class="commentCreatedTime">{{new Date(comment.createdTime).toLocaleString()}}</div>
+          <div class="deleteContainer">
+            <a  @click = "deleteComment(comment.commentId)">삭제</a>
+          </div>
         </div>
         <div class="commentText">{{ comment.comment }}</div>
         <hr width="80%"/>
+
+
       </div>
     </div>
   </div>
@@ -226,6 +231,28 @@ const deletePost = function () {
   }
 
 }
+
+const deleteComment = function (commendId) {
+  if(confirm("정말 삭제하시겠습니까?")) {
+    axios.delete(`http://localhost:8080/board/user/${props.postId}/${commendId}/delete`, {
+      headers: {
+        'Authorization': localStorage.getItem("accessToken")
+      }
+    })
+        .then(response => {
+          if (response.status === 200) {
+            alert("삭제되었습니다.")
+            router.go(0)
+          } else {
+            alert("권한이 없습니다.")
+          }
+        })
+        .catch(error => {
+          alert("권한이 없습니다.")
+        })
+  }
+
+}
 const loadPost = function () {
   axios
       .get(`http://localhost:8080/board/posts/${props.postId}`)
@@ -335,7 +362,7 @@ p {
   color: #222222;
   font-size: 16px;
   align-items: center;
-  margin: 20px 0px;
+  margin: 10px 0px;
 
 }
 
@@ -372,7 +399,8 @@ p {
 
 .commentText {
   color: #222222;
-  margin: 10px 10px;
+  margin-left: 10px;
+  margin-bottom: 20px;
   font-size: 20px;
 }
 

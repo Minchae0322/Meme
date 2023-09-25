@@ -13,7 +13,7 @@
 
       <ul class="nav">
         <div>
-        <RouterLink to="/home">Home</RouterLink>
+        <RouterLink to="/home">인기글</RouterLink>
         </div>
         <div>
           <RouterLink to="/write">글 작성</RouterLink>

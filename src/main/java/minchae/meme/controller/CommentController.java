@@ -62,7 +62,7 @@ public class CommentController {
 
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER') || (hasPermission(#commentId,'COMMENT','DELETE') && hasAuthority('USER'))")
-    @DeleteMapping("/board/{postId}/{commentId}/delete")
+    @DeleteMapping("/board/user/{postId}/{commentId}/delete")
     public void deleteComment(@PathVariable Long postId, @PathVariable Long commentId) {
         commentService.delete(postId, commentId);
     }
