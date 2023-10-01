@@ -14,37 +14,25 @@
             <div class="commentContainer">
               <font-awesome-icon class="commentIcon" icon="fa-regular fa-comment" />
               <div class="comment">{{ post.comments.length }}</div>
-
-
             </div>
           </router-link>
-          <div class = "infoContainer">
+          <div class="infoContainer">
             <div class="authorContainer">
               <div class="authorTitle">작성자 : </div>
-              <div class="author">{{post.author}}</div>
+              <div class="author">{{ post.author }}</div>
             </div>
             <div class="viewAndUp">
-
-
-
               <div class="viewContainer">
                 <font-awesome-icon class="viewIcon" icon="fa-solid fa-eye" />
-                <div class="view">{{post.views}}</div>
-
-
+                <div class="view">{{ post.views }}</div>
               </div>
-
-
               <div class="recommendationContainer">
                 <font-awesome-icon class="recommendationIcon" icon="fa-regular fa-thumbs-up" />
-                <div class="recommendation">{{post.recommendation}}</div>
-
-
+                <div class="recommendation">{{ post.recommendation }}</div>
               </div>
             </div>
           </div>
         </div>
-
       </li>
     </ul>
   </div>
@@ -54,59 +42,50 @@
     <ul class="pagination model">
       <li><a href="#" class="first" @click="loadPage(1)">처음 페이지</a></li>
       <li><a href="#" class="arrow left">이전</a></li>
-      <li><a href="#" class="active num" @click="loadPage(1)">1</a> </li>
-      <li><a href="#" class="num" @click="loadPage(2)">2</a> </li>
-      <li><a href="#" class="num" @click="loadPage(3)">3</a> </li>
-      <li><a href="#" class="num" @click="loadPage(4)">4</a> </li>
-      <li><a href="#" class="num" @click="loadPage(5)">5</a> </li>
+      <li><a href="#" class="active num" @click="loadPage(1)">1</a></li>
+      <li><a href="#" class="num" @click="loadPage(2)">2</a></li>
+      <li><a href="#" class="num" @click="loadPage(3)">3</a></li>
+      <li><a href="#" class="num" @click="loadPage(4)">4</a></li>
+      <li><a href="#" class="num" @click="loadPage(5)">5</a></li>
       <li><a href="#" class="arrow right">다음</a></li>
       <li><a href="#" class="last" @click="loadPage(pageRange.length)">끝 페이지</a></li>
-
-
     </ul>
   </div>
 </template>
 
-
-<script setup lang="js">
+<script setup lang="ts">
 import axios from 'axios';
 import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-import {checkLogin} from "@/global/globalFunction";
 
-const posts = ref([]);
-const page = ref(1); // Initial page number
+const posts = ref<any[]>([]);
+const page = ref<number>(1); // Initial page number
 const pageSize = 10; // Number of items per page
 
-const totalPosts = ref(0);
+const totalPosts = ref<number>(0);
 
 const pageRange = computed(() => {
   const totalPages = Math.ceil(totalPosts.value / pageSize);
-  const range = [];
+  const range: number[] = [];
   for (let i = 1; i <= totalPages; i++) {
     range.push(i);
   }
   return range;
 });
 
-const commentSize = ref("")
+const commentSize = ref<string>("");
 
 const router = useRoute();
 
-
-
-const truncateTitle = (title) => {
+const truncateTitle = (title: string): string => {
   if (title.length > 30) {
     return title.slice(0, 37) + '...';
   }
   return title;
 };
-const getCommentSize = function (post) {
-  commentSize.value = post.value.comments.length
-  return commentSize
-}
-const loadPage = async (pageNumber) => {
+
+const loadPage = async (pageNumber: number): Promise<void> => {
   if (pageNumber <= 0) return;
   const route = useRoute();
   try {
@@ -121,10 +100,9 @@ const loadPage = async (pageNumber) => {
 
 // Load the initial page when the component is mounted
 onMounted(() => {
-
   // Check if the initial page number is provided in the route query
   const route = useRoute();
-  const initialPage = parseInt(route.query.page);
+  const initialPage = parseInt(route.query.page as string);
   if (!isNaN(initialPage) && initialPage > 0) {
     loadPage(initialPage);
   } else {

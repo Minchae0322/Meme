@@ -6,7 +6,7 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router/index.js'
 import mitt from 'mitt'
-import store from './stores'; // Import your Vuex store
+import store from './stores/store.js'; // Import your Vuex store
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 

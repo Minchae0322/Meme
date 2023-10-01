@@ -72,38 +72,38 @@
 import axios from 'axios';
 import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
-import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-const posts = ref([]);
-const page = ref(1); // Initial page number
+const posts = ref<any[]>([]);
+const page = ref<number>(1); // Initial page number
 const pageSize = 10; // Number of items per page
 
-const totalPosts = ref(0);
+const totalPosts = ref<number>(0);
 
 const pageRange = computed(() => {
   const totalPages = Math.ceil(totalPosts.value / pageSize);
-  const range = [];
+  const range: number[] = [];
   for (let i = 1; i <= totalPages; i++) {
     range.push(i);
   }
   return range;
 });
 
-const commentSize = ref("")
+const commentSize = ref<string>("");
 
-
-const truncateTitle = (title) => {
+const truncateTitle = (title: string): string => {
   if (title.length > 30) {
     return title.slice(0, 37) + '...';
   }
   return title;
 };
-const getCommentSize = function (post) {
-  commentSize.value = post.value.comments.length
-  return commentSize
+
+const getCommentSize = (post: any): string => {
+  commentSize.value = post.comments.length.toString();
+  return commentSize.value;
 };
 
-const loadPage = async (pageNumber) => {
+const loadPage = async (pageNumber: number): Promise<void> => {
   if (pageNumber <= 0) return;
   const route = useRoute();
   try {
@@ -120,7 +120,7 @@ const loadPage = async (pageNumber) => {
 onMounted(() => {
   // Check if the initial page number is provided in the route query
   const route = useRoute();
-  const initialPage = parseInt(route.query.page);
+  const initialPage = parseInt(route.query.page as string);
   if (!isNaN(initialPage) && initialPage > 0) {
     loadPage(initialPage);
   } else {

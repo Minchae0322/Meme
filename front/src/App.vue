@@ -48,7 +48,7 @@
 
 
 
-<script setup lang="js">
+<script setup lang="ts">
 import {computed, ref} from "vue";
 import axios from "axios";
 
