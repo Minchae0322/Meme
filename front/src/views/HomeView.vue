@@ -92,7 +92,7 @@ const loadPage = async (pageNumber: number): Promise<void> => {
     const response = await axios.get(`http://localhost:8080/board/posts/hotList?page=${pageNumber}&size=10`);
     posts.value = response.data;
     page.value = pageNumber;
-    route.query.page = pageNumber;
+    route.query.page = '1';
   } catch (error) {
     console.error('Error loading page:', error);
   }

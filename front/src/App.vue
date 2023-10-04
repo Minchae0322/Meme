@@ -39,7 +39,6 @@
     <hr/>
 
     <main>
-      <child-component @login-success="onLoginSuccess"></child-component>
       <RouterView />
     </main>
 
@@ -54,11 +53,12 @@ import axios from "axios";
 
 import { useRouter} from "vue-router";
 import { onMounted , watch} from "vue";
-import { useStore } from 'vuex'; // Import useStore to access the store
-const store = useStore(); // Access the Vuex store
+import store from "@/stores/store";
+//import { useStore } from 'vuex'; // Import useStore to access the store
+//const store = useStore(); // Access the Vuex store
 
 const router = useRouter()
-const isLogin = computed(() => store.state.isLogin);
+const isLogin = computed(() =>store.state.isLogin);
 const loginRouter = ref('/logout');
 onMounted(() =>
 {

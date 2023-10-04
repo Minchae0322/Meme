@@ -70,6 +70,7 @@ public class WebSecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:5173");
+        configuration.addAllowedOrigin("http://3.37.128.174");
         configuration.addAllowedOrigin("https://www.youtube.com");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");

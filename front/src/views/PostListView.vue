@@ -107,10 +107,10 @@ const loadPage = async (pageNumber: number): Promise<void> => {
   if (pageNumber <= 0) return;
   const route = useRoute();
   try {
-    const response = await axios.get(`http://localhost:8080/board/posts/list?page=${pageNumber}&size=10`);
+    const response = await axios.get(`http://3.37.128.174/board/posts/list?page=${pageNumber}&size=10`);
     posts.value = response.data;
     page.value = pageNumber;
-    route.query.page = pageNumber;
+    route.query.page = "1";
   } catch (error) {
     console.error('Error loading page:', error);
   }

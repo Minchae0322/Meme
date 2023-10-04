@@ -2,9 +2,10 @@
 import axios from "axios";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { useStore } from 'vuex';
+import store from "@/stores/store";
+//import { useStore } from 'vuex';
 
-const store = useStore();
+//const store = useStore();
 const router = useRouter();
 
 const isAlphaNumeric = function(password: string): boolean {
