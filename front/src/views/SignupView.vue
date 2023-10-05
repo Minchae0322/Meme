@@ -97,12 +97,12 @@ const write = async function () {
       password.value === passwordCheck.value
   ) {
 
-    axios.post("http://localhost:8080/auth/mailVerify", {
+    axios.post("http://13.125.165.102/auth/mailVerify", {
       subject: email.value,
       verificationCode: verificationCode.value
     }).then(response => {
       if (response.status === 200) {
-        axios.post("http://localhost:8080/auth/signup", {
+        axios.post("http://13.125.165.102/auth/signup", {
           username: username.value,
           password: password.value,
           email: email.value,
@@ -183,14 +183,14 @@ const sendVerificationCode = function () {
   isValidEmail.value = emailPattern.test(email.value);
 
   if (isValidEmail.value) {
-    axios.post("http://localhost:8080/auth/isExistEmail", {
+    axios.post("http://13.125.165.102/auth/isExistEmail", {
       subject: email.value,
     }, {
       headers: {}
     }).then((response) => {
       if (response.status === 200) {
         isVerificationCodeSent.value = true;
-        axios.post("http://localhost:8080/auth/sendMail", {
+        axios.post("http://13.125.165.102/auth/sendMail", {
           subject: email.value,
         }, {
           headers: {}

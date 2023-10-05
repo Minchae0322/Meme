@@ -44,5 +44,5 @@
     "vite": "^4.4.6",
     "vue-tsc": "^1.8.6"
   },
-  "proxy": ["http://localhost:8080", "http://3.37.128.174"]
+  "proxy": ["http://localhost:8080", "http://13.125.165.102"]
 }

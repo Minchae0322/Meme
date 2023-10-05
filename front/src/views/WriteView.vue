@@ -88,7 +88,7 @@ const checkLogin = function () {
   const accessToken = localStorage.getItem("accessToken");
   if (accessToken) {
     try {
-      axios.get("http://localhost:8080/auth/isValidToken", {
+      axios.get("http://13.125.165.102/auth/isValidToken", {
         headers: {
           'Authorization': accessToken
         }
@@ -135,7 +135,7 @@ const write = function () {
   });
 
   axios
-      .post("http://localhost:8080/board/user/writePost", frm, {
+      .post("http://13.125.165.102/board/user/writePost", frm, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': localStorage.getItem("accessToken")

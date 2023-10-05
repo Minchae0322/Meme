@@ -79,7 +79,7 @@ function checkLogin(){
 
 
 const logout = function () {
-  axios.post("http://localhost:8080/auth/logout", {} ,{headers: {
+  axios.post("http://13.125.165.102/auth/logout", {} ,{headers: {
         'Authorization': localStorage.getItem("accessToken")
   }}
   ).then((response) => {

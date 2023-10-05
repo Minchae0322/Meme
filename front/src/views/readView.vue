@@ -130,7 +130,7 @@ onMounted(() => {
 const images = ref([])
 const fetchImage = function () {
   axios
-      .get(`http://localhost:8080/board/posts/${props.postId}/image`, {
+      .get(`http://13.125.165.102/board/posts/${props.postId}/image`, {
       })
       .then((response) => {
         console.log(response.data.imageData)
@@ -147,7 +147,7 @@ const fetchImage = function () {
 const checkLogin =  function () {
   const accessToken = localStorage.getItem("accessToken");
   if (accessToken) {
-    axios.get("http://localhost:8080/auth/isValidToken", {
+    axios.get("http://13.125.165.102/auth/isValidToken", {
         headers: {
           'Authorization': accessToken
         }
@@ -166,13 +166,13 @@ const submitComment = function () {
   } else {
     const accessToken = localStorage.getItem("accessToken");
     if (accessToken) {
-      axios.get("http://localhost:8080/auth/isValidToken", {
+      axios.get("http://13.125.165.102/auth/isValidToken", {
         headers: {
           'Authorization': accessToken
         }
       }).then(response => {
         if (response.status === 200) {
-          axios.post(`http://localhost:8080/board/user/${props.postId}/comments`, {
+          axios.post(`http://13.125.165.102/board/user/${props.postId}/comments`, {
             comment: commentText.value
           }, {
             headers: {
@@ -200,7 +200,7 @@ const getImageSrc = function (imageData) {
 
 
 const upRecommendation = function () {
-  axios.get(`http://localhost:8080/board/user/${props.postId}/up`, {
+  axios.get(`http://13.125.165.102/board/user/${props.postId}/up`, {
     headers: {
       'Authorization': localStorage.getItem("accessToken")
     }
@@ -212,7 +212,7 @@ const upRecommendation = function () {
 };
 const deletePost = function () {
   if(confirm("정말 삭제하시겠습니까?")) {
-    axios.delete(`http://localhost:8080/board/user/${props.postId}`, {
+    axios.delete(`http://13.125.165.102/board/user/${props.postId}`, {
       headers: {
         'Authorization': localStorage.getItem("accessToken")
       }
@@ -234,7 +234,7 @@ const deletePost = function () {
 
 const deleteComment = function (commendId) {
   if(confirm("정말 삭제하시겠습니까?")) {
-    axios.delete(`http://localhost:8080/board/user/${props.postId}/${commendId}/delete`, {
+    axios.delete(`http://13.125.165.102/board/user/${props.postId}/${commendId}/delete`, {
       headers: {
         'Authorization': localStorage.getItem("accessToken")
       }
@@ -255,7 +255,7 @@ const deleteComment = function (commendId) {
 }
 const loadPost = function () {
   axios
-      .get(`http://localhost:8080/board/posts/${props.postId}`)
+      .get(`http://13.125.165.102/board/posts/${props.postId}`)
       .then((response) => {
         // Assuming the response contains the post object with youtubeUrl
         post.value = response.data;
@@ -271,7 +271,7 @@ const loadPost = function () {
 const comments = ref([]);
 const loadComment = function () {
   axios
-      .get(`http://localhost:8080/board/posts/${props.postId}/comments`)
+      .get(`http://13.125.165.102/board/posts/${props.postId}/comments`)
       .then((response) => {
         // Assuming the response contains the post object with youtubeUrl
         comments.value = response.data;
