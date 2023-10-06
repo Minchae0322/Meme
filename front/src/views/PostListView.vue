@@ -273,19 +273,18 @@ li {
 }
 
 /* Media query for mobile devices */
-@media screen and (max-width: 480px) {
-  .pagination {
-    flex-direction: column; /* Stack pagination items vertically */
-    align-items: center; /* Center items vertically */
+@media (max-width: 768px) {
+
+  .post-info {
+    justify-content: start;
   }
 
-  .pagination li {
-    margin: 5px 0; /* Add space above and below each item */
-  }
-
-  .pagination a {
-    display: inline-block; /* Remove block display for inline layout */
-    width: auto; /* Let items expand to fit content */
+  .titleContainer {
+    width: 75%;
+    align-items: center;
+    padding-left: 0px;
   }
 }
+
+
 </style>

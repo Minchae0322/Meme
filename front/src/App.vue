@@ -1,49 +1,43 @@
+<template>
+  <head>
+    <title>MEME 게시판</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+  <header>
+    <div class="header_menu">
+      <div class="menu_logo">
 
-  <template>
-    <head><title>MEME 게시판</title></head>
-    <body>
-    <header>
-
-
-    <div class="nav_bar">
-      <div class="nav_logo">
-        <i></i>
-        <a href = "/home"> MEME </a>
+        <a href="/home"> MEME </a>
       </div>
 
-      <ul class="nav">
+      <ul class="menu_nav">
         <div>
-        <RouterLink to="/home">인기글</RouterLink>
+          <RouterLink to="/home">인기글</RouterLink>
         </div>
         <div>
           <RouterLink to="/write">글 작성</RouterLink>
         </div>
         <div>
-            <RouterLink to="/posts">글 목록</RouterLink>
+          <RouterLink to="/posts">글 목록</RouterLink>
         </div>
 
 
       </ul>
-
-      <div class="nav_link">
-
+      <div class="menu_link">
         <div class="logout-button">
           <el-button :id="isLogin === '로그인' ? 'logout-large' : 'logout'" @click="handleLogout">{{ isLogin }}</el-button>
           <el-button id="signup" @click="goSignup" v-if="isLogin === '로그인'">회원가입</el-button>
         </div>
       </div>
-
-
     </div>
-    </header>
-    <hr/>
-
-    <main>
-      <RouterView />
-    </main>
-
-    </body>
-  </template>
+  </header>
+  <hr />
+  <main>
+    <RouterView />
+  </main>
+  </body>
+</template>
 
 
 
@@ -114,14 +108,13 @@ function goSignup() {
 
 
   <style>
-  .nav_bar {
+  .header_menu {
     display: flex;
     justify-content: space-between;
     align-items: center;
     height: 7%;
-    margin-left: 100px;
+    margin: 20px 0;
     padding: 6px 20px;
-    margin-top: 20px;
   }
 
   header {
@@ -140,30 +133,55 @@ function goSignup() {
     width: 90vw;
   }
 
-  .nav {
+  .menu_nav {
     display: flex;
-    font-size: 20px;
+    font-size: 17px;
     width: 60%;
     margin: 20px 0;
     list-style: none;
   }
 
-  .nav div {
-    margin: 9px 20px;
+  .menu_nav div {
+    margin: 0px 20px;
     background: white;
   }
 
-  .nav_logo {
-    font-size: 30px;
+  .menu_logo {
+    justify-content: start;
+    font-size: 25px;
   }
 
+  body {
+    background: white;
+    margin: 0 auto;
+    min-width: 90vw;
+    width: 90vw;
+    padding: 0 10px; /* Add some padding to the body */
+  }
+
+  /* Add media query for mobile devices */
+  @media (max-width: 768px) {
+    .header_menu {
+      flex-direction: row;
 
 
-* {
-  font-family: 'Noto Sans KR', sans-serif;
-  font-weight: 500;
-}
+    }
+    .menu_logo {
 
 
+      justify-content: start;
+    }
+    .menu_nav {
+      justify-content: start;
+      width: 100%;
+      display: flex;
+      font-size: 21px;
+      text-align: center;
+    }
+  }
 
+  * {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 500;
+  }
   </style>
