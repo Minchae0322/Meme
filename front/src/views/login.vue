@@ -92,7 +92,7 @@ const write = async function (): Promise<void> {
 
 <style scoped>
 .login{
-  width: 30%;
+  width: 35%;
   align-items: center;
   padding-top: 50px;
   margin: 0 auto; /* Add this line to horizontally center the element */
@@ -172,5 +172,10 @@ const write = async function (): Promise<void> {
   cursor: pointer;
 }
 
+@media (max-width: 900px) {
+   .login {
+     width: 70%;
+   }
+}
 
 </style>

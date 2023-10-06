@@ -6,7 +6,9 @@
   <body>
   <header>
     <div class="header_menu">
-      <div class="menu_logo">
+      <div class="menu_small">
+
+        <div class="menu_logo">
 
         <a href="/home"> MEME </a>
       </div>
@@ -24,6 +26,8 @@
 
 
       </ul>
+
+      </div>
       <div class="menu_link">
         <div class="logout-button">
           <el-button :id="isLogin === '로그인' ? 'logout-large' : 'logout'" @click="handleLogout">{{ isLogin }}</el-button>
@@ -110,32 +114,44 @@ function goSignup() {
   <style>
   .header_menu {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
     height: 7%;
-    margin: 20px 0;
-    padding: 6px 20px;
-  }
-
-  header {
-    margin: 0;
-  }
-
-  hr {
-    margin-top: 10px;
-  }
-
-  body {
-    background: white;
-    margin: 0 auto;
-    display: flow;
-    min-width: 90vw;
     width: 90vw;
+    align-items: center;
+
   }
+
+  .menu_small {
+    display: flex;
+    height: 7%;
+    width: 77%;
+    margin-left: 20px;
+    align-items: center;
+  }
+
+  el-button {
+    width: 10px;
+  }
+
+  .menu_logo {
+    justify-content: start;
+    margin: 20px 10px;
+    font-size: 25px;
+  }
+
+  .menu_link {
+    display: flex;
+    justify-content: flex-end; /* 요소들을 오른쪽 끝으로 정렬 */
+    align-items: center; /* 세로 방향 중앙 정렬 */
+    width: 25%;
+  }
+
+
+
 
   .menu_nav {
     display: flex;
     font-size: 17px;
+    justify-content: center;
     width: 60%;
     margin: 20px 0;
     list-style: none;
@@ -146,37 +162,52 @@ function goSignup() {
     background: white;
   }
 
-  .menu_logo {
-    justify-content: start;
-    font-size: 25px;
-  }
 
   body {
     background: white;
-    margin: 0 auto;
     min-width: 90vw;
     width: 90vw;
+    display: flow;
     padding: 0 10px; /* Add some padding to the body */
   }
 
   /* Add media query for mobile devices */
   @media (max-width: 768px) {
     .header_menu {
-      flex-direction: row;
-
-
+      flex-direction: column-reverse; /* 세로로 정렬하고, menu_link를 아래에 배치 */
     }
+
+    .logout-button {
+      display: flex;
+    }
+
     .menu_logo {
-
-
       justify-content: start;
+      align-items: start;
+      font-size: 20px;
     }
+
     .menu_nav {
       justify-content: start;
       width: 100%;
       display: flex;
-      font-size: 21px;
+      font-size: 14px;
       text-align: center;
+    }
+
+    .menu_nav div {
+      margin: 0px 14px;
+    }
+
+    .menu_small {
+      flex-direction: row;
+      font-size: 13px;
+      width: 83%;
+    }
+
+    .logout-button {
+      align-items: center;
+      justify-content: center;
     }
   }
 
@@ -184,4 +215,6 @@ function goSignup() {
     font-family: 'Noto Sans KR', sans-serif;
     font-weight: 500;
   }
+
+
   </style>

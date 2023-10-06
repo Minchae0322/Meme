@@ -40,15 +40,16 @@
   <!-- Pagination Controls -->
   <div class="page">
     <ul class="pagination model">
-      <li><a href="#" class="first" @click="loadPage(1)">처음 페이지</a></li>
-      <li><a href="#" class="arrow left">이전</a></li>
-      <li><a href="#" class="active num" @click="loadPage(1)">1</a></li>
-      <li><a href="#" class="num" @click="loadPage(2)">2</a></li>
-      <li><a href="#" class="num" @click="loadPage(3)">3</a></li>
-      <li><a href="#" class="num" @click="loadPage(4)">4</a></li>
-      <li><a href="#" class="num" @click="loadPage(5)">5</a></li>
-      <li><a href="#" class="arrow right">다음</a></li>
-      <li><a href="#" class="last" @click="loadPage(pageRange.length)">끝 페이지</a></li>
+      <li><a href="#" class="arrow left" @click="previousPage">이전</a></li>
+      <li v-for="pageNumber in visiblePageNumbers" :key="pageNumber">
+        <a
+            href="#"
+            class="num"
+            @click="loadPage(pageNumber)"
+            :class="{ active: pageNumber === page }"
+        >{{ pageNumber }}</a>
+      </li>
+      <li><a href="#" class="arrow right" @click="nextPage">다음</a></li>
     </ul>
   </div>
 </template>
@@ -84,7 +85,36 @@ const truncateTitle = (title: string): string => {
   }
   return title;
 };
+const visiblePageNumbers = computed(() => {
+  const currentPage = page.value;
+  const totalPages = Math.ceil(totalPosts.value / pageSize);
+  const startPage = Math.max(1, currentPage - 2);
+  const endPage = Math.min(totalPages, currentPage + 2);
 
+  const pageNumbers = [];
+  for (let i = startPage; i <= endPage; i++) {
+    pageNumbers.push(i);
+  }
+
+  return pageNumbers;
+});
+
+const nextPage = () => {
+  const totalPages = Math.ceil(totalPosts.value / pageSize);
+  if (page.value + 5 <= totalPages) {
+    loadPage(page.value + 5);
+  } else {
+    loadPage(totalPages);
+  }
+};
+
+const previousPage = () => {
+  if (page.value - 5 >= 1) {
+    loadPage(page.value - 5);
+  } else {
+    loadPage(1);
+  }
+};
 const loadPage = async (pageNumber: number): Promise<void> => {
   if (pageNumber <= 0) return;
   const route = useRoute();
@@ -123,12 +153,13 @@ onMounted(() => {
   width: 75%;
   align-items: center;
   padding-left: 150px;
+  display: flex;
 }
 
 .commentContainer {
   display: flex;
   color: #333333;
-  font-size: 11px;
+  font-size: 10px;
   align-items: center;
 
 }
@@ -144,7 +175,7 @@ onMounted(() => {
 .title {
   margin: 0 20px;
   padding-left: 50px;
-  font-size: 20px;
+  font-size: 16px;
 
   white-space: nowrap; /* Prevent line breaks */
   overflow: hidden; /* Hide overflowing text */
@@ -154,14 +185,14 @@ onMounted(() => {
 
   width: 15%;
   margin-left: 5px;
-  font-size: 15px;
+  font-size: 12px;
   color: #157e7e;
 }
 
 .postTypeContainer {
   display: flex;
-  font-size: 15px;
-  color: #da6500;
+  font-size: 12px;
+  color: brown;
 }
 .page {
   text-align: center;
@@ -180,7 +211,7 @@ onMounted(() => {
 .viewContainer {
   display: flex;
   color: rgba(51, 51, 51, 0.58);
-  font-size: 14px;
+  font-size: 12px;
   align-items: center;
   margin-left: 5px;
 
@@ -190,7 +221,7 @@ onMounted(() => {
 .recommendationContainer {
   display: flex;
   color: rgba(51, 51, 51, 0.58);
-  font-size: 14px;
+  font-size: 12px;
   align-items: center;
   margin-left: 10px
 
@@ -222,9 +253,9 @@ onMounted(() => {
 
 .pagination a {
   display: block;
-  font-size: 14px;
+  font-size: 12px;
   text-decoration: none;
-  padding: 5px 12px;
+  padding: 3px 8px;
   color: #222222;
   line-height: 1.5;
   border: 1px solid #ccc; /* Add a border for better visibility */
@@ -240,9 +271,7 @@ li {
   background-color: #f0f0f0; /* Change background color on hover */
 }
 
-.titleContainer {
-  display: flex;
-}
+
 
 .infoContainer {
   display: flow;
@@ -255,19 +284,43 @@ li {
 }
 
 /* Media query for mobile devices */
-@media screen and (max-width: 480px) {
-  .pagination {
-    flex-direction: column; /* Stack pagination items vertically */
-    align-items: center; /* Center items vertically */
+@media (max-width: 768px) {
+
+  .post-info {
+    justify-content: start;
   }
 
-  .pagination li {
-    margin: 5px 0; /* Add space above and below each item */
+  .titleContainer {
+    width: 75%;
+    align-items: center;
+    padding-left: 0px;
+    margin-left: 0px;
   }
 
   .pagination a {
-    display: inline-block; /* Remove block display for inline layout */
-    width: auto; /* Let items expand to fit content */
+    font-size: 8px;
+  }
+
+  .title {
+    margin-left: 0;
+  }
+
+  .recommendationContainer {
+    font-size: 8px;
+  }
+
+  .authorContainer {
+    font-size: 7px;
+  }
+
+  .viewContainer {
+    font-size: 8px;
+  }
+
+  .commentContainer {
+    font-size: 8px;
   }
 }
+
+
 </style>

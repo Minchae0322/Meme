@@ -379,6 +379,7 @@ p {
 .postInfo {
   display: flex; /* Use flexbox to arrange child elements horizontally */
   align-content: center; /* Center align child elements vertically */
+  width: 90vw;
 
 }
 .commentInfo hr {
@@ -544,6 +545,82 @@ p {
 
 .writeComment {
   width: 80%;
+}
+
+@media (max-width: 768px) {
+  .titleContainer {
+    margin: 5px 5px; /* 모바일 화면에서는 여백을 작게 조정 */
+    padding: 5px;
+
+  }
+
+  .commentContainer {
+    margin: 0 0;
+  }
+
+  h1.title {
+    font-size: 26px; /* 모바일 화면에서 제목 폰트 크기 줄이기 */
+  }
+
+  p {
+    font-size: 13px; /* 모바일 화면에서 내용 폰트 크기 줄이기 */
+  }
+
+  .commentText {
+    font-size: 14px; /* 모바일 화면에서 댓글 폰트 크기 줄이기 */
+  }
+
+  .postInfo {
+    font-size: 8px;
+  }
+
+  .authorContainer {
+    font-size: 14px;
+  }
+
+  .viewContainer {
+    font-size: 11px;
+
+  }
+
+  .createdTime {
+    font-size: 11px;
+  }
+
+  .recommendationContainer {
+    font-size: 11px;
+    margin-left: 0;
+  }
+
+  .commentContainer {
+    font-size: 11px;
+    margin-left: 0;
+  }
+
+  .deleteContainer {
+    margin-right: auto;
+    font-size: 12px;
+  }
+
+  iframe {
+    width: 500px;
+    height: 387px;
+  }
+
+  .youtubeContainer {
+    margin: 10px 0;
+  }
+
+
+
+  .content {
+    margin: 10px 0;
+  }
+
+  img {
+    width: 500px;
+  }
+  /* 다른 요소들에 대한 스타일도 필요한 경우 추가하세요. */
 }
 /* 필요한 경우 이미지 뷰어를 스타일링할 CSS를 추가하세요 */
 </style>

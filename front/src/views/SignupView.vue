@@ -216,7 +216,7 @@ const goLogin = function () {
 <style scoped>
 
 .registration {
-  width: 30%;
+  width: 35%;
   align-items: center;
   padding-bottom: 20px;
   margin: 0 auto; /* Add this line to horizontally center the element */
@@ -327,5 +327,11 @@ const goLogin = function () {
 .sendButton {
   margin-bottom: 20px;
 
+}
+
+@media (max-width: 900px) {
+  .registration {
+    width: 80%;
+  }
 }
 </style>
