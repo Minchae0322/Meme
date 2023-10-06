@@ -79,7 +79,7 @@ function checkLogin(){
 
 
 const logout = function () {
-  axios.post("http://13.125.165.102/auth/logout", {} ,{headers: {
+  axios.post("http://13.125.165.102/api/auth/logout", {} ,{headers: {
         'Authorization': localStorage.getItem("accessToken")
   }}
   ).then((response) => {
@@ -88,7 +88,7 @@ const logout = function () {
       console.log('access 토큰 :', "로그아웃");
     }
   })
-
+  localStorage.removeItem("accessToken");
 }
 
 function handleLogout() {

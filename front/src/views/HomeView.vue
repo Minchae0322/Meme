@@ -89,7 +89,7 @@ const loadPage = async (pageNumber: number): Promise<void> => {
   if (pageNumber <= 0) return;
   const route = useRoute();
   try {
-    const response = await axios.get(`http://13.125.165.102/board/posts/hotList?page=${pageNumber}&size=10`);
+    const response = await axios.get(`http://13.125.165.102/api/board/posts/hotList?page=${pageNumber}&size=1`);
     posts.value = response.data;
     page.value = pageNumber;
     route.query.page = '1';

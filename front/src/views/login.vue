@@ -27,7 +27,7 @@ const checkLogin = async function (): Promise<void> {
   const accessToken = localStorage.getItem("accessToken");
   if (accessToken) {
     try {
-      const response = await axios.get("http://13.125.165.102/auth/isValidToken", {
+      const response = await axios.get("http://13.125.165.102/api/auth/isValidToken", {
         headers: {
           'Authorization': accessToken
         }
@@ -47,7 +47,7 @@ const goSignup = function (): void {
 
 const write = async function (): Promise<void> {
   try {
-    const response = await axios.post("http://13.125.165.102/auth/login", {
+    const response = await axios.post("http://13.125.165.102/api/auth/login", {
       username: username.value,
       password: password.value
     }, {
