@@ -113,6 +113,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public long getPostsCount() {
+        return postRepository.count();
+    }
+
+    @Override
     public List<PostResponse> getPostListByPostType(Page page, PostType postType) {
         return postRepository.findPostsByPostTypeAndPage(page, postType)
                 .stream()

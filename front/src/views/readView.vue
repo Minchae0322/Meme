@@ -35,7 +35,7 @@
 
       <div class="commentContainer">
         <font-awesome-icon class="commentIcon" icon="fa-regular fa-comment" />
-        <div class="comment">{{commentSize}}</div>
+        <div class="commentSize">{{commentSize}}</div>
 
 
       </div>
@@ -492,7 +492,7 @@ p {
 
 }
 
-.comment {
+.commentSize {
   margin: 0 5px;
 
 }
@@ -603,8 +603,8 @@ p {
   }
 
   iframe {
-    width: 500px;
-    height: 387px;
+    width: 370px;
+    height: 260px;
   }
 
   .youtubeContainer {
@@ -618,7 +618,7 @@ p {
   }
 
   img {
-    width: 500px;
+    width: 300px;
   }
   /* 다른 요소들에 대한 스타일도 필요한 경우 추가하세요. */
 }

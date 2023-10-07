@@ -1,8 +1,5 @@
 <template>
-  <head>
-    <title>MEME 게시판</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-  </head>
+
   <body>
   <header>
     <div class="header_menu">
@@ -14,16 +11,15 @@
       </div>
 
       <ul class="menu_nav">
-        <div>
+        <li>
           <RouterLink to="/home">인기글</RouterLink>
-        </div>
-        <div>
+        </li>
+        <li>
           <RouterLink to="/write">글 작성</RouterLink>
-        </div>
-        <div>
+        </li>
+        <li>
           <RouterLink to="/posts">글 목록</RouterLink>
-        </div>
-
+        </li>
 
       </ul>
 
@@ -112,64 +108,68 @@ function goSignup() {
 
 
   <style>
+
+  body {
+    background: white;
+    min-width: 95vw;
+    display: flow;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+  }
+
   .header_menu {
     display: flex;
-    height: 7%;
-    width: 90vw;
+    width: 100%;
     align-items: center;
+  }
 
+  hr {
+    margin-top: 10px;
   }
 
   .menu_small {
     display: flex;
-    height: 7%;
     width: 77%;
-    margin-left: 20px;
-    align-items: center;
+    margin-left: 50px;
   }
 
-  el-button {
-    width: 10px;
-  }
 
   .menu_logo {
-    justify-content: start;
-    margin: 20px 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-size: 25px;
+  }
+
+  .menu_nav {
+    display: flex;
+    font-size: 17px;
+    justify-content: center;
+    align-items: center;
+    width: 60%;
+    margin: 20px 0;
+    list-style: none;
+  }
+
+  .menu_nav li {
+    margin: 0px 20px;
+    background: white;
   }
 
   .menu_link {
     display: flex;
     justify-content: flex-end; /* 요소들을 오른쪽 끝으로 정렬 */
     align-items: center; /* 세로 방향 중앙 정렬 */
-    width: 25%;
+    width: 23%;
   }
 
 
 
 
-  .menu_nav {
-    display: flex;
-    font-size: 17px;
-    justify-content: center;
-    width: 60%;
-    margin: 20px 0;
-    list-style: none;
-  }
-
-  .menu_nav div {
-    margin: 0px 20px;
-    background: white;
-  }
 
 
-  body {
-    background: white;
-    min-width: 90vw;
-    width: 90vw;
-    display: flow;
-    padding: 0 10px; /* Add some padding to the body */
-  }
+
 
   /* Add media query for mobile devices */
   @media (max-width: 768px) {
@@ -182,8 +182,9 @@ function goSignup() {
     }
 
     .menu_logo {
-      justify-content: start;
-      align-items: start;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       font-size: 20px;
     }
 
@@ -191,16 +192,16 @@ function goSignup() {
       justify-content: start;
       width: 100%;
       display: flex;
-      font-size: 14px;
-      text-align: center;
+      font-size: small;
     }
 
-    .menu_nav div {
+    .menu_nav li {
       margin: 0px 14px;
     }
 
     .menu_small {
       flex-direction: row;
+      margin-left: 0px;
       font-size: 13px;
       width: 83%;
     }

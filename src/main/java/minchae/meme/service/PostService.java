@@ -28,6 +28,8 @@ public interface PostService {
 
     void unsetHotPost(Long postId);
 
+    long getPostsCount();
+
 
     List<PostResponse> getPostListByPostType(Page page, PostType postType);
 

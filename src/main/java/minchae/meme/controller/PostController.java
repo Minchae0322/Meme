@@ -46,9 +46,14 @@ public class PostController {
         return postService.get(postId);
     }
 
+    @GetMapping("/board/posts/count")
+    public long getPostsCount() {
+        return postService.getPostsCount();
+    }
 
     @GetMapping("/board/posts/{postId}/image")
     public ImageResponse getPostImages(@PathVariable("postId") Long postId) throws IOException {
+
         List<? extends MultipartFile> imageFiles = fileService.getFiles(postId).getMultipartFileList();
 
 

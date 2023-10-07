@@ -1,8 +1,8 @@
 <template>
-  <div class="post-list">
+  <div class="postsContainer">
     <ul>
       <li v-for="post in posts" :key="post.postId" class="post-item">
-        <div class="post-info">
+        <div class="postInfo">
           <router-link class="titleContainer" :to="{ name: 'read', params: { postId: post.postId } }">
             <div class="postTypeContainer">
               <div>[&nbsp </div>
@@ -13,22 +13,33 @@
             <div class="title">{{ truncateTitle(post.title) }}</div>
             <div class="commentContainer">
               <font-awesome-icon class="commentIcon" icon="fa-regular fa-comment" />
-              <div class="comment">{{ post.comments.length }}</div>
+              <div class="commentSize">{{ post.comments.length }}</div>
+
+
             </div>
           </router-link>
-          <div class="infoContainer">
+          <div class = "infoContainer">
             <div class="authorContainer">
               <div class="authorTitle">작성자 : </div>
-              <div class="author">{{ post.author }}</div>
+              <div class="author">{{post.author}}</div>
             </div>
             <div class="viewAndUp">
+
+
+
               <div class="viewContainer">
                 <font-awesome-icon class="viewIcon" icon="fa-solid fa-eye" />
-                <div class="view">{{ post.views }}</div>
+                <div class="view">{{post.views}}</div>
+
+
               </div>
+
+
               <div class="recommendationContainer">
                 <font-awesome-icon class="recommendationIcon" icon="fa-regular fa-thumbs-up" />
-                <div class="recommendation">{{ post.recommendation }}</div>
+                <div class="recommendation">{{post.recommendation}}</div>
+
+
               </div>
             </div>
           </div>
@@ -142,19 +153,42 @@ onMounted(() => {
 </script>
 
 <style scoped>
+
+.postsContainer {
+
+}
 /* Your existing styles */
-.post-info {
+.postInfo {
   display: flex;
   margin: 30px 10px;
-}
 
+}
 
 .titleContainer {
   width: 75%;
   align-items: center;
   padding-left: 150px;
   display: flex;
+
 }
+
+.postTypeContainer {
+  display: flex;
+  font-size: 12px;
+  color: #a55d2a;
+}
+
+
+.title {
+  margin: 0 20px;
+  padding-left: 50px;
+  font-size: 16px;
+  white-space: nowrap; /* Prevent line breaks */
+  overflow: hidden; /* Hide overflowing text */
+  text-overflow: ellipsis; /* Display ellipsis for overflowed text */
+}
+
+
 
 .commentContainer {
   display: flex;
@@ -164,48 +198,39 @@ onMounted(() => {
 
 }
 
-.comment {
+.commentSize {
   margin: 0 5px;
 
 }
 
 .commentIcon {
-  margin-left: 0;
-}
-.title {
-  margin: 0 20px;
-  padding-left: 50px;
-  font-size: 16px;
 
-  white-space: nowrap; /* Prevent line breaks */
-  overflow: hidden; /* Hide overflowing text */
-  text-overflow: ellipsis; /* Display ellipsis for overflowed text */
 }
+
+.infoContainer {
+  display: flow;
+  width: 25%;
+  margin-left: 10px;
+}
+
+
+.authorContainer {
+  display: flex;
+  color: #333333;
+  margin-bottom: 10px;
+  font-size: 12px;
+  align-items: center;
+}
+
 .author {
-
-  width: 15%;
   margin-left: 5px;
   font-size: 12px;
   color: #157e7e;
 }
 
-.postTypeContainer {
+.viewAndUp {
   display: flex;
-  font-size: 12px;
-  color: brown;
-}
-.page {
-  text-align: center;
-  width: 100%; /* Use full width for mobile devices */
-  margin-top: 20px;
-}
-
-.pagination {
-  list-style: none;
-  display: flex; /* Use flexbox for better alignment */
-  justify-content: center; /* Center the pagination controls */
-  padding: 0;
-  margin: 0;
+  font-size: 10px;
 }
 
 .viewContainer {
@@ -214,9 +239,8 @@ onMounted(() => {
   font-size: 12px;
   align-items: center;
   margin-left: 5px;
-
-
 }
+
 
 .recommendationContainer {
   display: flex;
@@ -236,20 +260,32 @@ onMounted(() => {
 
 }
 
+.page {
+  text-align: center;
+  width: 100%; /* Use full width for mobile devices */
+  margin-top: 20px;
+}
+
+.pagination {
+  list-style: none;
+  display: flex; /* Use flexbox for better alignment */
+  justify-content: center; /* Center the pagination controls */
+  padding: 0;
+  margin: 0;
+}
+
+
+
+
+
+
+
 .pagination li {
   margin: 0 5px; /* Add some space between pagination items */
 }
 
 
-.authorContainer {
-  display: flex;
-  color: #333333;
-  margin-bottom: 10px;
-  font-size: 12px;
-  align-items: center;
-  margin-left: auto;
 
-}
 
 .pagination a {
   display: block;
@@ -273,21 +309,15 @@ li {
 
 
 
-.infoContainer {
-  display: flow;
-  margin-left: 10px;
-}
 
-.viewAndUp {
-  display: flex;
-  font-size: 10px;
-}
 
 /* Media query for mobile devices */
 @media (max-width: 768px) {
 
-  .post-info {
+  .postInfo {
     justify-content: start;
+    margin: 20px 0;
+
   }
 
   .titleContainer {
@@ -301,24 +331,34 @@ li {
     font-size: 8px;
   }
 
+  .postTypeContainer {
+    font-size: 6px;
+  }
+
   .title {
     margin-left: 0;
+    padding-left: 20px;
+    font-size: small;
   }
 
   .recommendationContainer {
     font-size: 8px;
   }
 
-  .authorContainer {
-    font-size: 7px;
+
+  .author {
+    font-size: 6px;
   }
 
+  .authorTitle {
+    font-size: 5px;
+  }
   .viewContainer {
-    font-size: 8px;
+    font-size: 6px;
   }
 
   .commentContainer {
-    font-size: 8px;
+    font-size: 6px;
   }
 }
 
