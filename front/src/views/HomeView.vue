@@ -75,7 +75,7 @@ const posts = ref<any[]>([]);
 const page = ref<number>(1); // Initial page number
 const pageSize = 10; // Number of items per page
 
-const totalPosts = ref<number>(0);
+const totalPosts = ref<number>(100);
 
 const pageRange = computed(() => {
   const totalPages = Math.ceil(totalPosts.value / pageSize);
@@ -130,7 +130,7 @@ const loadPage = async (pageNumber: number): Promise<void> => {
   if (pageNumber <= 0) return;
   const route = useRoute();
   try {
-    const response = await axios.get(`http://13.125.165.102/api/board/posts/hotList?page=${pageNumber}&size=1`);
+    const response = await axios.get(`http://13.125.165.102/api/board/posts/hotList?page=${pageNumber}&size=10`);
     posts.value = response.data;
     page.value = pageNumber;
     route.query.page = '1';

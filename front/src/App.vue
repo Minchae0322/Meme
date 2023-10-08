@@ -20,7 +20,9 @@
         <li>
           <RouterLink to="/posts">글 목록</RouterLink>
         </li>
-
+        <li>
+          <RouterLink to="/posts">공지사항</RouterLink>
+        </li>
       </ul>
 
       </div>
