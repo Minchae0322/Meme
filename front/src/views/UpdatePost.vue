@@ -18,27 +18,28 @@
         </el-select>
         <el-input class="title" v-model="title" placeholder="제목을 입력하세요" style="height: 50px"></el-input>
 
+
       </div>
       <div class="fileContainer">
-      <el-upload
-          v-model:file-list="fileList"
-          multiple
-          :auto-upload="false"
-          class="upload"
-          :on-remove="handleRemove"
-          :limit="5"
-          list-type="picture"
-          style="margin-top: 10px"
-      >
-        <el-button type="primary">이미지 업로드</el-button>
-        <template #tip>
-          <div class="el-upload__tip">
-            jpg/png files with a size less than 10MB
-          </div>
-        </template>
+        <el-upload
+            v-model:file-list="fileList"
+            multiple
+            :auto-upload="false"
+            class="upload"
+            :on-remove="handleRemove"
+            :limit="5"
+            list-type="picture"
+            style="margin-top: 10px"
+        >
+          <el-button type="primary">이미지 업로드</el-button>
+          <template #tip>
+            <div class="el-upload__tip">
+              jpg/png files with a size less than 10MB
+            </div>
+          </template>
 
 
-      </el-upload>
+        </el-upload>
         <div class="youtubeUrlContainer">
           <el-input v-model="youtubeUrl" placeholder="YouTube 동영상 URL을 입력하세요" style="height: 50px"></el-input>
         </div>
@@ -56,15 +57,15 @@
 </template>
 
 <script setup lang = "js">
-import {onMounted, ref, watch} from "vue";
+import {defineProps, onMounted, ref, watch} from "vue";
 import axios from 'axios'
 import { useRouter } from "vue-router";
 
 const router = useRouter()
+const post = ref({});
 
 const title = ref("")
 const content = ref("")
-let images = new Image()
 let youtubeUrl = ref("");
 let videoId = ref("");
 const showWarning = ref(false); // Initialize the warning state
@@ -79,10 +80,6 @@ const options = [
     disabled: true,
   }
 ]
-
-onMounted( () => {
-  checkLogin()
-});
 
 const checkLogin = function () {
   const accessToken = localStorage.getItem("accessToken");
@@ -105,6 +102,74 @@ const checkLogin = function () {
     router.replace({name: "login"})
   }
 };
+
+const getImageSrc = function (imageData) {
+  //console.log(imageData)
+  // Create a data URL for the image data
+  return `data:image/jpeg;base64,${imageData}`;
+}
+const imageSrc = ref(""); // Set a default image source or placeholder
+const props = defineProps({
+  postId: {
+    type: Number,
+    required:true,
+  }
+})
+const commentText = ref(""); // Data property to store the comment text
+const commentSize = ref("");
+
+onMounted(() => {
+
+    }
+)
+const images = ref([])
+const fetchImage = function () {
+  axios
+      .get(`http://13.125.165.102/api/board/posts/${props.postId}/image`, {
+      })
+      .then((response) => {
+        images.value = response.data.imageData;
+
+        fileList.value = images.value.map((image, index) => ({
+          url: getImageSrc(image), // Set the URL for the image
+          name: `image_${index}`, // Set a unique name for each image
+          status: 'finished', // Set the status to 'finished' since these are existing images
+          raw: image, // Set the raw image data
+
+
+        }));
+        console.log(fileList.value)
+
+      })
+      .catch((error) => {
+        // console.error('이미지 불러오기 오류:', error);
+      });
+};
+
+onMounted( () => {
+  loadPost()
+  checkLogin()
+});
+
+
+const loadPost = function () {
+  axios
+      .get(`http://13.125.165.102/api/board/posts/${props.postId}`)
+      .then((response) => {
+        // Assuming the response contains the post object with youtubeUrl
+        post.value = response.data;
+        title.value = post.value.title;
+        content.value = post.value.content;
+        commentSize.value = post.value.comments.length
+        fetchImage()
+      })
+      .catch((error) => {
+        console.error('이미지 불러오기 오류:', error);
+      });
+
+  console.log(title)
+}
+
 
 const postType = ref("자유"); // Initialize with a default value
 const fileList = ref([]);
@@ -207,7 +272,7 @@ h3 {
 
 .titleContainer {
   display: flex;
- color: #181818;
+  color: #181818;
   width:70%;
   align-items: center;
   margin-top: 15px;

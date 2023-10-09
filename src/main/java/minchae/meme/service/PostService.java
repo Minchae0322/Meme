@@ -19,7 +19,7 @@ public interface PostService {
 
     void delete(Long postId);
 
-    PostResponse update(Long postId, PostEdit postEdit);
+    Post update(Long postId, PostEdit postEdit);
 
     List<PostResponse> getListWherePage(Page page);
 

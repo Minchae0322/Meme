@@ -24,4 +24,8 @@ public interface FileService {
     MultipartFile getFile(UploadFile uploadFile) throws IOException;
 
     void saveFile(MultipartFile file, Post post) throws IOException;
+
+    boolean deleteFile(UploadFile uploadFile);
+
+    boolean deleteFiles(List<UploadFile> uploadFiles);
 }

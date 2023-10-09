@@ -69,6 +69,32 @@ public class FileHandlerImpl implements FileHandler {
         return list;
     }
 
+    public boolean deleteFile(UploadFile uploadFile) {
+        String storeFileName = uploadFile.getStoreFileName();
+        String filePath = getFullPath(storeFileName);
+        File file = new File(filePath);
+
+        if (file.exists()) {
+            if (file.delete()) {
+                return true; // File deleted successfully
+            } else {
+                return false; // Failed to delete the file
+            }
+        } else {
+            return true; // File doesn't exist, treat as a successful deletion
+        }
+    }
+
+    @Override
+    public boolean deleteFiles(List<UploadFile> uploadFiles) {
+        for (UploadFile file : uploadFiles) {
+            if (!deleteFile(file)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     @Override
     public InMemoryMultipartFile extractFile(UploadFile uploadFile) throws IOException {
         File inMemoryFile = new File(getFullPath(uploadFile.getStoreFileName()));

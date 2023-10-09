@@ -12,6 +12,10 @@ public interface FileHandler {
 
     UploadFile storeFile(MultipartFile multipartFile, Post post) throws IOException;
 
+    boolean deleteFile(UploadFile uploadFile);
+
+    boolean deleteFiles(List<UploadFile> uploadFiles);
+
     List<UploadFile> storeFiles(List<MultipartFile> multipartFiles, Post post) throws IOException;
 
     List<InMemoryMultipartFile> extractFiles(List<UploadFile> uploadFiles) throws IOException;

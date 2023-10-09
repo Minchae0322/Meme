@@ -68,19 +68,25 @@ public class PostServiceImpl implements PostService {
     public void delete(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFound::new);
+        List<UploadFile> uploadFiles = post.getUploadFiles();
+        if (!uploadFiles.isEmpty()) {
+            if (!fileService.deleteFiles(uploadFiles)) {
+                throw new RuntimeException();
+            }
+        }
         postRepository.delete(post);
     }
 
     @Override
     @Transactional
-    public PostResponse update(Long postId, PostEdit postEdit) {
+    public Post update(Long postId, PostEdit postEdit) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFound::new);
         if (!post.getAuthor().getUsername().equals(postEdit.getUser().getUsername())) {
             throw new Unauthorized();
         }
         post.update(postEdit);
-        return PostResponse.builder().build().postToPostResponse(post);
+        return post;
     }
     @Override
     @Transactional

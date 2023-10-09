@@ -39,7 +39,17 @@ Content-Type: multipart/form-data
   "content": "dddf"
 
 }
+###
 
+PATCH http://localhost:8080/board/user/12
+Content-Type: multipart/form-data
+
+
+{
+  "title": "dddf",
+  "content": "dddf"
+
+}
 
 ###
 

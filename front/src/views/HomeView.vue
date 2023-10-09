@@ -75,7 +75,7 @@ const posts = ref<any[]>([]);
 const page = ref<number>(1); // Initial page number
 const pageSize = 10; // Number of items per page
 
-const totalPosts = ref<number>(100);
+const totalPosts = ref<number>(10);
 
 const pageRange = computed(() => {
   const totalPages = Math.ceil(totalPosts.value / pageSize);
@@ -128,6 +128,7 @@ const previousPage = () => {
 };
 const loadPage = async (pageNumber: number): Promise<void> => {
   if (pageNumber <= 0) return;
+  getTotalPage()
   const route = useRoute();
   try {
     const response = await axios.get(`http://13.125.165.102/api/board/posts/hotList?page=${pageNumber}&size=10`);
@@ -137,6 +138,17 @@ const loadPage = async (pageNumber: number): Promise<void> => {
   } catch (error) {
     console.error('Error loading page:', error);
   }
+};
+
+
+const getTotalPage = function () {
+  axios.get("http://13.125.165.102/api/board/posts/count")
+      .then(response => {
+        if (response.status === 200) {
+          totalPosts.value = response.data;
+        }
+        console.log(totalPosts.value)
+      });
 };
 
 // Load the initial page when the component is mounted

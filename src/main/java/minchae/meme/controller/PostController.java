@@ -1,6 +1,7 @@
 package minchae.meme.controller;
 
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import minchae.meme.auth.provider.JwtTokenProvider;
 import minchae.meme.entity.Post;
@@ -75,6 +76,7 @@ public class PostController {
 
     @PreAuthorize("hasAnyAuthority('USER','ADMIN','MANAGER')")
     @PostMapping(value = "/board/user/writePost", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @Transactional
     public void writePost(Authentication authentication, @RequestPart("post") PostCreate params, @RequestPart(value = "imageFile", required = false) List<MultipartFile> multipartFiles) throws IOException {
         User user = (User) authentication.getPrincipal();
         params.setUser(user);
@@ -92,9 +94,14 @@ public class PostController {
         return postId;
     }
     @PreAuthorize("hasPermission(#postId,'POST','UPDATE') && hasAuthority('USER')")
-    @PatchMapping("/board/user/{postId}")
-    public PostResponse updatePost(@PathVariable("postId") Long postId, @RequestBody PostEdit postEdit) {
-         return postService.update(postId, postEdit);
+    @PatchMapping(value = "/board/user/{postId}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @Transactional
+    public void updatePost(@PathVariable("postId") Long postId, @RequestPart("post") PostEdit postEdit, @RequestPart(value = "imageFile", required = false) List<MultipartFile> multipartFiles) throws IOException {
+        Post post = postService.update(postId, postEdit);
+        fileService.deleteFiles(post.getUploadFiles());
+        if (multipartFiles != null) {
+            fileService.saveFiles(multipartFiles, post);
+        }
     }
 
 

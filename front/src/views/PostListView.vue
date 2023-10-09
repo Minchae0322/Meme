@@ -108,7 +108,15 @@ const truncateTitle = (title: string): string => {
   }
   return title;
 };
-
+const getTotalPosts = function () {
+  axios.get("http://13.125.165.102/api/board/posts/count")
+      .then(response => {
+        if (response.status === 200) {
+          totalPosts.value = response.data;
+        }
+        console.log(totalPosts.value)
+      });
+};
 const getCommentSize = (post: any): string => {
   commentSize.value = post.comments.length.toString();
   return commentSize.value;
@@ -117,6 +125,7 @@ const getCommentSize = (post: any): string => {
 const loadPage = async (pageNumber: number): Promise<void> => {
   if (pageNumber <= 0) return;
   const route = useRoute();
+  getTotalPosts()
   try {
     const response = await axios.get(`http://13.125.165.102/api/board/posts/list?page=${pageNumber}&size=10`);
     posts.value = response.data;

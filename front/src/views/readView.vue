@@ -42,7 +42,7 @@
 
 
       <div class="deleteContainer">
-        <a  @click = "deletePost">수정</a>
+        <router-link  class="update" :to="{ name: 'update', params: { postId: post.postId } }">수정</router-link>
         <a>|</a>
         <a  @click = "deletePost">삭제</a>
       </div>
@@ -142,6 +142,10 @@ const fetchImage = function () {
       .catch((error) => {
        // console.error('이미지 불러오기 오류:', error);
       });
+};
+
+const updatePost = function () {
+
 };
 
 const checkLogin =  function () {

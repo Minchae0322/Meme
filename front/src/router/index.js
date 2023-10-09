@@ -5,6 +5,7 @@ import PostListView from '../views/PostListView.vue';
 import login from "../views/login.vue";
 import read from "../views/readView.vue";
 import signup from "../views/SignupView.vue";
+import update from "../views/UpdatePost.vue"
 import app from "../App.vue";
 
 const router = createRouter({
@@ -44,6 +45,14 @@ const router = createRouter({
       name: "read",
       component: read,
       props: true
+    },
+
+    {
+      path: "/update/:postId",
+      name: "update",
+      component: update,
+      props: true
+
     }
 
     // {

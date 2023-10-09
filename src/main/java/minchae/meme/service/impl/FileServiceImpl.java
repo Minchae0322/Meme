@@ -71,4 +71,14 @@ public class FileServiceImpl implements FileService {
             write(uploadFile);
         }
     }
+
+    @Override
+    public boolean deleteFile(UploadFile uploadFile) {
+        return fileHandler.deleteFile(uploadFile);
+    }
+
+    @Override
+    public boolean deleteFiles(List<UploadFile> uploadFiles) {
+        return fileHandler.deleteFiles(uploadFiles);
+    }
 }
