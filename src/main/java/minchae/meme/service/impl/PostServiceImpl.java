@@ -82,9 +82,6 @@ public class PostServiceImpl implements PostService {
     public Post update(Long postId, PostEdit postEdit) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFound::new);
-        if (!post.getAuthor().getUsername().equals(postEdit.getUser().getUsername())) {
-            throw new Unauthorized();
-        }
         post.update(postEdit);
         return post;
     }

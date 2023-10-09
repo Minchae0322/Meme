@@ -194,13 +194,13 @@ const write = function () {
   console.log(files)
   let params = JSON.stringify({ title: title.value, content: content.value });
 
-  frm.append("post", new Blob([JSON.stringify({ title: title.value, content: content.value, postType: postType.value, youtubeUrl: youtubeUrl.value })], { type: "application/json" }));
+  frm.append("post", new Blob([JSON.stringify({ title: title.value, content: content.value})], { type: "application/json" }));
   files.forEach((file) => {
     frm.append("imageFile", file);
   });
 
   axios
-      .post("http://13.125.165.102/api/board/user/writePost", frm, {
+      .patch(`http://13.125.165.102/api/board/user/${props.postId}`, frm, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': localStorage.getItem("accessToken")
