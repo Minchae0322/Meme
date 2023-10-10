@@ -82,6 +82,7 @@ public class PostServiceImpl implements PostService {
     public Post update(Long postId, PostEdit postEdit) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFound::new);
+        fileService.deleteFiles(post.getUploadFiles());
         post.update(postEdit);
         return post;
     }

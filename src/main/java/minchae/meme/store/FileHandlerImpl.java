@@ -26,7 +26,6 @@ public class FileHandlerImpl implements FileHandler {
 
 
     public UploadFile storeFile(MultipartFile multipartFile, Post post) throws IOException {
-
         if(multipartFile.isEmpty()) {
             return null;
         }
