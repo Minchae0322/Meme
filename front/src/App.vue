@@ -146,7 +146,7 @@ function goSignup() {
 
   .menu_nav {
     display: flex;
-    font-size: 17px;
+    font-size: 14px;
     justify-content: center;
     align-items: center;
     width: 60%;
@@ -187,18 +187,18 @@ function goSignup() {
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 20px;
+      font-size: 18px;
     }
 
     .menu_nav {
       justify-content: start;
       width: 100%;
       display: flex;
-      font-size: small;
+      font-size: 10px;
     }
 
     .menu_nav li {
-      margin: 0px 14px;
+      margin: 0px 11px;
     }
 
     .menu_small {

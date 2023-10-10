@@ -95,7 +95,6 @@ public class PostController {
     }
     @PreAuthorize("hasPermission(#postId,'POST','UPDATE') && hasAuthority('USER')")
     @PatchMapping(value = "/board/user/{postId}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    @Transactional
     public void updatePost(@PathVariable("postId") Long postId, @RequestPart("post") PostEdit postEdit, @RequestPart(value = "imageFile", required = false) List<MultipartFile> multipartFiles) throws IOException {
         Post post = postService.update(postId, postEdit);
         fileService.deleteFiles(post.getUploadFiles());

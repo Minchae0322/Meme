@@ -8,9 +8,14 @@ import signup from "../views/SignupView.vue";
 import update from "../views/UpdatePost.vue"
 import app from "../App.vue";
 
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    {
+      path: '/', // 도메인 입력 시 초기 페이지를 '/home'으로 설정
+      redirect: '/home'
+    },
     {
       path: '/home',
       name: 'home',
@@ -64,6 +69,7 @@ const router = createRouter({
     //   component: () => import('../views/AboutView.vue')
     // }
   ],
+
 });
 
 export default router

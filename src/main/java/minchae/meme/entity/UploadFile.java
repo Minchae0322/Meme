@@ -20,7 +20,7 @@ public class UploadFile {
 
     private String storeFileName;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     private Post post;
 
 
