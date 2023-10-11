@@ -85,7 +85,7 @@ const pageRange = computed(() => {
   }
   return range;
 });
-
+const apiBaseUrl = "http://localhost:8080";
 const commentSize = ref<string>("");
 
 const router = useRoute();
@@ -131,7 +131,7 @@ const loadPage = async (pageNumber: number): Promise<void> => {
   getTotalPage()
   const route = useRoute();
   try {
-    const response = await axios.get(`http://13.125.165.102/api/board/posts/hotList?page=${pageNumber}&size=10`);
+    const response = await axios.get(`${apiBaseUrl}/board/posts/hotList?page=${pageNumber}&size=10`);
     posts.value = response.data;
     page.value = pageNumber;
     route.query.page = '1';
@@ -142,7 +142,7 @@ const loadPage = async (pageNumber: number): Promise<void> => {
 
 
 const getTotalPage = function () {
-  axios.get("http://13.125.165.102/api/board/posts/count")
+  axios.get(`${apiBaseUrl}/board/posts/count`)
       .then(response => {
         if (response.status === 200) {
           totalPosts.value = response.data;

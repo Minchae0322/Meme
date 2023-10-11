@@ -86,6 +86,7 @@ public class PostServiceImpl implements PostService {
         post.update(postEdit);
         return post;
     }
+
     @Override
     @Transactional
     public List<PostResponse> getListWherePage(Page page) {

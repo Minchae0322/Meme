@@ -97,6 +97,7 @@ public class PostController {
     @PatchMapping(value = "/board/user/{postId}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public void updatePost(@PathVariable("postId") Long postId, @RequestPart("post") PostEdit postEdit, @RequestPart(value = "imageFile", required = false) List<MultipartFile> multipartFiles) throws IOException {
         Post post = postService.update(postId, postEdit);
+
         if (multipartFiles != null) {
             fileService.saveFiles(multipartFiles, post);
         }

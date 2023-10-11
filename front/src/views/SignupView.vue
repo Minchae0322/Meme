@@ -51,7 +51,7 @@ import { ref, onMounted, onUpdated} from "vue";
 
 import { useRouter } from "vue-router";
 
-
+const apiBaseUrl = "http://localhost:8080";
 const router = useRouter()
 const isAlphaNumeric = function(password) {
   // 정규 표현식을 사용하여 영문자와 숫자로만 이루어진지 확인
@@ -97,12 +97,12 @@ const write = async function () {
       password.value === passwordCheck.value
   ) {
 
-    axios.post("http://13.125.165.102/api/auth/mailVerify", {
+    axios.post(`${apiBaseUrl}/auth/mailVerify`, {
       subject: email.value,
       verificationCode: verificationCode.value
     }).then(response => {
       if (response.status === 200) {
-        axios.post("http://13.125.165.102/api/auth/signup", {
+        axios.post(`${apiBaseUrl}/auth/signup`, {
           username: username.value,
           password: password.value,
           email: email.value,
@@ -183,14 +183,14 @@ const sendVerificationCode = function () {
   isValidEmail.value = emailPattern.test(email.value);
 
   if (isValidEmail.value) {
-    axios.post("http://13.125.165.102/api/auth/isExistEmail", {
+    axios.post(`${apiBaseUrl}/auth/isExistEmail`, {
       subject: email.value,
     }, {
       headers: {}
     }).then((response) => {
       if (response.status === 200) {
         isVerificationCodeSent.value = true;
-        axios.post("http://13.125.165.102/api/auth/sendMail", {
+        axios.post(`${apiBaseUrl}/auth/sendMail`, {
           subject: email.value,
         }, {
           headers: {}

@@ -84,7 +84,7 @@ public class Post {
         this.title = postEdit.getTitle();
         this.content = postEdit.getContent();
         this.views++;
-
+        this.uploadFiles.clear();
         //todo 이미지 파일이랑 url 수정도 같이
     }
 

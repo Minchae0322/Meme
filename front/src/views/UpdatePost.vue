@@ -27,6 +27,7 @@
             :auto-upload="false"
             class="upload"
             :on-remove="handleRemove"
+            :on-change="handleChange"
             :limit="5"
             list-type="picture"
             style="margin-top: 10px"
@@ -60,10 +61,10 @@
 import {defineProps, onMounted, ref, watch} from "vue";
 import axios from 'axios'
 import { useRouter } from "vue-router";
-
+const apiBaseUrl = "http://localhost:8080";
 const router = useRouter()
 const post = ref({});
-
+const fileList = ref([]);
 const title = ref("")
 const content = ref("")
 let youtubeUrl = ref("");
@@ -85,7 +86,7 @@ const checkLogin = function () {
   const accessToken = localStorage.getItem("accessToken");
   if (accessToken) {
     try {
-      axios.get("http://13.125.165.102/api/auth/isValidToken", {
+      axios.get(`${apiBaseUrl}/auth/isValidToken`, {
         headers: {
           'Authorization': accessToken
         }
@@ -125,36 +126,39 @@ onMounted(() => {
 const images = ref([])
 const fetchImage = function () {
   axios
-      .get(`http://13.125.165.102/api/board/posts/${props.postId}/image`, {
-      })
+      .get(`${apiBaseUrl}/board/posts/${props.postId}/image`, {})
       .then((response) => {
         images.value = response.data.imageData;
 
-        fileList.value = images.value.map((image, index) => ({
-          url: getImageSrc(image), // Set the URL for the image
-          name: `image_${index}`, // Set a unique name for each image
-          status: 'finished', // Set the status to 'finished' since these are existing images
-          raw: image, // Set the raw image data
-
-
+        // Combine the fetched images with the uploaded images
+        const uploadedImages = fileList.value.filter((file) => file.status !== 'finished');
+        fileList.value = [...images.value, ...uploadedImages].map((image, index) => ({
+          url: getImageSrc(image),
+          name: `image_${index}`,
+          status: 'finished',
+          raw: image,
         }));
-        console.log(fileList.value)
 
+        console.log(fileList.value);
       })
       .catch((error) => {
-        // console.error('이미지 불러오기 오류:', error);
+        console.error('이미지 불러오기 오류:', error);
       });
 };
+
 
 onMounted( () => {
   loadPost()
   checkLogin()
 });
 
-
+const handleChange = function (file, fileList) {
+  // 파일 업로드 상태가 변경될 때 실행할 코드를 여기에 작성
+  console.log('파일 업로드 상태가 변경되었습니다:', fileList.length);
+};
 const loadPost = function () {
   axios
-      .get(`http://13.125.165.102/api/board/posts/${props.postId}`)
+      .get(`${apiBaseUrl}/board/posts/${props.postId}`)
       .then((response) => {
         // Assuming the response contains the post object with youtubeUrl
         post.value = response.data;
@@ -172,7 +176,7 @@ const loadPost = function () {
 
 
 const postType = ref("자유"); // Initialize with a default value
-const fileList = ref([]);
+
 const handleRemove = (file, fileList) => {
   // 파일 삭제 시 fileList에서 해당 파일 제거
   const index = fileList.indexOf(file);
@@ -189,6 +193,8 @@ const write = function () {
     alert("제목과 내용은 공백일 수 없습니다.")
     return; // Stop here and don't proceed with the API call
   }
+
+  console.log('파일 업로드 상태가 변경되었습니다:', fileList.value.length);
   // 새로운 코드: fileList.value를 사용하여 파일 가져오기
   const files = fileList.value.map((item) => item.raw);
   console.log(files)
@@ -200,7 +206,7 @@ const write = function () {
   });
 
   axios
-      .patch(`http://13.125.165.102/api/board/user/${props.postId}`, frm, {
+      .patch(`${apiBaseUrl}/board/user/${props.postId}`, frm, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': localStorage.getItem("accessToken")

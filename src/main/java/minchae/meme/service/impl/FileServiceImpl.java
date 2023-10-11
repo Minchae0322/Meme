@@ -42,7 +42,6 @@ public class FileServiceImpl implements FileService {
         List<UploadFile> uploadFiles = fileHandler.storeFiles(files, post);
         if (uploadFiles != null) {
             writeList(uploadFiles);
-
         }
     }
 

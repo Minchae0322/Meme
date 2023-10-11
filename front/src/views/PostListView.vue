@@ -77,7 +77,7 @@ const page = ref<number>(1); // Initial page number
 const pageSize = 10; // Number of items per page
 
 const totalPosts = ref<number>(10);
-
+const apiBaseUrl = "http://localhost:8080";
 const pageRange = computed(() => {
   const totalPages = Math.ceil(totalPosts.value / pageSize);
   const range: number[] = [];
@@ -109,7 +109,7 @@ const truncateTitle = (title: string): string => {
   return title;
 };
 const getTotalPosts = function () {
-  axios.get("http://13.125.165.102/api/board/posts/count")
+  axios.get(`${apiBaseUrl}/board/posts/count`)
       .then(response => {
         if (response.status === 200) {
           totalPosts.value = response.data;
@@ -127,7 +127,7 @@ const loadPage = async (pageNumber: number): Promise<void> => {
   const route = useRoute();
   getTotalPosts()
   try {
-    const response = await axios.get(`http://13.125.165.102/api/board/posts/list?page=${pageNumber}&size=10`);
+    const response = await axios.get(`${apiBaseUrl}/board/posts/list?page=${pageNumber}&size=10`);
     posts.value = response.data;
     page.value = pageNumber;
     route.query.page = "1";

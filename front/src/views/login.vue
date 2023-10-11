@@ -7,7 +7,7 @@ import store from "@/stores/store";
 
 //const store = useStore();
 const router = useRouter();
-
+const apiBaseUrl = "http://localhost:8080";
 const isAlphaNumeric = function(password: string): boolean {
   // 정규 표현식을 사용하여 영문자와 숫자로만 이루어진지 확인
   const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
@@ -27,7 +27,7 @@ const checkLogin = async function (): Promise<void> {
   const accessToken = localStorage.getItem("accessToken");
   if (accessToken) {
     try {
-      const response = await axios.get("http://13.125.165.102/api/auth/isValidToken", {
+      const response = await axios.get(`${apiBaseUrl}/auth/isValidToken`, {
         headers: {
           'Authorization': accessToken
         }
@@ -47,7 +47,7 @@ const goSignup = function (): void {
 
 const write = async function (): Promise<void> {
   try {
-    const response = await axios.post("http://13.125.165.102/api/auth/login", {
+    const response = await axios.post(`${apiBaseUrl}/auth/login`, {
       username: username.value,
       password: password.value
     }, {

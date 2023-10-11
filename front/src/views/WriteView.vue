@@ -59,7 +59,7 @@
 import {onMounted, ref, watch} from "vue";
 import axios from 'axios'
 import { useRouter } from "vue-router";
-
+const apiBaseUrl = "http://localhost:8080";
 const router = useRouter()
 
 const title = ref("")
@@ -88,7 +88,7 @@ const checkLogin = function () {
   const accessToken = localStorage.getItem("accessToken");
   if (accessToken) {
     try {
-      axios.get("http://13.125.165.102/api/auth/isValidToken", {
+      axios.get(`${apiBaseUrl}/auth/isValidToken`, {
         headers: {
           'Authorization': accessToken
         }
@@ -126,7 +126,7 @@ const write = function () {
   }
   // 새로운 코드: fileList.value를 사용하여 파일 가져오기
   const files = fileList.value.map((item) => item.raw);
-  console.log(files)
+
   let params = JSON.stringify({ title: title.value, content: content.value });
 
   frm.append("post", new Blob([JSON.stringify({ title: title.value, content: content.value, postType: postType.value, youtubeUrl: youtubeUrl.value })], { type: "application/json" }));
@@ -135,7 +135,7 @@ const write = function () {
   });
 
   axios
-      .post("http://13.125.165.102/api/board/user/writePost", frm, {
+      .post(`${apiBaseUrl}/board/user/writePost`, frm, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': localStorage.getItem("accessToken")
