@@ -1,2 +1,2 @@
 # Meme
-[밈게시판](mememmm.com)
+[밈게시판](http://www.mememmm.com)
