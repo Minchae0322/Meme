@@ -24,7 +24,7 @@ public class FileHandlerImpl implements FileHandler {
     @Override
     public String getFullPath(String filename) { return fileDir + filename; }
 
-
+    @Override
     public UploadFile storeFile(MultipartFile multipartFile, Post post) throws IOException {
         if(multipartFile.isEmpty()) {
             return null;
@@ -47,6 +47,7 @@ public class FileHandlerImpl implements FileHandler {
     }
 
 
+    @Override
     // 파일이 여러개 들어왔을 때 처리해주는 부분
     public List<UploadFile> storeFiles(List<MultipartFile> multipartFiles, Post post) throws IOException {
         List<UploadFile> storeFileResult = new ArrayList<>();
@@ -68,6 +69,7 @@ public class FileHandlerImpl implements FileHandler {
         return list;
     }
 
+    @Override
     public boolean deleteFile(UploadFile uploadFile) {
         String storeFileName = uploadFile.getStoreFileName();
         String filePath = getFullPath(storeFileName);
