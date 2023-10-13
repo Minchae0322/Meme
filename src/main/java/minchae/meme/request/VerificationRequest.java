@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 public class VerificationRequest {
     private String subject;
-
     private String verificationCode;
 
     @Builder
