@@ -118,7 +118,7 @@ function goSignup() {
     justify-content: center;
     align-items: center;
     margin-top: 10px;
-    margin-right: 20px;
+
   }
 
   .header_menu {
@@ -182,6 +182,11 @@ function goSignup() {
 
     .logout-button {
       display: flex;
+    }
+
+    body {
+      min-width: 90vw;
+      padding-right: 7px;
     }
 
     .menu_logo {

@@ -336,9 +336,7 @@ const formatCreateTime = computed(() => {
 
 <style scoped>
 
-body {
-  margin-right: 20px;
-}
+
 .commentInputContainer {
   display: flex;
   margin: 30px 0;
@@ -588,6 +586,7 @@ p {
   }
 
   .viewContainer {
+    margin-left: 4px;
     font-size: 11px;
 
   }
@@ -608,7 +607,7 @@ p {
 
   .deleteContainer {
     margin-right: auto;
-    font-size: 12px;
+    font-size: 9px;
   }
 
   iframe {
