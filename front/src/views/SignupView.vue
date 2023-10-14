@@ -51,7 +51,7 @@ import { ref, onMounted, onUpdated} from "vue";
 
 import { useRouter } from "vue-router";
 
-const apiBaseUrl = "http://localhost:8080";
+const apiBaseUrl = "http://13.125.165.102/api";
 const router = useRouter()
 const isAlphaNumeric = function(password) {
   // 정규 표현식을 사용하여 영문자와 숫자로만 이루어진지 확인

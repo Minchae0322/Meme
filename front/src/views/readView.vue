@@ -120,7 +120,7 @@ const props = defineProps({
     required:true,
   }
 })
-const apiBaseUrl = "http://localhost:8080";
+const apiBaseUrl = "http://13.125.165.102/api";
 const commentText = ref(""); // Data property to store the comment text
 const commentSize = ref("");
 
@@ -335,6 +335,10 @@ const formatCreateTime = computed(() => {
 
 
 <style scoped>
+
+body {
+  margin-right: 20px;
+}
 .commentInputContainer {
   display: flex;
   margin: 30px 0;

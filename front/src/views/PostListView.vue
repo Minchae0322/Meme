@@ -77,7 +77,7 @@ const page = ref<number>(1); // Initial page number
 const pageSize = 10; // Number of items per page
 
 const totalPosts = ref<number>(10);
-const apiBaseUrl = "http://localhost:8080";
+const apiBaseUrl = "http://13.125.165.102/api";
 const pageRange = computed(() => {
   const totalPages = Math.ceil(totalPosts.value / pageSize);
   const range: number[] = [];

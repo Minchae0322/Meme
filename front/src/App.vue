@@ -118,6 +118,7 @@ function goSignup() {
     justify-content: center;
     align-items: center;
     margin-top: 10px;
+    margin-right: 20px;
   }
 
   .header_menu {
@@ -194,11 +195,11 @@ function goSignup() {
       justify-content: start;
       width: 100%;
       display: flex;
-      font-size: 10px;
+      font-size: 9px;
     }
 
     .menu_nav li {
-      margin: 0px 11px;
+      margin: 0px 9px;
     }
 
     .menu_small {

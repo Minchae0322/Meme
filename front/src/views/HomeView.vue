@@ -85,7 +85,7 @@ const pageRange = computed(() => {
   }
   return range;
 });
-const apiBaseUrl = "http://localhost:8080";
+const apiBaseUrl = "http://13.125.165.102/api";
 const commentSize = ref<string>("");
 
 const router = useRoute();

@@ -59,7 +59,7 @@
 import {onMounted, ref, watch} from "vue";
 import axios from 'axios'
 import { useRouter } from "vue-router";
-const apiBaseUrl = "http://localhost:8080";
+const apiBaseUrl = "http://13.125.165.102/api";
 const router = useRouter()
 
 const title = ref("")
