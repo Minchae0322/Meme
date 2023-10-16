@@ -1,17 +1,15 @@
 package minchae.meme.entity;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Entity
-@RequiredArgsConstructor
-public class UploadFile {
-
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "dtype", discriminatorType = DiscriminatorType.STRING)
+@NoArgsConstructor
+public abstract class UploadFile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,15 +18,9 @@ public class UploadFile {
 
     private String storeFileName;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
-    private Post post;
-
-
-    @Builder
-    public UploadFile(Long id, String orgFileName, String storeFileName, Post post) {
+    public UploadFile(Long id, String orgFileName, String storeFileName) {
         this.id = id;
         this.orgFileName = orgFileName;
         this.storeFileName = storeFileName;
-        this.post = post;
     }
 }

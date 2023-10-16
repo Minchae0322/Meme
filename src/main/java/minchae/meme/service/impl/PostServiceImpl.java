@@ -68,7 +68,7 @@ public class PostServiceImpl implements PostService {
     public void delete(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFound::new);
-        List<UploadFile> uploadFiles = post.getUploadFiles();
+        List<UploadFile_post> uploadFiles = post.getUploadFiles();
         if (!uploadFiles.isEmpty()) {
             if (!fileService.deleteFiles(uploadFiles)) {
                 throw new RuntimeException();

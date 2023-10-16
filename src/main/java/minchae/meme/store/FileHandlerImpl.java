@@ -2,6 +2,7 @@ package minchae.meme.store;
 
 import minchae.meme.entity.Post;
 import minchae.meme.entity.UploadFile;
+import minchae.meme.entity.UploadFile_post;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,7 +26,7 @@ public class FileHandlerImpl implements FileHandler {
     public String getFullPath(String filename) { return fileDir + filename; }
 
     @Override
-    public UploadFile storeFile(MultipartFile multipartFile, Post post) throws IOException {
+    public UploadFile_post storeFile(MultipartFile multipartFile, Post post) throws IOException {
         if(multipartFile.isEmpty()) {
             return null;
         }
@@ -39,18 +40,17 @@ public class FileHandlerImpl implements FileHandler {
         // 파일을 저장하는 부분 -> 파일경로 + storeFilename 에 저장
         multipartFile.transferTo(Path.of(getFullPath(storeFilename)));
 
-        return UploadFile.builder()
+        return UploadFile_post.builder()
                 .orgFileName(originalFilename)
                 .storeFileName(storeFilename)
                 .post(post)
                 .build();
     }
 
-
-    @Override
     // 파일이 여러개 들어왔을 때 처리해주는 부분
-    public List<UploadFile> storeFiles(List<MultipartFile> multipartFiles, Post post) throws IOException {
-        List<UploadFile> storeFileResult = new ArrayList<>();
+    @Override
+    public List<UploadFile_post> storeFiles(List<MultipartFile> multipartFiles, Post post) throws IOException {
+        List<UploadFile_post> storeFileResult = new ArrayList<>();
         for (MultipartFile multipartFile : multipartFiles) {
             if(!multipartFile.isEmpty()) {
                 storeFileResult.add(storeFile(multipartFile, post));
@@ -60,7 +60,7 @@ public class FileHandlerImpl implements FileHandler {
     }
 
     @Override
-    public List<InMemoryMultipartFile> extractFiles(List<UploadFile> uploadFiles) throws IOException {
+    public List<InMemoryMultipartFile> extractFiles(List<? extends UploadFile> uploadFiles) throws IOException {
         List<InMemoryMultipartFile> list = new ArrayList<>();
         for (UploadFile file : uploadFiles) {
             list.add(extractFile(file));
@@ -87,7 +87,7 @@ public class FileHandlerImpl implements FileHandler {
     }
 
     @Override
-    public boolean deleteFiles(List<UploadFile> uploadFiles) {
+    public boolean deleteFiles(List<? extends UploadFile> uploadFiles) {
         for (UploadFile file : uploadFiles) {
             if (!deleteFile(file)) {
                 return false;

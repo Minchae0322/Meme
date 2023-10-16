@@ -349,7 +349,7 @@ li {
 
   .title {
     margin-left: 0;
-    padding-left: 20px;
+    padding-left: 10px;
     font-size: small;
   }
 

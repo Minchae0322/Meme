@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -89,8 +90,8 @@ class PostControllerTest {
 
     @BeforeEach
     public void before(@Value("${jwt.secret}") String secretKey) {
-      /* commentRepository.deleteAll();
-       postRepository.deleteAll();*/
+      commentRepository.deleteAll();
+       postRepository.deleteAll();
        userRepository.deleteAll();
        upDownRepository.deleteAll();
        testUser = User.builder()
@@ -121,7 +122,7 @@ class PostControllerTest {
         PostCreate postCreate = new PostCreate();
         postCreate.setTitle("Test Title");
         postCreate.setContent("Test Content");
-        postCreate.setPostType("ALL");
+        postCreate.setPostType("자유");
 
         // when
         MockMultipartFile imageFile = new MockMultipartFile(
@@ -146,7 +147,7 @@ class PostControllerTest {
         PostCreate postCreate = new PostCreate();
         postCreate.setTitle("Test Title");
         postCreate.setContent("Test Content");
-        postCreate.setPostType("ALL");
+        postCreate.setPostType("자유");
 
         String json = new ObjectMapper().writeValueAsString(postCreate);
         MockMultipartFile notice = new MockMultipartFile("post", "post", "application/json", json.getBytes(StandardCharsets.UTF_8));
@@ -166,7 +167,7 @@ class PostControllerTest {
         PostCreate postCreate = new PostCreate();
         postCreate.setTitle("Test Title");
         postCreate.setContent("Test Content");
-        postCreate.setPostType("ALL");
+        postCreate.setPostType("자유");
 
         // when
         MockMultipartFile imageFile = new MockMultipartFile(
@@ -198,7 +199,7 @@ class PostControllerTest {
         PostCreate postCreate = new PostCreate();
         postCreate.setTitle("Test Title");
         postCreate.setContent("Test Content");
-        postCreate.setPostType("ALL");
+        postCreate.setPostType("자유");
 
         // when
         MockMultipartFile imageFile = new MockMultipartFile(
@@ -227,7 +228,7 @@ class PostControllerTest {
         PostCreate postCreate = new PostCreate();
         postCreate.setTitle("Test Title");
         postCreate.setContent("Test Content");
-        postCreate.setPostType("ALL");
+        postCreate.setPostType("자유");
 
         // when
         MockMultipartFile imageFile = new MockMultipartFile(
@@ -252,7 +253,7 @@ class PostControllerTest {
                 .title("글 작성중입니다")
                 .content("글 내용은 비밀입니다")
                 .user(testUser)
-                .postType("ALL")
+                .postType("자유")
                 .build();
         postService.write(postCreate);
 
@@ -283,7 +284,7 @@ class PostControllerTest {
                 .title("글 작성중입니다")
                 .content("글 내용은 비밀입니다")
                 .user(user)
-                .postType("ALL")
+                .postType("자유")
                 .build();
         postService.write(postCreate);
         Post postResponse = postRepository.findAll().get(0);
@@ -369,7 +370,7 @@ class PostControllerTest {
                 .title("글 작성중입니다")
                 .content("글 내용은 비밀입니다")
                 .user(testUser)
-                .postType("ALL")
+                .postType("자유")
                 .build();
         postService.write(postCreate);
 
@@ -402,7 +403,7 @@ class PostControllerTest {
                 .title("글 작성중입니다")
                 .content("글 내용은 비밀입니다")
                 .user(user)
-                .postType("ALL")
+                .postType("자유")
                 .build();
         postService.write(postCreate);
 
@@ -444,7 +445,7 @@ class PostControllerTest {
                 .title("글 작성중입니다")
                 .content("글 내용은 비밀입니다")
                 .user(user)
-                .postType("ALL")
+                .postType("자유")
                 .build();
         postService.write(postCreate);
 
@@ -561,19 +562,22 @@ class PostControllerTest {
                 .content("글 내용을 변경합니다")
                 .user(testUser)
                 .build();
-        ObjectMapper objectMapper = new ObjectMapper();
-        java.lang.String json = objectMapper.writeValueAsString(postEdit);
 
+
+
+        MockMultipartFile imageFile = new MockMultipartFile(
+                "imageFile", "test-image.jpg", "image/jpeg", "image data".getBytes()
+        );
+        String json = new ObjectMapper().writeValueAsString(postEdit);
+        MockMultipartFile notice = new MockMultipartFile("post", "post", "application/json", json.getBytes(StandardCharsets.UTF_8));
+        // Perform the POST request
         //when
         Post postResponse = postRepository.findAll().get(0);
-        mockMvc.perform(MockMvcRequestBuilders.patch("/board/user/{postId}", postResponse.getPostId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json)
+        mockMvc.perform(multipart(HttpMethod.PATCH,"/board/user/{postId}", postResponse.getPostId())
+                        .file(notice)
+                        .file(imageFile)
                         .header("Authorization", ACCESS_TOKEN))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("글 내용을 변경하겠습니다"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.content").value("글 내용을 변경합니다"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.postId").value(postResponse.getPostId()))
                 .andDo(print());
 
         Assertions.assertEquals(postRepository.count(), 1);
@@ -779,7 +783,7 @@ class PostControllerTest {
                 .title("글 작성중입니다")
                 .content("글 내용은 비밀입니다")
                 .user(user)
-                .postType("ALL")
+                .postType("자유")
                 .build();
         postService.write(postCreate);
         Post postResponse = postRepository.findAll().get(0);
@@ -802,7 +806,7 @@ class PostControllerTest {
                 .title("글 작성중입니다")
                 .content("글 내용은 비밀입니다")
                 .user(testUser)
-                .postType("ALL")
+                .postType("자유")
                 .build();
         postService.write(postCreate);
         Post postResponse = postRepository.findAll().get(0);

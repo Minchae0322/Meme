@@ -611,7 +611,7 @@ p {
   }
 
   iframe {
-    width: 370px;
+    width: 340px;
     height: 260px;
   }
 

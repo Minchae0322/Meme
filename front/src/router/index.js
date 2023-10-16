@@ -1,11 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import WriteView from '../views/WriteView.vue';
-import PostListView from '../views/PostListView.vue';
+import home from '../views/HomeView.vue'
+import writePost from '../views/WriteView.vue';
+import postList from '../views/PostListView.vue';
 import login from "../views/login.vue";
 import read from "../views/readView.vue";
 import signup from "../views/SignupView.vue";
 import update from "../views/UpdatePost.vue"
+import userInfo from "../views/UserInfo.vue"
 import app from "../App.vue";
 
 
@@ -19,12 +20,12 @@ const router = createRouter({
     {
       path: '/home',
       name: 'home',
-      component: HomeView
+      component: home
     },
     {
       path: "/write",
       name: "write",
-      component: WriteView
+      component: writePost
     },
     {
       path: '/signup', // 회원가입 페이지 경로
@@ -35,7 +36,7 @@ const router = createRouter({
     {
       path: "/posts",
       name: "postList",
-      component: PostListView
+      component: postList
     }
 
     ,
@@ -58,6 +59,12 @@ const router = createRouter({
       component: update,
       props: true
 
+    },
+
+    {
+      path: "/userInfo",
+      name: "userInfo",
+      component: userInfo
     }
 
     // {

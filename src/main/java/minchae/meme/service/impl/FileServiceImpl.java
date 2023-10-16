@@ -4,11 +4,13 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import minchae.meme.entity.Post;
 import minchae.meme.entity.UploadFile;
+import minchae.meme.entity.UploadFile_post;
 import minchae.meme.repository.UploadFileRepository;
 import minchae.meme.response.FileResponse;
 import minchae.meme.service.FileService;
 import minchae.meme.store.FileHandler;
 import minchae.meme.store.InMemoryMultipartFile;
+import minchae.meme.store.PostFileHandler;
 import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +26,8 @@ public class FileServiceImpl implements FileService {
 
     private final FileHandler fileHandler;
 
+    private final PostFileHandler postFileHandler;
+
     @Override
     @Transactional
     public void write(UploadFile uploadFile) {
@@ -32,14 +36,14 @@ public class FileServiceImpl implements FileService {
 
     @Override
     @Transactional
-    public void writeList(List<UploadFile> uploadFiles) {
+    public void writeList(List<UploadFile_post> uploadFiles) {
         fileRepository.saveAll(uploadFiles);
     }
 
     @Override
     @Transactional
     public void saveFiles(List<MultipartFile> files, Post post) throws IOException {
-        List<UploadFile> uploadFiles = fileHandler.storeFiles(files, post);
+        List<UploadFile_post> uploadFiles = fileHandler.storeFiles(files, post);
         if (uploadFiles != null) {
             writeList(uploadFiles);
         }
@@ -54,7 +58,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     @Transactional
-    public List<UploadFile> getUploadFilesByPostId(Long postId) {
+    public List<? extends UploadFile> getUploadFilesByPostId(Long postId) {
         return fileRepository.findUploadFilesByPostId(postId);
     }
 
@@ -65,7 +69,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public void saveFile(MultipartFile file, Post post) throws IOException {
-        UploadFile uploadFile = fileHandler.storeFile(file, post);
+        UploadFile_post uploadFile = fileHandler.storeFile(file, post);
         if (uploadFile != null) {
             write(uploadFile);
         }
@@ -78,7 +82,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public boolean deleteFiles(List<UploadFile> uploadFiles) {
+    public boolean deleteFiles(List<? extends UploadFile> uploadFiles) {
         fileRepository.deleteAll(uploadFiles);
         return fileHandler.deleteFiles(uploadFiles);
     }

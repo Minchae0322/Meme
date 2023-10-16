@@ -75,7 +75,7 @@ public class Post {
     private final List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private final List<UploadFile> uploadFiles = new ArrayList<>();
+    private final List<UploadFile_post> uploadFiles = new ArrayList<>();
 
     private PostType postType;
 

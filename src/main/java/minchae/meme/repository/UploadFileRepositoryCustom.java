@@ -5,5 +5,5 @@ import minchae.meme.entity.UploadFile;
 import java.util.List;
 
 public interface UploadFileRepositoryCustom {
-    List<UploadFile> findUploadFilesByPostId(Long postId);
+    List<? extends UploadFile> findUploadFilesByPostId(Long postId);
 }

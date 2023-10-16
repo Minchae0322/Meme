@@ -2,6 +2,7 @@ package minchae.meme.service;
 
 import minchae.meme.entity.Post;
 import minchae.meme.entity.UploadFile;
+import minchae.meme.entity.UploadFile_post;
 import minchae.meme.response.FileResponse;
 import minchae.meme.store.InMemoryMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,13 +14,13 @@ public interface FileService {
 
     void write(UploadFile uploadFile);
 
-    void writeList(List<UploadFile> uploadFiles);
+    void writeList(List<UploadFile_post> uploadFiles);
 
     void saveFiles(List<MultipartFile> files, Post post) throws IOException;
 
     FileResponse getFiles(Long postId) throws IOException;
 
-    List<UploadFile> getUploadFilesByPostId(Long postId);
+    List<? extends UploadFile> getUploadFilesByPostId(Long postId);
 
     MultipartFile getFile(UploadFile uploadFile) throws IOException;
 
@@ -27,5 +28,5 @@ public interface FileService {
 
     boolean deleteFile(UploadFile uploadFile);
 
-    boolean deleteFiles(List<UploadFile> uploadFiles);
+    boolean deleteFiles(List<? extends UploadFile> uploadFiles);
 }
