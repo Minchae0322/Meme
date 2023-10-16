@@ -7,7 +7,7 @@ import store from "@/stores/store";
 
 //const store = useStore();
 const router = useRouter();
-const apiBaseUrl = "http://13.125.165.102/api";
+const apiBaseUrl = "http://localhost:8080";
 const isAlphaNumeric = function(password: string): boolean {
   // 정규 표현식을 사용하여 영문자와 숫자로만 이루어진지 확인
   const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;

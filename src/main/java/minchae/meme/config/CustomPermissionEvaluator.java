@@ -40,6 +40,8 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             return Objects.equals(user.getId(), comment.getUser().getId());
         }
 
+
+
         return false;
     }
 }

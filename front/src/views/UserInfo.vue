@@ -25,8 +25,14 @@
 
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import {onMounted, reactive, ref} from 'vue'
 import type { FormProps } from 'element-plus'
+import axios from "axios";
+import {useRouter} from "vue-router";
+
+
+const apiBaseUrl = "http://localhost:8080";
+const router = useRouter()
 
 const labelPosition = ref<FormProps['labelPosition']>('left')
 
@@ -35,6 +41,59 @@ const formLabelAlign = reactive({
   region: '',
   type: '',
 })
+
+
+onMounted( () => {
+  checkLogin()
+  getUserInformation()
+});
+
+const checkLogin = function () {
+  const accessToken = localStorage.getItem("accessToken");
+  if (accessToken) {
+    try {
+      axios.get(`${apiBaseUrl}/auth/isValidToken`, {
+        headers: {
+          'Authorization': accessToken
+        }
+      }).then(response => {
+
+        if (response.status !== 200) {
+          router.replace({name: "login"})
+        }
+      });
+    } catch (error) {
+      console.error("에러 발생:", error);
+    }
+  } else {
+    router.replace({name: "login"})
+  }
+};
+
+const getUserInformation = function () {
+  const accessToken = localStorage.getItem("accessToken");
+  if (accessToken) {
+    try {
+      axios.get(`${apiBaseUrl}/user/information`, {
+        headers: {
+          'Authorization': accessToken
+        }
+      }).then(response => {
+
+        if (response.status !== 200) {
+          router.replace({name: "login"})
+        }
+      });
+    } catch (error) {
+      console.error("에러 발생:", error);
+    }
+  } else {
+    router.replace({name: "login"})
+  }
+};
+
+
+
 </script>
 
 <style scoped>
