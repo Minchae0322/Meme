@@ -30,6 +30,7 @@
         <div class="logout-button">
           <el-button :id="isLogin === '로그인' ? 'logout-large' : 'logout'" @click="handleLogout">{{ isLogin }}</el-button>
           <el-button id="signup" @click="goSignup" v-if="isLogin === '로그인'">회원가입</el-button>
+          <el-button v-if="isLogin === '로그아웃'" @click="goUserInfo">내정보</el-button>
         </div>
       </div>
     </div>
@@ -54,7 +55,7 @@ import store from "@/stores/store";
 //const store = useStore(); // Access the Vuex store
 
 const router = useRouter()
-const isLogin = computed(() =>store.state.isLogin);
+const isLogin = computed(() => store.state.isLogin);
 const loginRouter = ref('/logout');
 onMounted(() =>
 {
@@ -102,6 +103,10 @@ function goSignup() {
 
   router.push('/signup'); // 로그인 상태가 아니면 클릭하면 /login으로 이동
 
+}
+
+function goUserInfo() {
+  router.replace('/userInfo')
 }
 
 

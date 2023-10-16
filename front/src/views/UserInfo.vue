@@ -5,7 +5,7 @@
 <el-form
     :label-position="labelPosition"
     label-width="100px"
-    :model="formLabelAlign"
+
     style="max-width: 460px"
 >
   <el-form-item label="아이디">
@@ -35,9 +35,10 @@
 import {onMounted,reactive, ref, toRefs} from 'vue'
 import type { FormProps } from 'element-plus'
 import axios from "axios";
+import {defineProps} from "vue"
 import {useRouter} from "vue-router";
 
-const userInfo = ref({});
+
 const apiBaseUrl = "http://13.125.165.102/api";
 const router = useRouter()
 
@@ -54,7 +55,17 @@ const { editingNickname, newNickname } = toRefs(reactive({
   newNickname: ''
 }))
 
+type UserInfo = {
+  username: string;
+  nickName: string;
+  email: string;
+};
 
+const userInfo = ref<UserInfo>({
+  username: '',
+  nickName: '',
+  email: '',
+});
 
 onMounted( () => {
   checkLogin()
@@ -92,7 +103,6 @@ const getUserInformation = function () {
           'Authorization': accessToken
         }
       }).then(response => {
-
         if (response.status === 200) {
           userInfo.value = response.data
         }
