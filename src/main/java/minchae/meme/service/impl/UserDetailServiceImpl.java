@@ -65,8 +65,20 @@ public class UserDetailServiceImpl implements UserDetailsService, UserService {
         user.setNickName(nickName);
     }
 
+
+
     @Override
     public boolean isExistEmail(String email) {
         return userRepository.findByEmail(email).isPresent();
+    }
+
+    @Override
+    public boolean isExistNickname(String nickname) {
+        return userRepository.findByNickName(nickname).isPresent();
+    }
+
+    @Override
+    public boolean isValidNickname(String nickname) {
+        return !isExistNickname(nickname);
     }
 }

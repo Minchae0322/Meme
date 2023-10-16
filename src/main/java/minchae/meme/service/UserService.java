@@ -1,9 +1,6 @@
 package minchae.meme.service;
 
-import minchae.meme.entity.enumClass.Authorization;
-import minchae.meme.request.Login;
 import minchae.meme.request.SignupForm;
-import org.springframework.stereotype.Service;
 
 public interface UserService {
     void signup(SignupForm signupForm);
@@ -13,6 +10,10 @@ public interface UserService {
     void changeNickName(Long userId, String nickName);
 
     boolean isExistEmail(String email);
+
+    boolean isExistNickname(String nickname);
+
+    boolean isValidNickname(String nickname);
 
 
 }

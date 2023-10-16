@@ -2,13 +2,12 @@ package minchae.meme.controller;
 
 import lombok.RequiredArgsConstructor;
 import minchae.meme.entity.User;
+import minchae.meme.request.UserEdit;
 import minchae.meme.response.UserInfoResponse;
 import minchae.meme.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,10 +21,15 @@ public class UserController {
         return UserInfoResponse.builder().build().userToUserInfo(user);
     }
 
-    @PostMapping("/user/information/changeName")
+    @PostMapping("/user/information/isValidNickname")
+    @PreAuthorize("hasAuthority('USER')")
+    public boolean isValidNickname(@RequestBody UserEdit userEdit) {
+        return userService.isValidNickname(userEdit.getNickname());
+    }
 
-    public void changeNickName(Long userId, String nickName) {
-        userService.changeNickName(userId, nickName);
+    @PostMapping("/user/information/changeNickname")
+    public void changeNickName(@RequestBody UserEdit userEdit, @AuthenticationPrincipal User user) {
+        userService.changeNickName(user.getId(), userEdit.getNickname());
 
     }
 }
