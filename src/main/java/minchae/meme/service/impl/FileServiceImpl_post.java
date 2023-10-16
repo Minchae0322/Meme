@@ -2,16 +2,12 @@ package minchae.meme.service.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import minchae.meme.entity.Post;
 import minchae.meme.entity.UploadFile;
 import minchae.meme.entity.UploadFile_post;
 import minchae.meme.repository.UploadFileRepository;
 import minchae.meme.response.FileResponse;
 import minchae.meme.service.FileService;
 import minchae.meme.store.FileHandler;
-import minchae.meme.store.InMemoryMultipartFile;
-import minchae.meme.store.PostFileHandler;
-import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,13 +16,12 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class FileServiceImpl implements FileService {
+public class FileServiceImpl_post implements FileService {
 
     private final UploadFileRepository fileRepository;
 
     private final FileHandler fileHandler;
 
-    private final PostFileHandler postFileHandler;
 
     @Override
     @Transactional
@@ -36,14 +31,14 @@ public class FileServiceImpl implements FileService {
 
     @Override
     @Transactional
-    public void writeList(List<UploadFile_post> uploadFiles) {
+    public void writeList(List<? extends UploadFile> uploadFiles) {
         fileRepository.saveAll(uploadFiles);
     }
 
     @Override
     @Transactional
-    public void saveFiles(List<MultipartFile> files, Post post) throws IOException {
-        List<UploadFile_post> uploadFiles = fileHandler.storeFiles(files, post);
+    public void saveFiles(List<MultipartFile> files, Object post) throws IOException {
+        List<? extends UploadFile> uploadFiles = fileHandler.storeFiles(files, post);
         if (uploadFiles != null) {
             writeList(uploadFiles);
         }
@@ -68,8 +63,8 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void saveFile(MultipartFile file, Post post) throws IOException {
-        UploadFile_post uploadFile = fileHandler.storeFile(file, post);
+    public void saveFile(MultipartFile file, Object post) throws IOException {
+        UploadFile uploadFile = fileHandler.storeFile(file, post);
         if (uploadFile != null) {
             write(uploadFile);
         }

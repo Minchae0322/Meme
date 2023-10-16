@@ -18,6 +18,7 @@ public abstract class UploadFile {
 
     private String storeFileName;
 
+
     public UploadFile(Long id, String orgFileName, String storeFileName) {
         this.id = id;
         this.orgFileName = orgFileName;

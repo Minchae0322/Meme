@@ -14,9 +14,9 @@ public interface FileService {
 
     void write(UploadFile uploadFile);
 
-    void writeList(List<UploadFile_post> uploadFiles);
+    void writeList(List<? extends UploadFile> uploadFiles);
 
-    void saveFiles(List<MultipartFile> files, Post post) throws IOException;
+    void saveFiles(List<MultipartFile> files, Object post) throws IOException;
 
     FileResponse getFiles(Long postId) throws IOException;
 
@@ -24,7 +24,7 @@ public interface FileService {
 
     MultipartFile getFile(UploadFile uploadFile) throws IOException;
 
-    void saveFile(MultipartFile file, Post post) throws IOException;
+    void saveFile(MultipartFile file, Object post) throws IOException;
 
     boolean deleteFile(UploadFile uploadFile);
 

@@ -1,8 +1,10 @@
-package minchae.meme.store;
+package minchae.meme.store.impl;
 
 import minchae.meme.entity.Post;
 import minchae.meme.entity.UploadFile;
 import minchae.meme.entity.UploadFile_post;
+import minchae.meme.store.FileHandler;
+import minchae.meme.store.InMemoryMultipartFile;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,7 +17,7 @@ import java.util.UUID;
 import java.util.List;
 
 @Component
-public class FileHandlerImpl implements FileHandler {
+public class FileHandlerImpl_post implements FileHandler {
 
     String rootPath = System.getProperty("user.dir");
 
@@ -26,7 +28,7 @@ public class FileHandlerImpl implements FileHandler {
     public String getFullPath(String filename) { return fileDir + filename; }
 
     @Override
-    public UploadFile_post storeFile(MultipartFile multipartFile, Post post) throws IOException {
+    public UploadFile_post storeFile(MultipartFile multipartFile, Object objectBy) throws IOException {
         if(multipartFile.isEmpty()) {
             return null;
         }
@@ -43,17 +45,17 @@ public class FileHandlerImpl implements FileHandler {
         return UploadFile_post.builder()
                 .orgFileName(originalFilename)
                 .storeFileName(storeFilename)
-                .post(post)
+                .post((Post) objectBy)
                 .build();
     }
 
     // 파일이 여러개 들어왔을 때 처리해주는 부분
     @Override
-    public List<UploadFile_post> storeFiles(List<MultipartFile> multipartFiles, Post post) throws IOException {
+    public List<UploadFile_post> storeFiles(List<MultipartFile> multipartFiles, Object objectBy) throws IOException {
         List<UploadFile_post> storeFileResult = new ArrayList<>();
         for (MultipartFile multipartFile : multipartFiles) {
             if(!multipartFile.isEmpty()) {
-                storeFileResult.add(storeFile(multipartFile, post));
+                storeFileResult.add(storeFile(multipartFile, objectBy));
             }
         }
         return storeFileResult;
