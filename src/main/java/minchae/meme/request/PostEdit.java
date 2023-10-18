@@ -13,12 +13,15 @@ public class PostEdit {
 
     private String content;
 
+    private String youtubeUrl;
+
     private User user;
 
     @Builder
-    public PostEdit(String title, String content, User user) {
+    public PostEdit(String title, String content, String youtubeUrl, User user) {
         this.title = title;
         this.content = content;
+        this.youtubeUrl = youtubeUrl;
         this.user = user;
     }
 }
