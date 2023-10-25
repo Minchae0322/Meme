@@ -191,6 +191,9 @@ const submitComment = function () {
       }).catch(error => {
 
       });
+    } else {
+      alert("로그인을 후 작성해주세요.")
+      router.push({name : "login"})
     }
   }
 

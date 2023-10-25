@@ -53,7 +53,7 @@ import { onMounted , watch} from "vue";
 import store from "@/stores/store";
 //import { useStore } from 'vuex'; // Import useStore to access the store
 //const store = useStore(); // Access the Vuex store
-
+const apiBaseUrl = "http://13.125.165.102/api";
 const router = useRouter()
 const isLogin = computed(() => store.state.isLogin);
 const loginRouter = ref('/logout');
@@ -62,13 +62,28 @@ onMounted(() =>
   checkLogin()
 })
 function checkLogin(){
-  if (!localStorage.getItem("accessToken")) {
-    console.log(localStorage.getItem("accessToken"))
-    store.dispatch('setLoginStatus', '로그인'); // Dispatch the action to change isLogin
-      loginRouter.value = "/login"
-    console.log("로그인 필요")
+  const accessToken = localStorage.getItem("accessToken");
+  if (accessToken) {
+      axios.get(`${apiBaseUrl}/auth/isValidToken`, {
+        headers: {
+          'Authorization': accessToken
+        }
+      }).then(response => {
+        if(response.status === 200) {
+          store.dispatch('setLoginStatus', '로그아웃'); // Dispatch the action to change isLogin
+          loginRouter.value = "/logout"
+        } else {
+          store.dispatch('setLoginStatus', '로그인'); // Dispatch the action to change isLogin
+          loginRouter.value = "/login"
+        }
+      }).catch(error => {
+        store.dispatch('setLoginStatus', '로그인'); // Dispatch the action to change isLogin
+        loginRouter.value = "/login"
+      });
   } else {
-    store.dispatch('setLoginStatus', '로그아웃'); // Dispatch the action to change isLogin
+    store.dispatch('setLoginStatus', '로그인'); // Dispatch the action to change isLogin
+    loginRouter.value = "/login"
+    console.log("로그인 필요")
   }
   return 0
 }
