@@ -44,5 +44,6 @@ public interface PostService {
     int upBad(Long postId, User user);
 
 
+    long getPostsCountByHot();
 }
 

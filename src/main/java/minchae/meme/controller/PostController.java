@@ -61,6 +61,11 @@ public class PostController {
         }
         return postService.getPostsCountByPostType(postCount.getPostType());
     }
+
+    @GetMapping("/board/posts/countByHot")
+    public long getPostsCountByHot() {
+        return postService.getPostsCountByHot();
+    }
     @GetMapping("/board/posts/{postId}/image")
     public ImageResponse getPostImages(@PathVariable("postId") Long postId) throws IOException {
 

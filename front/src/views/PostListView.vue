@@ -75,6 +75,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 const posts = ref<any[]>([]);
 const page = ref<number>(1); // Initial page number
 const pageSize = 10; // Number of items per page
+const postType = ref("")
 
 const totalPosts = ref<number>(10);
 const apiBaseUrl = "http://13.125.165.102/api";
@@ -109,7 +110,8 @@ const truncateTitle = (title: string): string => {
   return title;
 };
 const getTotalPosts = function () {
-  axios.get(`${apiBaseUrl}/board/posts/count`)
+  axios.get(`${apiBaseUrl}/board/posts/count`,{
+  })
       .then(response => {
         if (response.status === 200) {
           totalPosts.value = response.data;

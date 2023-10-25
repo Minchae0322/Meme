@@ -18,4 +18,6 @@ public interface PostRepositoryCustom {
     List<Post> getNoticeList(Page page);
 
     long getPostCountByPostType(PostType postType);
+
+    long getPostCountByHot();
 }

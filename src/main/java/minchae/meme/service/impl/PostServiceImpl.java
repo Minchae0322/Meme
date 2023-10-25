@@ -185,6 +185,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public long getPostsCountByHot() {
+        return postRepository.getPostCountByHot();
+    }
+
+    @Override
     public List<PostResponse> getNoticeWherePage(Page page) {
         return postRepository.getNoticeList(page)
                 .stream()

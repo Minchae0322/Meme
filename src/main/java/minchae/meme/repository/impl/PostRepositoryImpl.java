@@ -62,5 +62,13 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .size();
     }
 
+    @Override
+    public long getPostCountByHot() {
+        return jpaQueryFactory.selectFrom(QPost.post)
+                .where(QPost.post.postFunction.isHot)
+                .fetch()
+                .size();
+    }
+
 
 }

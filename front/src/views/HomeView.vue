@@ -142,7 +142,7 @@ const loadPage = async (pageNumber: number): Promise<void> => {
 
 
 const getTotalPage = function () {
-  axios.get(`${apiBaseUrl}/board/posts/count`)
+  axios.get(`${apiBaseUrl}/board/posts/countByHot`)
       .then(response => {
         if (response.status === 200) {
           totalPosts.value = response.data;
