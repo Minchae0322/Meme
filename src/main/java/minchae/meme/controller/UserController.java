@@ -16,18 +16,19 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/user/information")
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN', 'MANAGER')")
     public UserInfoResponse userInfo(@AuthenticationPrincipal User user) {
         return UserInfoResponse.builder().build().userToUserInfo(user);
     }
 
     @PostMapping("/user/information/isValidNickname")
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN', 'MANAGER')")
     public boolean isValidNickname(@RequestBody UserEdit userEdit) {
         return userService.isValidNickname(userEdit.getNickname());
     }
 
     @PostMapping("/user/information/changeNickname")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN', 'MANAGER')")
     public void changeNickName(@RequestBody UserEdit userEdit, @AuthenticationPrincipal User user) {
         userService.changeNickName(user.getId(), userEdit.getNickname());
 
