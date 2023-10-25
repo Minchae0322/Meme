@@ -123,6 +123,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public long getPostsCountByPostType(String type) {
+        return postRepository.getPostCountByPostType(PostType.valueOf(type));
+    }
+
+    @Override
     public List<PostResponse> getPostListByPostType(Page page, PostType postType) {
         return postRepository.findPostsByPostTypeAndPage(page, postType)
                 .stream()
@@ -179,4 +184,11 @@ public class PostServiceImpl implements PostService {
         return post.getBad();
     }
 
+    @Override
+    public List<PostResponse> getNoticeWherePage(Page page) {
+        return postRepository.getNoticeList(page)
+                .stream()
+                .map(post -> PostResponse.builder().build().postToPostResponse(post))
+                .collect(Collectors.toList());
+    }
 }

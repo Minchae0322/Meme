@@ -15,13 +15,13 @@
           <RouterLink to="/home">인기글</RouterLink>
         </li>
         <li>
-          <RouterLink to="/write">글 작성</RouterLink>
-        </li>
-        <li>
           <RouterLink to="/posts">글 목록</RouterLink>
         </li>
         <li>
-          <RouterLink to="/posts">공지사항</RouterLink>
+          <RouterLink to="/notice">공지사항</RouterLink>
+        </li>
+        <li>
+          <RouterLink to="/write">글 작성</RouterLink>
         </li>
       </ul>
 

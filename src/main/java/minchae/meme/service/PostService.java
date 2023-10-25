@@ -37,6 +37,10 @@ public interface PostService {
 
     int upRecommendation(Long postId, User user);
 
+    List<PostResponse> getNoticeWherePage(Page page);
+
+    long getPostsCountByPostType(String type);
+
     int upBad(Long postId, User user);
 
 

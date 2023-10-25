@@ -7,6 +7,7 @@ import read from "../views/readView.vue";
 import signup from "../views/SignupView.vue";
 import update from "../views/UpdatePost.vue"
 import userInfo from "../views/UserInfo.vue"
+import notice from "../views/NoticeView.vue"
 import app from "../App.vue";
 
 
@@ -65,6 +66,11 @@ const router = createRouter({
       path: "/userInfo",
       name: "userInfo",
       component: userInfo
+    },
+    {
+      path: "/notice",
+      name: "notice",
+      component: notice
     }
 
     // {

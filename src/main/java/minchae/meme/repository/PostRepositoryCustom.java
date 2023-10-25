@@ -4,6 +4,7 @@ import minchae.meme.entity.Post;
 import minchae.meme.entity.enumClass.PostType;
 import minchae.meme.request.Page;
 
+import java.util.Arrays;
 import java.util.List;
 
 public interface PostRepositoryCustom {
@@ -14,4 +15,7 @@ public interface PostRepositoryCustom {
     List<Post> findPostsByPostTypeAndPage(Page page, PostType postType);
 
 
+    List<Post> getNoticeList(Page page);
+
+    long getPostCountByPostType(PostType postType);
 }

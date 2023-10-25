@@ -44,5 +44,23 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .fetch();
     }
 
+    @Override
+    public List<Post> getNoticeList(Page page) {
+        return jpaQueryFactory.selectFrom(QPost.post)
+                .where(QPost.post.postType.eq(PostType.공지))
+                .orderBy(QPost.post.createdTime.desc())
+                .limit(page.getSize())
+                .offset((long) (page.getPage() - 1) * page.getSize())
+                .fetch();
+    }
+
+    @Override
+    public long getPostCountByPostType(PostType postType) {
+        return jpaQueryFactory.selectFrom(QPost.post)
+                .where(QPost.post.postType.eq(postType))
+                .fetch()
+                .size();
+    }
+
 
 }

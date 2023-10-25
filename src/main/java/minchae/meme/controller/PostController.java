@@ -6,8 +6,10 @@ import lombok.RequiredArgsConstructor;
 import minchae.meme.auth.provider.JwtTokenProvider;
 import minchae.meme.entity.Post;
 import minchae.meme.entity.User;
+import minchae.meme.entity.enumClass.PostType;
 import minchae.meme.repository.UserRepository;
 import minchae.meme.request.Page;
+import minchae.meme.request.PostCount;
 import minchae.meme.request.PostCreate;
 import minchae.meme.request.PostEdit;
 import minchae.meme.response.ImageResponse;
@@ -52,6 +54,13 @@ public class PostController {
         return postService.getPostsCount();
     }
 
+    @PostMapping("/board/posts/countByType")
+    public long getPostsCountByType(@RequestBody PostCount postCount) {
+        if(postCount.getPostType() == null) {
+            throw new IllegalArgumentException();
+        }
+        return postService.getPostsCountByPostType(postCount.getPostType());
+    }
     @GetMapping("/board/posts/{postId}/image")
     public ImageResponse getPostImages(@PathVariable("postId") Long postId) throws IOException {
 
@@ -126,6 +135,11 @@ public class PostController {
     public List<PostResponse> getHotPostList(@PageableDefault Page page) {
 
         return postService.getHotListWherePage(page);
+    }
+
+    @GetMapping("/board/posts/notice")
+    public List<PostResponse> getNotice(@PageableDefault Page page) {
+        return postService.getNoticeWherePage(page);
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER', 'USER')")

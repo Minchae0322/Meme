@@ -192,7 +192,7 @@ const submitComment = function () {
 
       });
     } else {
-      alert("로그인을 후 작성해주세요.")
+      alert("로그인 후 작성해주세요.")
       router.push({name : "login"})
     }
   }
