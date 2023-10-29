@@ -350,6 +350,7 @@ li {
 
   .postTypeContainer {
     font-size: 6px;
+    width: 20%;
   }
 
   .title {

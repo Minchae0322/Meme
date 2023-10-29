@@ -189,6 +189,7 @@ onMounted(() => {
 .postTypeContainer {
   display: flex;
   font-size: 12px;
+  width: 20%;
   color: #000ca9;
 }
 
