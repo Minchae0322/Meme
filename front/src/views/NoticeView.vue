@@ -92,7 +92,7 @@ const router = useRoute();
 
 const truncateTitle = (title: string): string => {
   if (title.length > 30) {
-    return title.slice(0, 37) + '...';
+    return title.slice(0, 27) + '...';
   }
   return title;
 };
@@ -189,7 +189,6 @@ onMounted(() => {
 .postTypeContainer {
   display: flex;
   font-size: 12px;
-  width: 20%;
   color: #000ca9;
 }
 
@@ -348,6 +347,7 @@ li {
 
   .postTypeContainer {
     font-size: 6px;
+    width: 17%;
   }
 
   .title {

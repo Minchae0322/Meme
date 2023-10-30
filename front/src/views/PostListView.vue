@@ -105,7 +105,7 @@ const visiblePageNumbers = computed(() => {
 });
 const truncateTitle = (title: string): string => {
   if (title.length > 30) {
-    return title.slice(0, 37) + '...';
+    return title.slice(0, 50) + '...';
   }
   return title;
 };
@@ -350,7 +350,7 @@ li {
 
   .postTypeContainer {
     font-size: 6px;
-    width: 20%;
+    width: 17%;
   }
 
   .title {
