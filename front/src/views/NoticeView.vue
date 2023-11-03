@@ -347,7 +347,7 @@ li {
 
   .postTypeContainer {
     font-size: 6px;
-    width: 17%;
+    width: 24%;
   }
 
   .title {
