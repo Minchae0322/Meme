@@ -32,7 +32,6 @@ public class UsernamePasswordCustomTokenFilter extends AbstractAuthenticationPro
 
 
         usernamePasswordAuthenticationToken.setDetails(this.authenticationDetailsSource.buildDetails(request));
-
         return this.getAuthenticationManager().authenticate(usernamePasswordAuthenticationToken);
 
     }
